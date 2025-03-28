@@ -1,0 +1,22 @@
+{
+  "imports": {
+    "lume/": "https://deno.land/x/lume@v2.5.1/"
+  },
+  "tasks": {
+    "lume": "echo \"import 'lume/cli.ts'\" | deno run -A -",
+    "build": "deno task lume && deno fmt _site/**/*.html",
+    "serve": "deno task lume -s"
+  },
+  "compilerOptions": {
+    "types": [
+      "lume/types.ts"
+    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "npm:react",
+    "jsxImportSourceTypes": "npm:@types/react"
+  },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 80
+  }
+}
