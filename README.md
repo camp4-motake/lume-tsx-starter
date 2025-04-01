@@ -10,8 +10,12 @@ deno task serve
 
 # build
 deno task build
+
+# zip
+deno task zip
 ```
 
 ## Resources
 
-[Lume](https://github.com/lumeland/lume)
+- [Deno 2](https://deno.com/)
+- [Lume](https://github.com/lumeland/lume)

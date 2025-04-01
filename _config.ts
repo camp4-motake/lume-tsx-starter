@@ -7,8 +7,10 @@ import picture from "lume/plugins/picture.ts";
 import relativeUrls from "lume/plugins/relative_urls.ts";
 import svgo from "lume/plugins/svgo.ts";
 import transformImages from "lume/plugins/transform_images.ts";
+import { pathJoin } from "./lib/pathJoin.ts";
 
-const site = lume({ src: "./src", prettyUrls: false });
+// https://lume.land/docs/configuration/config-file/
+const site = lume({ src: "./src", prettyUrls: true });
 
 site.use(base_path());
 site.use(esbuild());
@@ -18,5 +20,8 @@ site.use(picture());
 site.use(relativeUrls());
 site.use(svgo());
 site.use(transformImages());
+
+site.helper("uppercase", (body) => body.toUpperCase(), { type: "tag" });
+site.helper("pathJoin", pathJoin, { type: "tag" });
 
 export default site;

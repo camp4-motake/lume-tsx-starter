@@ -1,12 +1,14 @@
-import type { Components, LayoutProps } from "./_type/page.d.ts";
 export const layout = "layouts/BaseLayout.tsx";
-export const title = "page1";
 
-export default function Layout<T extends Components>({ comp }: LayoutProps<T>) {
-  return (
-    <>
-      <comp.Heading />
-      <comp.Image src="/assets/img/test300x300.png" />
-    </>
-  );
-}
+export const title = "";
+export const description = "";
+export const keywords = "";
+export const ogType = "website";
+export const ogImage = "";
+
+export default ({ comp }: Lume.Data) => (
+  <>
+    <comp.Heading />
+    <comp.Image src="/assets/img/test300x300.png" />
+  </>
+);

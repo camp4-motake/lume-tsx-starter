@@ -1,3 +1,5 @@
-_site
-_cache
+*.zip
 .DS_Store
+_cache
+_site
+_zip
