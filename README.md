@@ -1,12 +1,15 @@
 # Lume/TSX starter
 
-Static Site Development Environment
+Lume/TSX Static Site Development Environment
 
 ## Task
 
+Set up [Deno](https://deno.com/) beforehand with `npm install -g deno` or
+[other installation](https://docs.deno.com/runtime/getting_started/installation/).
+
 ```sh
 # dev
-deno task serve
+deno task dev
 
 # build
 deno task build
@@ -17,5 +20,4 @@ deno task zip
 
 ## Resources
 
-- [Deno 2](https://deno.com/)
-- [Lume](https://github.com/lumeland/lume)
+[Deno](https://deno.com/) | [Lume](https://github.com/lumeland/lume)

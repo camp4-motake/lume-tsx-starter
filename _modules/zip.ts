@@ -1,7 +1,7 @@
-import { resolve } from "https://deno.land/std/path/mod.ts";
+import { resolve } from "@std/path";
 import AdmZip from "npm:adm-zip";
 
-const zipPrefix = "site-build";
+const zipPrefix = "amphi-style4u-build";
 const date = new Date().toISOString().slice(0, 10).replace(/-/g, "") + "_" +
   Math.floor(Date.now() / 1000);
 

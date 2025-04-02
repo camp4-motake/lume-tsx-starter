@@ -3,6 +3,7 @@
   "specifiers": {
     "jsr:@b-fuze/deno-dom@*": "0.1.49",
     "jsr:@davidbonnet/astring@1.8.6": "1.8.6",
+    "jsr:@std/assert@0.224": "0.224.0",
     "jsr:@std/cli@1.0.11": "1.0.11",
     "jsr:@std/cli@1.0.14": "1.0.14",
     "jsr:@std/cli@^1.0.12": "1.0.14",
@@ -25,6 +26,7 @@
     "jsr:@std/fs@1.0.10": "1.0.10",
     "jsr:@std/fs@1.0.14": "1.0.14",
     "jsr:@std/fs@^1.0.11": "1.0.14",
+    "jsr:@std/fs@^1.0.15": "1.0.15",
     "jsr:@std/fs@^1.0.9": "1.0.10",
     "jsr:@std/html@1.0.3": "1.0.3",
     "jsr:@std/html@^1.0.3": "1.0.3",
@@ -40,6 +42,7 @@
     "jsr:@std/media-types@^1.1.0": "1.1.0",
     "jsr:@std/net@^1.0.4": "1.0.4",
     "jsr:@std/path@*": "1.0.8",
+    "jsr:@std/path@0.224": "0.224.0",
     "jsr:@std/path@1.0.8": "1.0.8",
     "jsr:@std/path@^1.0.8": "1.0.8",
     "jsr:@std/streams@^1.0.8": "1.0.9",
@@ -61,6 +64,7 @@
     "npm:gsap@*": "3.12.7",
     "npm:ico-endec@0.1.6": "0.1.6",
     "npm:image-size@*": "1.2.0",
+    "npm:image-size@2.0.1": "2.0.1",
     "npm:lightningcss-wasm@1.29.1": "1.29.1",
     "npm:lightningcss-wasm@1.29.2": "1.29.2",
     "npm:markdown-it-attrs@4.3.1": "4.3.1_markdown-it@14.1.0",
@@ -83,6 +87,9 @@
     },
     "@davidbonnet/astring@1.8.6": {
       "integrity": "98b4914c8863cdf8c0ff83bb5c528caa67a8dca6020ad6234113499f00583e3a"
+    },
+    "@std/assert@0.224.0": {
+      "integrity": "8643233ec7aec38a940a8264a6e3eed9bfa44e7a71cc6b3c8874213ff401967f"
     },
     "@std/cli@1.0.11": {
       "integrity": "ec219619fdcd31bcf0d8e53bee1e2706ec9a02f70255365a094f69755dadd340"
@@ -133,6 +140,12 @@
     },
     "@std/fs@1.0.14": {
       "integrity": "1e84bf0b95fe08f41f1f4aea9717bbf29f45408a56ce073b0114474ce1c9fccf",
+      "dependencies": [
+        "jsr:@std/path@^1.0.8"
+      ]
+    },
+    "@std/fs@1.0.15": {
+      "integrity": "c083fb479889d6440d768e498195c3fc499d426fbf9a6592f98f53884d1d3f41",
       "dependencies": [
         "jsr:@std/path@^1.0.8"
       ]
@@ -199,6 +212,12 @@
     },
     "@std/net@1.0.4": {
       "integrity": "2f403b455ebbccf83d8a027d29c5a9e3a2452fea39bb2da7f2c04af09c8bc852"
+    },
+    "@std/path@0.224.0": {
+      "integrity": "55bca6361e5a6d158b9380e82d4981d82d338ec587de02951e2b7c3a24910ee6",
+      "dependencies": [
+        "jsr:@std/assert"
+      ]
     },
     "@std/path@1.0.8": {
       "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
@@ -713,6 +732,9 @@
       "dependencies": [
         "queue"
       ]
+    },
+    "image-size@2.0.1": {
+      "integrity": "sha512-NI6NK/2zchlZopsQrcVIS7jxA0/rtIy74B+/rx5s7rKQyFebmQjZVhzxXgRZJROk+WhhOq+S6sUaODxp0L5hfg=="
     },
     "inherits@2.0.4": {
       "integrity": "sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ=="
@@ -1722,6 +1744,7 @@
     "https://deno.land/x/lume@v2.5.3/mod.ts": "097c8497b7bc917b3558f87611b21fa0507d4ad28b863fd41a9bf7683aed1042",
     "https://deno.land/x/lume@v2.5.3/plugins/base_path.ts": "ddaffaac8166137244c79cf72b1cd77a074160e52ec59ad49c06cfee4aef7f64",
     "https://deno.land/x/lume@v2.5.3/plugins/esbuild.ts": "dfb39ca3238ffec30ff1da24eacbd5ed4e0c8f6608e4791c99f6c10a7fa1d4d1",
+    "https://deno.land/x/lume@v2.5.3/plugins/inline.ts": "bda09ad738b7b2940ccc1155446f847c6c14ee3213fa34314f799c132a99b33c",
     "https://deno.land/x/lume@v2.5.3/plugins/json.ts": "67e5e2e00f8e8640f33c1f97a2bf82a7c97a67a838804637b87b16b72f9042e1",
     "https://deno.land/x/lume@v2.5.3/plugins/jsx.ts": "00d3ab842adbc4d64dc9d517d41dcd96215c6d3a75a4cd7a6b137afda99f0fc6",
     "https://deno.land/x/lume@v2.5.3/plugins/lightningcss.ts": "66e1ba77047fc0b0b490460f05b82068d654394121bf3b339077731d8e54ec1d",
@@ -1770,6 +1793,8 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@std/fs@^1.0.15",
+      "jsr:@std/path@0.224",
       "npm:@types/react@*",
       "npm:react@*"
     ]

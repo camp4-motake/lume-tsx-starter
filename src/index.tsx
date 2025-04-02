@@ -6,9 +6,13 @@ export const keywords = "";
 export const ogType = "website";
 export const ogImage = "";
 
-export default ({ comp }: Lume.Data) => (
-  <>
-    <comp.Heading />
-    <comp.Image src="/assets/img/test300x300.png" />
-  </>
-);
+export default ({ comp }: Lume.Data) => {
+  const { Heading } = comp;
+
+  return (
+    <>
+      <Heading>Sample</Heading>
+      <img src="/assets/img/test300x300.png" alt="" decoding="async" />
+    </>
+  );
+};

@@ -1,12 +1,17 @@
 {
   "imports": {
-    "lume/": "https://deno.land/x/lume@v2.5.3/"
+    "lume/": "https://deno.land/x/lume@v2.5.3/",
+    "@std/fs": "jsr:@std/fs@^1.0.15",
+    "@std/path": "jsr:@std/path@^0.224.0"
   },
   "tasks": {
     "lume": "echo \"import 'lume/cli.ts'\" | deno run -A -",
-    "build": "deno task lume && deno fmt _site/**/*.html --line-width 320 && deno run --allow-read --allow-write ./lib/cacheBuster.ts",
-    "serve": "deno task lume -s",
-    "zip": "deno run --allow-read --allow-write --allow-run lib/zip.ts"
+    "dev": "deno task lume -s",
+    "build": "deno task lume && deno task build:ims && deno task build:cbt && deno task build:fmt",
+    "build:fmt": "deno fmt _site/**/*.html --line-width 320",
+    "build:cbt": "deno run --allow-read --allow-write _modules/cacheBuster.ts",
+    "build:ims": "deno run --allow-read --allow-write --allow-env _modules/imageSize.ts",
+    "zip": "deno run --allow-read --allow-write --allow-run _modules/zip.ts"
   },
   "compilerOptions": {
     "types": [

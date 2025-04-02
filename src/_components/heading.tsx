@@ -1,3 +1,3 @@
-export default function () {
-  return <h1>test</h1>;
+export default function ({ children }: Lume.Data) {
+  return <h1>{children as React.ReactNode}</h1>;
 }
