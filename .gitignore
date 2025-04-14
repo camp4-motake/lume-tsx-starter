@@ -1,5 +1,10 @@
-*.zip
 .DS_Store
 _cache
 _site
 _zip
+.env
+.env.*
+*.zip
+.*.sh
+mise.*.local.toml
+mise.local.toml

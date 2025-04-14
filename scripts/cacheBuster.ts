@@ -1,6 +1,6 @@
-import { dirname, extname, join } from "@std/path";
 import { DOMParser, Element } from "jsr:@b-fuze/deno-dom";
 import { crypto } from "jsr:@std/crypto";
+import { dirname, extname, join } from "jsr:@std/path";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 const distDir = join(__dirname, "../_site");
@@ -108,7 +108,8 @@ async function processHtmlFile(filePath: string): Promise<void> {
     ]);
 
     // Write the modified HTML back to the file
-    await Deno.writeTextFile(filePath, document.documentElement!.outerHTML);
+    const doctype = document.doctype ? `<!DOCTYPE ${document.doctype.name}>` : "";
+    await Deno.writeTextFile(filePath, doctype + document.documentElement!.outerHTML);
     console.log(`Processed: ${filePath}`);
   } catch (error) {
     console.error(`Error processing file ${filePath}:`, error);

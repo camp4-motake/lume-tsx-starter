@@ -1,7 +1,7 @@
-import { resolve } from "@std/path";
+import { resolve } from "jsr:@std/path";
 import AdmZip from "npm:adm-zip";
 
-const zipPrefix = "amphi-style4u-build";
+const zipPrefix = "production-build";
 const date = new Date().toISOString().slice(0, 10).replace(/-/g, "") + "_" +
   Math.floor(Date.now() / 1000);
 
