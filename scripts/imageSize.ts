@@ -1,6 +1,6 @@
-import { walk } from "@std/fs/walk";
-import { dirname, isAbsolute, join } from "@std/path";
 import { DOMParser, Element, HTMLDocument } from "jsr:@b-fuze/deno-dom";
+import { walk } from "jsr:@std/fs/walk";
+import { dirname, isAbsolute, join } from "jsr:@std/path";
 import { imageSizeFromFile } from "npm:image-size@2.0.1/fromFile"; // Use the specified version
 
 const siteDir = "_site";
