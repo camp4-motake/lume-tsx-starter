@@ -10,7 +10,9 @@ export default function ({ children }: Lume.Data) {
           />
           <title>Document</title>
           <link rel="stylesheet" href="/assets/main.css" />
+          <link rel="stylesheet" href="/assets/components.css" />
           <script type="module" src="/assets/main.js"></script>
+          <script type="module" src="/assets/components.js"></script>
         </head>
         <body>
           {children}

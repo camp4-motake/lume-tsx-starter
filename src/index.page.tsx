@@ -1,8 +1,8 @@
 export const layout = "layouts/BaseLayout.tsx";
 
-export const title = "test";
+export const title = "example";
 
-export default ({/* comp */}: Lume.Data) => {
+export default ({ comp }: Lume.Data) => {
   return (
     <div class="flex flex-col items-center justify-center h-screen bg-gray-100">
       <h1 class="text-3xl font-bold underline">
@@ -13,6 +13,7 @@ export default ({/* comp */}: Lume.Data) => {
         loading="lazy"
         transform-images="avif png"
       />
+      <comp.Button>component sample</comp.Button>
     </div>
   );
 };

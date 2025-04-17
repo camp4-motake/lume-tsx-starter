@@ -26,4 +26,16 @@ site.use(svgo());
 site.use(picture());
 site.use(transformImages());
 
+site.process([".css", ".js"], (assets) => {
+  const map: { [key: string]: string } = {
+    "/style.css": "/assets/components.css",
+    "/script.js": "/assets/components.js",
+  };
+
+  for (const asset of assets) {
+    if (!map[asset.data.url]) continue;
+    asset.data.url = map[asset.data.url];
+  }
+});
+
 export default site;
