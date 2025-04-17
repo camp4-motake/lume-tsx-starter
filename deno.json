@@ -1,6 +1,6 @@
 {
   "imports": {
-    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@81d172f110ee13cac5ce4d3e465d9159320bdd10/",
+    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@2f3d7c6b9aa9a1856d7f62cc3ee62ad8a4495a39/",
     "lume/jsx-runtime": "https://deno.land/x/ssx@v0.1.8/jsx-runtime.ts"
   },
   "tasks": {
@@ -14,17 +14,29 @@
     "zip": "deno run --allow-read --allow-write --allow-run scripts/zip.ts"
   },
   "compilerOptions": {
-    "types": ["lume/types.ts"],
+    "types": [
+      "lume/types.ts"
+    ],
     "jsx": "react-jsx",
     "jsxImportSource": "lume"
   },
   "lint": {
-    "exclude": ["./_site"],
-    "rules": { "tags": ["recommended"] }
+    "exclude": [
+      "./_site"
+    ],
+    "rules": {
+      "tags": [
+        "recommended"
+      ]
+    }
   },
   "fmt": {
     "lineWidth": 100,
-    "exclude": ["./_site"]
+    "exclude": [
+      "./_site"
+    ]
   },
-  "unstable": ["temporal"]
+  "unstable": [
+    "temporal"
+  ]
 }
