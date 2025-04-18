@@ -10,32 +10,27 @@ import svgo from "lume/plugins/svgo.ts";
 import tailwindcss from "lume/plugins/tailwindcss.ts";
 import transformImages from "lume/plugins/transform_images.ts";
 
-const site = lume({ src: "./src", prettyUrls: true });
+const site = lume({
+  src: "./src",
+  prettyUrls: true,
+  components: {
+    cssFile: "/assets/components.css",
+    jsFile: "/assets/components.js",
+  },
+});
 
 site.add("/assets", "/assets");
 site.ignore("README.md", "CHANGELOG.md", "node_modules");
 
 site.use(jsx());
-site.use(inline());
-site.use(base_path());
-site.use(relativeUrls());
 site.use(esbuild());
 site.use(tailwindcss());
 site.use(lightningCss());
 site.use(svgo());
 site.use(picture());
 site.use(transformImages());
-
-site.process([".css", ".js"], (assets) => {
-  const map: { [key: string]: string } = {
-    "/style.css": "/assets/components.css",
-    "/script.js": "/assets/components.js",
-  };
-
-  for (const asset of assets) {
-    if (!map[asset.data.url]) continue;
-    asset.data.url = map[asset.data.url];
-  }
-});
+site.use(inline());
+site.use(base_path());
+site.use(relativeUrls());
 
 export default site;
