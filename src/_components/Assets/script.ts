@@ -1,1 +1,1 @@
-import "./sample.ts";
+console.log("asset script loaded");
