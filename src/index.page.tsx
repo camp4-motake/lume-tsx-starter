@@ -1,4 +1,4 @@
-export const layout = "layouts/BaseLayout.tsx";
+export const layout = "layouts/Base.tsx";
 
 export const title = "example";
 
