@@ -10,7 +10,6 @@ import sourceMaps from "lume/plugins/source_maps.ts";
 import svgo from "lume/plugins/svgo.ts";
 import tailwindcss from "lume/plugins/tailwindcss.ts";
 import transformImages from "lume/plugins/transform_images.ts";
-import cacheBuster from "./scripts/cacheBuster.ts";
 import imageDimensions from "./scripts/imageDimensions.ts";
 import { pathJoin } from "./scripts/pathJoin.ts";
 
@@ -42,14 +41,19 @@ site.use(inline());
 site.use(base_path());
 site.use(relativeUrls());
 
-if (!isDev) {
-  site.use(cacheBuster());
-}
-
 site.helper("pathJoin", pathJoin, { type: "tag" });
 site.helper("uppercase", (body) => body.toUpperCase(), { type: "tag" });
 
 site.add("/assets", "/assets");
 site.ignore("README.md", "CHANGELOG.md", "node_modules");
+
+site.script(
+  "afterBuild",
+  `deno run --allow-read --allow-write scripts/cacheBuster.ts`, // WORKAROUND: cache busting
+  `deno eval --allow-scripts 'for await (const e of Deno.readDir("_site/assets/img")) if (e.isFile && /\.(png|jpe?g)$/.test(e.name)) await Deno.remove(\`_site/assets/img/\${e.name}\`)'`, // WORKAROUND: remove unused png/jpg
+);
+site.addEventListener("afterBuild", (_event) => {
+  if (!isDev) site.run("afterBuild");
+});
 
 export default site;
