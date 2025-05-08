@@ -7,10 +7,7 @@
     "lume": "echo \"import 'lume/cli.ts'\" | deno run -A -",
     "serve": "deno task lume -s",
     "dev": "deno task lume -s",
-    "build": "deno task lume && deno task build:ims && deno task build:cbt && deno task build:fmt",
-    "build:fmt": "deno fmt _site/**/*.html --no-config --line-width 320",
-    "build:cbt": "deno run --allow-read --allow-write scripts/cacheBuster.ts",
-    "build:ims": "deno run --allow-read --allow-write --allow-env scripts/imageSize.ts",
+    "build": "deno task lume && deno fmt _site/**/*.html --no-config --line-width 320",
     "zip": "deno run --allow-read --allow-write --allow-run scripts/zip.ts"
   },
   "compilerOptions": {

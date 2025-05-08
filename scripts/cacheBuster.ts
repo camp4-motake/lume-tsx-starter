@@ -1,140 +1,193 @@
-import { DOMParser, Element } from "jsr:@b-fuze/deno-dom";
-import { crypto } from "jsr:@std/crypto";
-import { dirname, extname, join } from "jsr:@std/path";
+import { existsSync } from "jsr:@std/fs";
+import { join, parse } from "jsr:@std/path";
+import type Site from "lume/core/site.ts";
 
-const __dirname = new URL(".", import.meta.url).pathname;
-const distDir = join(__dirname, "../_site");
+export interface CacheBusterOptions {
+  /** Method to generate the cache buster (default: "timestamp") */
+  method?: "timestamp" | "hash" | "random";
 
-const hashCache = new Map<string, string>();
+  /** Length of the hash value (default: 8) */
+  hashLength?: number;
 
-async function generateHashCached(filePath: string): Promise<string> {
-  if (hashCache.has(filePath)) {
-    return hashCache.get(filePath)!;
-  }
+  /** Name of the cache buster query parameter (default: "v") */
+  paramName?: string;
 
-  try {
-    const fileBytes = await Deno.readFile(filePath);
-    const hashBuffer = await crypto.subtle.digest("MD5", fileBytes);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-    const shortHash = hashHex.slice(0, 8);
-    hashCache.set(filePath, shortHash);
-    return shortHash;
-  } catch (error) {
-    console.error(`Error generating hash for ${filePath}:`, error);
-    hashCache.set(filePath, "error");
-    return "error";
-  }
+  /** File types to which cache buster query parameter will be added */
+  extensions?: string[];
+
+  /** Selectors and attributes in HTML to which cache buster will be applied */
+  selectors?: Record<string, string[]>;
 }
 
-async function addHashToAttributeValue(
-  htmlFilePath: string,
-  attrValue: string | null,
-): Promise<string | null> {
-  if (!attrValue || attrValue.startsWith("http") || attrValue.startsWith("data:")) {
-    return attrValue;
-  }
+/**
+ * Lume plugin to add cache busters (query parameters) to static asset URLs
+ *
+ * @param options Plugin options
+ * @returns Lume plugin function
+ */
+export default function cacheBuster(options: CacheBusterOptions = {}) {
+  const {
+    method = "hash",
+    hashLength = 8,
+    paramName = "v",
+    extensions = [".css", ".js", ".jpg", ".jpeg", ".png", ".gif", ".svg", ".webp", ".avif", ".mp4"],
+    selectors = {
+      "link[rel='stylesheet']": ["href"],
+      "script": ["src"],
+      "img": ["src", "srcset"],
+      "source": ["src", "srcset"],
+      "video": ["src", "poster"],
+      "audio": ["src"],
+    },
+  } = options;
 
-  const [pathOnly] = attrValue.split(/[?#]/);
-  const fullPath = join(dirname(htmlFilePath), pathOnly);
-  const hash = await generateHashCached(fullPath);
+  return (site: Site) => {
+    site.process([".html"], (pages) => {
+      for (const page of pages) {
+        const { document } = page;
 
-  if (hash === "error") {
-    return attrValue;
-  }
+        for (const [selector, attributes] of Object.entries(selectors)) {
+          const elements = document.querySelectorAll(selector);
 
-  return `${pathOnly}?v=${hash}`;
-}
-
-async function processElements(
-  document: Document,
-  htmlFilePath: string,
-  selector: string,
-  attributeName: string,
-): Promise<void> {
-  const elements = document.querySelectorAll(selector);
-  const promises: Promise<void>[] = [];
-
-  for (let i = 0; i < elements.length; i++) {
-    const elem = elements[i] as unknown as Element;
-    const attrValue = elem.getAttribute(attributeName);
-
-    if (attributeName === "srcset" && attrValue) {
-      promises.push(
-        (async () => {
-          const srcsetParts = attrValue.split(",");
-          const newSrcsetParts = await Promise.all(
-            srcsetParts.map(async (srcItem) => {
-              const [url, descriptor] = srcItem.trim().split(/\s+/);
-              const newUrl = await addHashToAttributeValue(htmlFilePath, url);
-              return descriptor ? `${newUrl} ${descriptor}` : newUrl;
-            }),
-          );
-          elem.setAttribute(attributeName, newSrcsetParts.join(", "));
-        })(),
-      );
-    } else if (attrValue) {
-      promises.push(
-        (async () => {
-          const newValue = await addHashToAttributeValue(htmlFilePath, attrValue);
-          if (newValue && newValue !== attrValue) {
-            elem.setAttribute(attributeName, newValue);
+          for (const element of elements) {
+            for (const attribute of attributes) {
+              processAttribute(element, attribute, site);
+            }
           }
-        })(),
-      );
+        }
+      }
+    });
+
+    /**
+     * Add cache buster to the attribute URL of an element
+     */
+    function processAttribute(element: Element, attribute: string, site: Site) {
+      if (attribute === "srcset") {
+        const srcset = element.getAttribute("srcset");
+        if (!srcset) return;
+
+        const updatedSrcset = processSrcSet(srcset, site);
+        element.setAttribute("srcset", updatedSrcset);
+        return;
+      }
+
+      const url = element.getAttribute(attribute);
+      if (!url) return;
+
+      if (
+        url.startsWith("http://") || url.startsWith("https://") ||
+        url.startsWith("//") || url.startsWith("data:") || url.startsWith("#")
+      ) {
+        return;
+      }
+
+      if (url.includes("?") && url.includes(`${paramName}=`)) {
+        return;
+      }
+
+      const { ext } = parse(url);
+      if (!extensions.includes(ext)) {
+        return;
+      }
+
+      const cacheBusterValue = getCacheBusterValue(url, site);
+
+      const separator = url.includes("?") ? "&" : "?";
+      const newUrl = `${url}${separator}${paramName}=${cacheBusterValue}`;
+
+      element.setAttribute(attribute, newUrl);
     }
-  }
-  await Promise.all(promises);
-}
 
-async function processHtmlFile(filePath: string): Promise<void> {
-  try {
-    const html = await Deno.readTextFile(filePath);
-    const document = new DOMParser().parseFromString(html, "text/html");
-    if (!document) throw new Error(`Failed to parse HTML from ${filePath}`);
+    /**
+     * Process srcset attribute
+     */
+    function processSrcSet(srcset: string, site: Site): string {
+      return srcset.split(",").map((part) => {
+        const [url, descriptor] = part.trim().split(/\s+/);
 
-    await Promise.all([
-      processElements(
-        document as unknown as Document,
-        filePath,
-        'link[rel="stylesheet"][href]',
-        "href",
-      ),
-      processElements(document as unknown as Document, filePath, "script[src]", "src"),
-      processElements(document as unknown as Document, filePath, "img[src]", "src"),
-      processElements(document as unknown as Document, filePath, "source[src]", "src"), // source[src]
-      processElements(document as unknown as Document, filePath, "source[srcset]", "srcset"), // source[srcset]
-      // 必要に応じて他の要素（例: video[poster]など）を追加
-    ]);
+        if (
+          url.startsWith("http://") || url.startsWith("https://") ||
+          url.startsWith("//") || url.startsWith("data:") || url.startsWith("#")
+        ) {
+          return part;
+        }
 
-    // Write the modified HTML back to the file
-    const doctype = document.doctype ? `<!DOCTYPE ${document.doctype.name}>` : "";
-    await Deno.writeTextFile(filePath, doctype + document.documentElement!.outerHTML);
-    console.log(`Processed: ${filePath}`);
-  } catch (error) {
-    console.error(`Error processing file ${filePath}:`, error);
-  }
-}
+        if (url.includes("?") && url.includes(`${paramName}=`)) {
+          return part;
+        }
 
-async function processDistDirectory(dir: string): Promise<void> {
-  const filePromises: Promise<void>[] = [];
-  for await (const entry of Deno.readDir(dir)) {
-    const filePath = join(dir, entry.name);
+        const { ext } = parse(url);
+        if (!extensions.includes(ext)) {
+          return part;
+        }
 
-    if (entry.isDirectory) {
-      // サブディレクトリの処理も並列化の対象とする（ただし深くなりすぎると問題になる可能性も）
-      filePromises.push(processDistDirectory(filePath));
-    } else if (entry.isFile && extname(entry.name).toLowerCase() === ".html") {
-      filePromises.push(processHtmlFile(filePath));
+        const cacheBusterValue = getCacheBusterValue(url, site);
+
+        const separator = url.includes("?") ? "&" : "?";
+        const newUrl = `${url}${separator}${paramName}=${cacheBusterValue}`;
+
+        return descriptor ? `${newUrl} ${descriptor}` : newUrl;
+      }).join(", ");
     }
-  }
-  await Promise.all(filePromises);
-}
 
-if (import.meta.main) {
-  console.log("Starting cache busting process...");
-  const startTime = performance.now();
-  await processDistDirectory(distDir).catch(console.error);
-  const endTime = performance.now();
-  console.log(`Cache busting finished in ${(endTime - startTime).toFixed(2)} ms`);
+    /**
+     * Get cache buster value
+     */
+    function getCacheBusterValue(url: string, site: Site): string {
+      const filePath = url.startsWith("/")
+        ? join(site.options.location.root, site.options.dest, url)
+        : site.src(url);
+
+      if (!existsSync(filePath)) {
+        return getRandomValue();
+      }
+
+      try {
+        switch (method) {
+          case "hash":
+            return getFileHash(filePath);
+          case "timestamp":
+            return getFileTimestamp(filePath);
+          case "random":
+          default:
+            return getRandomValue();
+        }
+      } catch (error) {
+        console.warn(`Cache buster: Error processing file ${url}`, error);
+        return getRandomValue();
+      }
+    }
+
+    /**
+     * Get file timestamp
+     */
+    function getFileTimestamp(filePath: string): string {
+      const stat = Deno.statSync(filePath);
+      return Math.floor(stat.mtime?.getTime() || Date.now()).toString();
+    }
+
+    /**
+     * Calculate hash value from file contents (synchronous)
+     */
+    function getFileHash(filePath: string): string {
+      const fileContent = Deno.readFileSync(filePath);
+
+      let hash = 0;
+      for (let i = 0; i < fileContent.length; i++) {
+        const byte = fileContent[i];
+        hash = ((hash << 5) - hash) + byte;
+      }
+
+      const hashHex = (hash >>> 0).toString(16);
+
+      return hashHex.padStart(hashLength, "0").substring(0, hashLength);
+    }
+
+    /**
+     * Generate a random value
+     */
+    function getRandomValue(): string {
+      return Math.floor(Math.random() * 10000000).toString().padStart(8, "0");
+    }
+  };
 }
