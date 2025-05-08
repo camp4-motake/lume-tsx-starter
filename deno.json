@@ -1,7 +1,7 @@
 {
   "imports": {
-    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@2f3d7c6b9aa9a1856d7f62cc3ee62ad8a4495a39/",
-    "lume/jsx-runtime": "https://deno.land/x/ssx@v0.1.8/jsx-runtime.ts"
+    "lume/": "https://deno.land/x/lume@v3.0.0/",
+    "lume/jsx-runtime": "https://deno.land/x/ssx@v0.1.9/jsx-runtime.ts"
   },
   "tasks": {
     "lume": "echo \"import 'lume/cli.ts'\" | deno run -A -",
@@ -25,7 +25,10 @@
       "tags": [
         "recommended"
       ]
-    }
+    },
+    "plugins": [
+      "https://deno.land/x/lume@v3.0.0/lint.ts"
+    ]
   },
   "fmt": {
     "lineWidth": 100,
