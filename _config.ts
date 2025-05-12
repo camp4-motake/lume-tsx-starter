@@ -30,11 +30,7 @@ site.use(tailwindcss());
 site.use(lightningCss());
 site.use(svgo());
 site.use(imageDimensions());
-
-if (isDev) {
-  site.use(sourceMaps());
-}
-
+if (isDev) site.use(sourceMaps());
 site.use(picture());
 site.use(transformImages());
 site.use(inline());
@@ -48,12 +44,10 @@ site.add("/assets", "/assets");
 site.ignore("README.md", "CHANGELOG.md", "node_modules");
 
 site.script(
-  "afterBuild",
+  "afterProcess",
   `deno run --allow-read --allow-write scripts/cacheBuster.ts`, // WORKAROUND: cache busting
   `deno eval --allow-scripts 'for await (const e of Deno.readDir("_site/assets/img")) if (e.isFile && /\.(png|jpe?g)$/.test(e.name)) await Deno.remove(\`_site/assets/img/\${e.name}\`)'`, // WORKAROUND: remove unused png/jpg
 );
-site.addEventListener("afterBuild", (_event) => {
-  if (!isDev) site.run("afterBuild");
-});
+if (!isDev) site.addEventListener("afterBuild", "afterProcess");
 
 export default site;
