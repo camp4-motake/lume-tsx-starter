@@ -5,12 +5,12 @@ import inline from "lume/plugins/inline.ts";
 import jsx from "lume/plugins/jsx.ts";
 import lightningCss from "lume/plugins/lightningcss.ts";
 import picture from "lume/plugins/picture.ts";
-import relativeUrls from "lume/plugins/relative_urls.ts";
 import sourceMaps from "lume/plugins/source_maps.ts";
 import svgo from "lume/plugins/svgo.ts";
 import tailwindcss from "lume/plugins/tailwindcss.ts";
 import transformImages from "lume/plugins/transform_images.ts";
 import imageDimensions from "./scripts/imageDimensions.ts";
+// import relativeUrls from "lume/plugins/relative_urls.ts";
 import { pathJoin } from "./scripts/pathJoin.ts";
 
 const isDev = Deno.args.includes("-s");
@@ -35,7 +35,7 @@ site.use(picture());
 site.use(transformImages());
 site.use(inline());
 site.use(base_path());
-site.use(relativeUrls());
+// site.use(relativeUrls());
 
 site.helper("pathJoin", pathJoin, { type: "tag" });
 site.helper("uppercase", (body) => body.toUpperCase(), { type: "tag" });
@@ -46,7 +46,7 @@ site.ignore("README.md", "CHANGELOG.md", "node_modules");
 site.script(
   "afterProcess",
   `deno run --allow-read --allow-write scripts/cacheBuster.ts`, // WORKAROUND: cache busting
-  `deno eval --allow-scripts 'for await (const e of Deno.readDir("_site/assets/img")) if (e.isFile && /\.(png|jpe?g)$/.test(e.name)) await Deno.remove(\`_site/assets/img/\${e.name}\`)'`, // WORKAROUND: remove unused png/jpg
+  // `deno eval --allow-scripts 'for await (const e of Deno.readDir("_site/assets/img")) if (e.isFile && /\.(png|jpe?g)$/.test(e.name)) await Deno.remove(\`_site/assets/img/\${e.name}\`)'`, // WORKAROUND: remove unused png/jpg
 );
 if (!isDev) site.addEventListener("afterBuild", "afterProcess");
 
