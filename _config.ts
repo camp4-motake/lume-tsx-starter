@@ -17,10 +17,6 @@ const isDev = Deno.args.includes("-s");
 const site = lume({
   src: "./src",
   prettyUrls: true,
-  components: {
-    cssFile: "/assets/components.css",
-    jsFile: "/assets/components.js",
-  },
 });
 
 site.use(jsx());
