@@ -7,7 +7,6 @@ import lightningCss from "lume/plugins/lightningcss.ts";
 import picture from "lume/plugins/picture.ts";
 import sourceMaps from "lume/plugins/source_maps.ts";
 import svgo from "lume/plugins/svgo.ts";
-import tailwindcss from "lume/plugins/tailwindcss.ts";
 import transformImages from "lume/plugins/transform_images.ts";
 import imageDimensions from "./scripts/imageDimensions.ts";
 // import relativeUrls from "lume/plugins/relative_urls.ts";
@@ -26,7 +25,6 @@ const site = lume({
 
 site.use(jsx());
 site.use(esbuild({ options: { target: ["esnext", "safari16"] } }));
-site.use(tailwindcss());
 site.use(lightningCss());
 site.use(svgo());
 site.use(imageDimensions());
