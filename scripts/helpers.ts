@@ -1,3 +1,12 @@
+/**
+ * range array
+ */
+export const range = (start: number, end: number) =>
+  Array.from({ length: end - start + 1 }, (_, i) => start + i);
+
+/**
+ * path join
+ */
 export function pathJoin(...paths: string[]) {
   const firstPath = paths[0] || "";
   const protocolMatch = firstPath.match(/^(https?:\/\/)/i);

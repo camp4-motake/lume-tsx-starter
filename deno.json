@@ -1,7 +1,8 @@
 {
   "imports": {
-    "lume/": "https://deno.land/x/lume@v3.0.5/",
-    "lume/jsx-runtime": "https://deno.land/x/ssx@v0.1.11/jsx-runtime.ts"
+    "clsx": "npm:clsx",
+    "lume/": "https://deno.land/x/lume@v3.0.11/",
+    "lume/jsx-runtime": "https://deno.land/x/ssx@v0.1.12/jsx-runtime.ts"
   },
   "tasks": {
     "lume": "echo \"import 'lume/cli.ts'\" | deno run -A -",
@@ -24,10 +25,13 @@
     "rules": {
       "tags": [
         "recommended"
+      ],
+      "exclude": [
+        "no-import-prefix"
       ]
     },
     "plugins": [
-      "https://deno.land/x/lume@v3.0.5/lint.ts"
+      "https://deno.land/x/lume@v3.0.11/lint.ts"
     ]
   },
   "fmt": {

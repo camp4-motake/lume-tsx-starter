@@ -11,7 +11,7 @@ export default ({ comp }: Lume.Data) => {
         loading="lazy"
         transform-images="avif png"
       />
-      <comp.Button>component sample</comp.Button>
+      <comp.Button attributes={{ href: "#" }}>component sample</comp.Button>
     </div>
   );
 };

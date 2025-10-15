@@ -1,4 +1,14 @@
-@layer reset, config, components, utilities;
+/* global styles */
+
+/* @see https://lightningcss.dev/bundling.html#cascade-layers */
+@layer config, reset, utilities, components, sections;
+
+@import "styles/variables.css" layer(config);
+@import "styles/inline-images.css" layer(config);
 
 @import "npm:@acab/reset.css" layer(reset);
-@import "styles/components/button.css" layer(components);
+@import "styles/base.css" layer(reset);
+@import "styles/typography.css" layer(reset);
+
+@import "styles/utilities.css" layer(utilities);
+@import "styles/transition.css" layer(utilities);

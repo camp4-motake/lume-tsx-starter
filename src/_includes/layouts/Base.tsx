@@ -13,12 +13,16 @@ export default function (data: Lume.Data, helpers: Lume.Helpers) {
     siteName,
     url,
     children,
-    // comp,
+    comp,
+    nav,
   } = data;
   const { pathJoin } = helpers;
-  // const {} = comp;
+  const { Assets } = comp;
 
-  const titleText: string | undefined = `${title} | ${siteTitle || meta?.siteTitle}`;
+  const titleText: string | undefined = title && siteTitle || meta?.siteTitle
+    ? (title && `${title} | `) + `${siteTitle || meta?.siteTitle}`
+    : title;
+
   const canonicalUrl = pathJoin(meta?.siteUrl || "", canonical || url || "/");
 
   return (
@@ -54,6 +58,7 @@ export default function (data: Lume.Data, helpers: Lume.Helpers) {
         <meta name="twitter:title" content={ogTitle || titleText || ""} />
         <meta name="twitter:description" content={description || meta?.description || ""} />
         {meta?.twitterSite && <meta name="twitter:site" content={meta?.twitterSite} />}
+        <meta name="theme-color" content="#fff" />
         <link rel="canonical" href={canonicalUrl} />
         {(meta?.webFonts?.length > 0) && (
           <>
@@ -81,10 +86,10 @@ export default function (data: Lume.Data, helpers: Lume.Helpers) {
             ))}
           </>
         )}
-        <link rel="stylesheet" href="/assets/main.css" />
-        <link rel="stylesheet" href="/assets/components.css" />
-        <script type="module" src="/assets//main.js"></script>
-        <script type="module" src="/assets//components.js"></script>
+        <Assets />
+
+        {/* tracking tag */}
+        {/* {{ __html: ``, }} */}
       </head>
       <body>
         {children}

@@ -1,0 +1,97 @@
+:where(.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6) {
+  margin-block: 0.5em;
+  text-wrap: pretty;
+  font-weight: var(--font-weight-bold);
+  line-height: var(--leading-hd);
+  text-wrap: wrap;
+  overflow-wrap: break-word;
+  margin-block: 1.5em 0.75em;
+  letter-spacing: 0;
+  backface-visibility: hidden;
+
+  &:first-child {
+    margin-block-start: 0;
+  }
+}
+
+.h1,
+:where(h1) {
+  font-size: var(--font-size-40);
+}
+
+.h2,
+:where(h2) {
+  font-size: var(--font-size-28);
+}
+
+.h3,
+:where(h3) {
+  font-size: var(--font-size-24);
+}
+
+.h4,
+:where(h4) {
+  font-size: var(--font-size-20);
+}
+
+.h5,
+:where(h5) {
+  font-size: var(--font-size-18);
+}
+
+.h6,
+:where(h6) {
+  font-size: var(--font-size-16);
+}
+
+:where(p) {
+  margin-block-end: 1em;
+}
+
+:root body :where(* + p) {
+  margin-block-start: 1em;
+}
+
+:where(h1) {
+  font-size: var(--font-size-32);
+  margin-block-end: 1em;
+}
+
+:where(.heading) {
+  line-height: var(--leading-sm);
+}
+
+.has-block-line {
+  > span {
+    display: block;
+  }
+}
+
+.has-align-center {
+  text-align: center;
+}
+
+.has-align-start {
+  text-align: start;
+}
+
+.has-align-end {
+  text-align: end;
+}
+
+.wbr {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.text-under-stroke {
+  font-weight: 500;
+  text-decoration-line: underline;
+  text-decoration-thickness: 0.125em;
+  text-underline-offset: 0.25em;
+}
+
+.text-extra-lead {
+  font-size: clamp(var(--font-size-16), 1.6cqi, var(--font-size-20));
+  line-height: 2.4;
+}

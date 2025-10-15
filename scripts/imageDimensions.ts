@@ -20,6 +20,10 @@ export default function imageDimensions() {
         for (const img of images) {
           const src = img.getAttribute("src");
 
+          if (isAbsoluteUrl(String(src))) {
+            continue;
+          }
+
           if (!src || img.getAttribute("width") || img.getAttribute("height")) {
             continue;
           }
@@ -39,4 +43,26 @@ export default function imageDimensions() {
       }
     });
   };
+}
+
+function isAbsoluteUrl(url: string): boolean {
+  if (!url || typeof url !== "string") {
+    return false;
+  }
+  if (url.startsWith("/")) {
+    return false;
+  }
+  if (url.startsWith("./") || url.startsWith("../")) {
+    return false;
+  }
+  if (url.startsWith("?") || url.startsWith("#")) {
+    return false;
+  }
+  if (/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(url)) {
+    return true;
+  }
+  if (/^[^\/]+\.[^\/]+/.test(url)) {
+    return true;
+  }
+  return false;
 }

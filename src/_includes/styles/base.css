@@ -1,0 +1,190 @@
+:root {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  scroll-behavior: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: 100%;
+  font-size: var(--root-font-size);
+  font-synthesis: none;
+  font-feature-settings: "pkna";
+  min-block-size: 100vh;
+  color: var(--color-text);
+  letter-spacing: var(--letter-spacing-base);
+  line-height: var(--leading-base);
+  color-scheme: normal;
+  text-spacing-trim: trim-start;
+  scrollbar-gutter: stable;
+  scroll-padding-top: var(--header-block-size, 0);
+}
+
+body {
+  background-color: var(--color-base);
+  padding: 0;
+  margin: 0;
+  min-block-size: 100%;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-medium);
+  min-block-size: 100vh;
+}
+
+.lenis body {
+  backface-visibility: hidden;
+}
+
+:where(main) {
+  container-name: main;
+  container-type: inline-size;
+  margin-inline: auto;
+  max-inline-size: var(--container-max-width-view);
+  backface-visibility: hidden;
+}
+
+:where(:focus-visible, :target) {
+  scroll-margin-block: 0;
+}
+
+:where(img, svg) {
+  max-inline-size: 100%;
+  block-size: auto;
+  backface-visibility: hidden;
+}
+
+:where(svg) {
+  inline-size: 100%;
+  block-size: auto;
+  overflow: visible;
+}
+
+:where(table) {
+  inline-size: 100%;
+  border-collapse: collapse;
+}
+
+:where(.has-fixed-layout table, table.has-fixed-layout) {
+  inline-size: 100%;
+  table-layout: fixed;
+}
+
+:where(thead) {
+  border-block-end: max(1px, calc(1 * var(--rem))) solid;
+}
+
+:where(tfoot) {
+  border-block-start: max(1px, calc(1 * var(--rem))) solid;
+}
+
+:where(td, th) {
+  padding: 0.5em 0.75em;
+  border: max(1px, calc(1 * var(--rem))) solid;
+  line-break: anywhere;
+}
+
+:where(dialog) {
+  inline-size: unset;
+  max-inline-size: unset;
+  block-size: unset;
+  max-block-size: unset;
+  padding: unset;
+  margin: unset;
+  color: unset;
+  background-color: unset;
+  border: unset;
+  overflow: unset;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:where(:root[data-mousedown] dialog *) {
+  outline: none;
+}
+
+[data-modal-open]:where(:root[data-mousedown] *) {
+  outline: none;
+}
+
+:where(a, button, summary) {
+  text-underline-offset: 0.25em;
+  text-wrap: pretty;
+}
+
+:where(a) {
+  text-decoration: underline;
+
+  &:focus-visible {
+    text-decoration: none;
+  }
+
+  @media (any-hover: hover) {
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+:where(button) {
+  background-color: transparent;
+  border: 0;
+  touch-action: manipulation;
+}
+
+a:not([class*="button"], :has(img, svg, [data-external-icon]))[target="_blank"]::after,
+a[target="_blank"] > [data-external-icon]::after {
+  --_color: currentcolor;
+
+  display: inline-block;
+  inline-size: 0.75em;
+  aspect-ratio: 1;
+  margin-inline-start: 0.25em;
+  content: "";
+  background-color: var(--_color);
+  margin-block-end: 0.125em;
+  mask: var(--img-ico-external) no-repeat center / contain;
+}
+
+:where(a, button).has-underline-link {
+  text-decoration: underline;
+
+  &:focus-visible {
+    text-decoration: none;
+  }
+  @media (any-hover: hover) {
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+[hidden]:not([hidden="until-found"]) {
+  display: none !important;
+}
+
+:where(figcaption) {
+  padding-block: 0.5em;
+  font-size: var(--font-size-12);
+  line-height: var(--leading-md);
+}
+
+:where(iframe) {
+  border: 0;
+}
+
+:where(time) {
+  font-family: var(--font-family-sans-serif-roman);
+  font-weight: var(--font-weight-semi-bold);
+  font-size: var(--font-size-12);
+  letter-spacing: 0.05em;
+}
+
+@media (prefers-reduced-motion) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation-duration: 0s !important;
+  }
+}

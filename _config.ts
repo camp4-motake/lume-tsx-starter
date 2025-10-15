@@ -8,15 +8,18 @@ import picture from "lume/plugins/picture.ts";
 import sourceMaps from "lume/plugins/source_maps.ts";
 import svgo from "lume/plugins/svgo.ts";
 import transformImages from "lume/plugins/transform_images.ts";
-import imageDimensions from "./scripts/imageDimensions.ts";
 // import relativeUrls from "lume/plugins/relative_urls.ts";
-import { pathJoin } from "./scripts/pathJoin.ts";
+
+import { pathJoin, range } from "./scripts/helpers.ts";
+import imageDimensions from "./scripts/imageDimensions.ts";
 
 const isDev = Deno.args.includes("-s");
 
 const site = lume({
   src: "./src",
   prettyUrls: true,
+  cssFile: "/assets/main.css",
+  jsFile: "/assets/main.js",
 });
 
 site.use(jsx());
@@ -25,12 +28,14 @@ site.use(lightningCss());
 site.use(svgo());
 site.use(imageDimensions());
 if (isDev) site.use(sourceMaps());
+site.use(base_path());
 site.use(picture());
 site.use(transformImages());
 site.use(inline());
-site.use(base_path());
 // site.use(relativeUrls());
 
+site.helper("pathJoin", pathJoin, { type: "tag" });
+site.helper("range", range, { type: "tag" });
 site.helper("pathJoin", pathJoin, { type: "tag" });
 site.helper("uppercase", (body) => body.toUpperCase(), { type: "tag" });
 
