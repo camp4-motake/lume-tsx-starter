@@ -8,40 +8,26 @@
     "lume": "echo \"import 'lume/cli.ts'\" | deno run -A -",
     "serve": "deno task lume -s",
     "dev": "deno task lume -s",
-    "build": "deno task lume && deno fmt _site/**/*.html --no-config --line-width 320",
+    "build": "deno task lume && deno task fmt:html",
+    "fmt:html": "deno fmt _site/**/*.html --no-config --line-width 512",
     "zip": "deno run --allow-read --allow-write --allow-run --allow-env scripts/zip.ts"
   },
   "compilerOptions": {
-    "types": [
-      "lume/types.ts"
-    ],
+    "types": ["lume/types.ts"],
     "jsx": "react-jsx",
     "jsxImportSource": "lume"
   },
   "lint": {
-    "exclude": [
-      "./_site"
-    ],
+    "exclude": ["./_site"],
     "rules": {
-      "tags": [
-        "recommended"
-      ],
-      "exclude": [
-        "no-import-prefix"
-      ]
+      "tags": ["recommended"],
+      "exclude": ["no-import-prefix"]
     },
-    "plugins": [
-      "https://deno.land/x/lume@v3.0.11/lint.ts"
-    ]
+    "plugins": ["https://deno.land/x/lume@v3.0.11/lint.ts"]
   },
   "fmt": {
     "lineWidth": 100,
-    "exclude": [
-      "./_site"
-    ]
+    "exclude": ["./_site"]
   },
-  "unstable": [
-    "temporal",
-    "fmt-component"
-  ]
+  "unstable": ["temporal", "fmt-component"]
 }
