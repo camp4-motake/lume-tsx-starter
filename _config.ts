@@ -31,7 +31,7 @@ if (isDev) site.use(sourceMaps());
 site.use(base_path());
 site.use(picture());
 site.use(transformImages());
-site.use(inline());
+site.use(inline({ copyAttributes: ["role", "title", /^aria-/, /^data-/] }));
 // site.use(relativeUrls());
 
 site.helper("pathJoin", pathJoin, { type: "tag" });
