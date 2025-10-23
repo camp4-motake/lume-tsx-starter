@@ -111,7 +111,8 @@ async function processHtmlFile(filePath: string): Promise<void> {
       processElements(document as unknown as Document, filePath, "img[src]", "src"),
       processElements(document as unknown as Document, filePath, "source[src]", "src"), // source[src]
       processElements(document as unknown as Document, filePath, "source[srcset]", "srcset"), // source[srcset]
-      processElements(document as unknown as Document, filePath, "video[poster]", "src"),
+      processElements(document as unknown as Document, filePath, "video[src]", "src"),
+      processElements(document as unknown as Document, filePath, "video[poster]", "poster"),
       processElements(document as unknown as Document, filePath, "audio[src]", "src"),
       // 必要に応じて他の要素（例: video[poster]など）を追加
     ]);
