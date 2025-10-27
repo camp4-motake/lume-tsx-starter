@@ -36,7 +36,12 @@ async function addHashToAttributeValue(
   }
 
   const [pathOnly] = attrValue.split(/[?#]/);
-  const fullPath = join(dirname(htmlFilePath), pathOnly);
+
+  // ルートパス（/で始まる）の場合はdistDirを基準に解決
+  // 相対パスの場合はHTMLファイルのディレクトリを基準に解決
+  const fullPath = pathOnly.startsWith("/")
+    ? join(distDir, pathOnly.slice(1)) // 先頭の/を除去してdistDirと結合
+    : join(dirname(htmlFilePath), pathOnly);
 
   try {
     await Deno.stat(fullPath);
@@ -109,12 +114,11 @@ async function processHtmlFile(filePath: string): Promise<void> {
       ),
       processElements(document as unknown as Document, filePath, "script[src]", "src"),
       processElements(document as unknown as Document, filePath, "img[src]", "src"),
-      processElements(document as unknown as Document, filePath, "source[src]", "src"), // source[src]
-      processElements(document as unknown as Document, filePath, "source[srcset]", "srcset"), // source[srcset]
+      processElements(document as unknown as Document, filePath, "source[src]", "src"),
+      processElements(document as unknown as Document, filePath, "source[srcset]", "srcset"),
       processElements(document as unknown as Document, filePath, "video[src]", "src"),
       processElements(document as unknown as Document, filePath, "video[poster]", "poster"),
       processElements(document as unknown as Document, filePath, "audio[src]", "src"),
-      // 必要に応じて他の要素（例: video[poster]など）を追加
     ]);
 
     // Write the modified HTML back to the file
@@ -132,7 +136,6 @@ async function processDistDirectory(dir: string): Promise<void> {
     const filePath = join(dir, entry.name);
 
     if (entry.isDirectory) {
-      // サブディレクトリの処理も並列化の対象とする（ただし深くなりすぎると問題になる可能性も）
       filePromises.push(processDistDirectory(filePath));
     } else if (entry.isFile && extname(entry.name).toLowerCase() === ".html") {
       filePromises.push(processHtmlFile(filePath));
