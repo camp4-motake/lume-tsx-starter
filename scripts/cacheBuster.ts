@@ -39,8 +39,9 @@ async function addHashToAttributeValue(
 
   // ルートパス（/で始まる）の場合はdistDirを基準に解決
   // 相対パスの場合はHTMLファイルのディレクトリを基準に解決
-  const fullPath = pathOnly.startsWith("/")
-    ? join(distDir, pathOnly.slice(1)) // 先頭の/を除去してdistDirと結合
+  const loc = Deno.env.get("SITE_LOCATION") || "/";
+  const fullPath = pathOnly.startsWith(loc)
+    ? join(distDir, pathOnly.slice(loc.length)) // 先頭の/np/を除去してdistDirと結合
     : join(dirname(htmlFilePath), pathOnly);
 
   try {

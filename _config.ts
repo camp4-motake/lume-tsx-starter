@@ -1,3 +1,7 @@
+/**
+ * Lume Plugins
+ * @see https://lume.land/plugins/
+ */
 import lume from "lume/mod.ts";
 import base_path from "lume/plugins/base_path.ts";
 import esbuild from "lume/plugins/esbuild.ts";
@@ -15,11 +19,17 @@ import imageDimensions from "./scripts/imageDimensions.ts";
 
 const isDev = Deno.args.includes("-s");
 
+/**
+ * Lume config
+ * @see https://lume.land/docs/configuration/config-file/
+ */
 const site = lume({
   src: "./src",
   prettyUrls: true,
   cssFile: "/assets/main.css",
   jsFile: "/assets/main.js",
+  // @see https://lume.land/plugins/base_path/
+  // location: new URL("https://domein/subdirectory/"),
 });
 
 site.use(jsx());
@@ -42,11 +52,14 @@ site.helper("uppercase", (body) => body.toUpperCase(), { type: "tag" });
 site.add("/assets", "/assets");
 site.ignore("README.md", "CHANGELOG.md", "node_modules");
 
-site.script(
-  "afterProcess",
-  `deno run --allow-read --allow-write scripts/cacheBuster.ts`, // WORKAROUND: cache busting
-  // `deno eval --allow-scripts 'for await (const e of Deno.readDir("_site/assets/img")) if (e.isFile && /\.(png|jpe?g)$/.test(e.name)) await Deno.remove(\`_site/assets/img/\${e.name}\`)'`, // WORKAROUND: remove unused png/jpg
-);
-if (!isDev) site.addEventListener("afterBuild", "afterProcess");
+// WORKAROUND: cache busting
+if (!isDev) {
+  const loc = site?.options?.location?.pathname || "/";
+  site.script(
+    "afterProcess",
+    `SITE_LOCATION=${loc} deno run --allow-read --allow-write --allow-env scripts/cacheBuster.ts`,
+  );
+  site.addEventListener("afterBuild", "afterProcess");
+}
 
 export default site;
