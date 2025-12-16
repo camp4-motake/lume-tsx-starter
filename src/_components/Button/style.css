@@ -1,14 +1,14 @@
 @layer components {
   .button {
-    --_color: var(--color-base);
-    --_bg-color: var(--color-primary);
-    --_stroke-color: var(--color-primary);
-    --_inline-size: fit-content;
-    --_min-block-size: 3.75em;
-    --_min-inline-size: calc(300 * var(--rem));
-    --_font-size: 1rem;
-
     @layer elements {
+      --_color: var(--color-base);
+      --_bg-color: var(--color-primary);
+      --_stroke-color: var(--color-primary);
+      --_inline-size: fit-content;
+      --_min-block-size: 3.75em;
+      --_min-inline-size: calc(300 * var(--rem));
+      --_font-size: 1rem;
+
       display: inline grid;
       background-color: var(--_bg-color);
       border-radius: var(--infinity);
@@ -46,12 +46,13 @@
     }
 
     @layer states {
-      &:where(:focus-visible) {
+      &:focus-visible {
         --_color: var(--color-primary);
         --_bg-color: var(--color-base);
       }
+
       @media (any-hover: hover) {
-        &:where(:hover) {
+        &:hover {
           --_color: var(--color-primary);
           --_bg-color: var(--color-base);
         }
