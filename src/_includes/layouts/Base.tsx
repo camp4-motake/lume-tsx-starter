@@ -1,4 +1,4 @@
-export default function (data: Lume.Data, helpers: Lume.Helpers) {
+export default function (data: Lume.Data, { pathJoin }: Lume.Helpers) {
   const {
     canonical,
     children,
@@ -14,8 +14,8 @@ export default function (data: Lume.Data, helpers: Lume.Helpers) {
     tagline,
     title,
     url,
+    webFonts,
   } = data;
-  const { pathJoin } = helpers;
   const { Assets } = comp;
 
   const titleText = [!isHome && title, config.siteTitle, isHome && tagline]
@@ -61,11 +61,11 @@ export default function (data: Lume.Data, helpers: Lume.Helpers) {
           content={ogDescription || description || config?.description || ""}
         />
         <link rel="canonical" href={url || ""} />
-        {(config?.webFonts?.length > 0) && (
+        {(config?.webFonts?.length > 0 || webFonts?.length > 0) && (
           <>
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-            {meta?.webFonts?.map(
+            {[config?.webFonts && config?.webFonts, ...(webFonts && webFonts)].map(
               (url: string, i: number) => (
                 <link
                   key={`fonts-preload-${i}`}
@@ -76,7 +76,10 @@ export default function (data: Lume.Data, helpers: Lume.Helpers) {
                 />
               ),
             )}
-            {meta?.webFonts?.map((url: string, i: number) => (
+            {[config?.webFonts && config?.webFonts, ...(webFonts && webFonts)].map((
+              url: string,
+              i: number,
+            ) => (
               <link
                 key={`fonts-${i}`}
                 rel="stylesheet"

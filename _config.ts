@@ -9,10 +9,10 @@ import inline from "lume/plugins/inline.ts";
 import jsx from "lume/plugins/jsx.ts";
 import lightningCss from "lume/plugins/lightningcss.ts";
 import picture from "lume/plugins/picture.ts";
+import relativeUrls from "lume/plugins/relative_urls.ts";
 import sourceMaps from "lume/plugins/source_maps.ts";
 import svgo from "lume/plugins/svgo.ts";
 import transformImages from "lume/plugins/transform_images.ts";
-// import relativeUrls from "lume/plugins/relative_urls.ts";
 
 import { pathJoin, range } from "./scripts/helpers.ts";
 import imageDimensions from "./scripts/imageDimensions.ts";
@@ -29,7 +29,7 @@ const site = lume({
   cssFile: "/assets/main.css",
   jsFile: "/assets/main.js",
   // @see https://lume.land/plugins/base_path/
-  location: new URL("https://example.com/subdirectory/"),
+  // location: new URL("https://example.com/"),
 });
 
 site.use(jsx());
@@ -42,7 +42,7 @@ site.use(base_path());
 site.use(picture());
 site.use(transformImages());
 site.use(inline({ copyAttributes: ["role", "title", /^aria-/, /^data-/] }));
-// site.use(relativeUrls());
+site.use(relativeUrls());
 
 site.helper("pathJoin", pathJoin, { type: "tag" });
 site.helper("range", range, { type: "tag" });
