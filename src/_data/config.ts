@@ -3,6 +3,7 @@ const config = {
   lang: "ja",
   region: "JP",
   twitter: "",
+  ogImage: "assets/ogp.png",
 };
 
 export default config;

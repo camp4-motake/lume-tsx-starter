@@ -1,4 +1,4 @@
-export default function (data: Lume.Data, { pathJoin }: Lume.Helpers) {
+export default function (data: Lume.Data, helpers: Lume.Helpers) {
   const {
     canonical,
     children,
@@ -17,12 +17,11 @@ export default function (data: Lume.Data, { pathJoin }: Lume.Helpers) {
     webFonts,
   } = data;
   const { Assets } = comp;
+  const { pathJoin, url: urlHelper } = helpers;
 
   const titleText = [!isHome && title, config.siteTitle, isHome && tagline]
     .filter(Boolean)
-    .join(" &#8211; ");
-
-  const canonicalUrl = pathJoin(config.meta?.siteUrl || "", canonical || url || "/");
+    .join(" | ");
 
   return (
     <html lang={config.meta?.lang || "ja"}>
@@ -34,33 +33,42 @@ export default function (data: Lume.Data, { pathJoin }: Lume.Helpers) {
         />
         <meta name="format-detection" content="telephone=no" />
         <title>{titleText}</title>
-        <meta name="description" content={description || ""} />
-        {keywords ||
-          config?.keywords && <meta name="keywords" content={keywords || config?.keywords} />}
-        {config?.locale && <meta property="og:locale" content={`${config?.locale}`} />}
-        <meta property="og:type" content={ogType || config?.ogType} />
+
+        {description && <meta name="description" content={description || ""} />}
+        {keywords || config?.keywords &&
+            <meta name="keywords" content={keywords || config?.keywords} />}
+
+        <meta property="og:locale" content={`${config?.locale}`} />
+        <meta property="og:type" content={ogType || "article"} />
         <meta property="og:title" content={ogTitle || titleText || ""} />
-        <meta
-          property="og:description"
-          content={ogDescription || description || config?.description || ""}
-        />
-        <meta property="og:url" content={canonicalUrl} />
+        {ogDescription || description && (
+              <meta
+                property="og:description"
+                content={ogDescription || description}
+              />
+            )}
+        <meta property="og:url" content={urlHelper(url, true)} />
         <meta property="og:site_name" content={config?.siteName || ""} />
-        {config?.siteUrl &&
-          (
-            <meta
-              property="og:image"
-              content={pathJoin(config?.siteUrl, ogImage || config?.ogImage || "")}
-            />
-          )}
-        <meta name="twitter:card" content="summary_large_image" />
+        {ogImage || config?.ogImage &&
+            (
+              <meta
+                property="og:image"
+                content={urlHelper(pathJoin("/", ogImage || config?.ogImage), true)}
+              />
+            )}
+
         {config?.twitterSite && <meta name="twitter:site" content={config?.twitterSite} />}
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={ogTitle || titleText || ""} />
-        <meta
-          name="twitter:description"
-          content={ogDescription || description || config?.description || ""}
-        />
-        <link rel="canonical" href={url || ""} />
+        {ogDescription || description && (
+              <meta
+                name="twitter:description"
+                content={ogDescription || description}
+              />
+            )}
+
+        <link rel="canonical" href={urlHelper(url, true)} />
+
         {(config?.webFonts?.length > 0 || webFonts?.length > 0) && (
           <>
             <link rel="preconnect" href="https://fonts.googleapis.com" />

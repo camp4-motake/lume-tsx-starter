@@ -28,8 +28,9 @@ const site = lume({
   prettyUrls: true,
   cssFile: "/assets/main.css",
   jsFile: "/assets/main.js",
+
   // @see https://lume.land/plugins/base_path/
-  // location: new URL("https://example.com/"),
+  location: new URL("https://example.com/"),
 });
 
 site.use(jsx());
