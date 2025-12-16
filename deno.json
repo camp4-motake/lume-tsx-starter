@@ -1,15 +1,14 @@
 {
   "imports": {
     "clsx": "npm:clsx",
-    "lume/": "https://deno.land/x/lume@v3.0.11/",
-    "lume/jsx-runtime": "https://deno.land/x/ssx@v0.1.12/jsx-runtime.ts"
+    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.1.2/",
+    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.13/jsx-runtime.ts"
   },
   "tasks": {
     "lume": "echo \"import 'lume/cli.ts'\" | deno run -A -",
     "serve": "deno task lume -s",
     "dev": "deno task lume -s",
-    "build": "deno task lume && deno task fmt:html",
-    "fmt:html": "deno fmt _site/**/*.html --no-config --line-width 512",
+    "build": "deno task lume",
     "zip": "deno run --allow-read --allow-write --allow-run --allow-env scripts/zip.ts"
   },
   "compilerOptions": {
@@ -23,11 +22,12 @@
       "tags": ["recommended"],
       "exclude": ["no-window", "no-window-prefix", "no-import-prefix"]
     },
-    "plugins": ["https://deno.land/x/lume@v3.0.11/lint.ts"]
+    "plugins": ["https://cdn.jsdelivr.net/gh/lumeland/lume@3.1.2/lint.ts"]
   },
   "fmt": {
     "lineWidth": 100,
     "exclude": ["./_site"]
   },
-  "unstable": ["temporal", "fmt-component"]
+  "unstable": ["temporal", "fmt-component"],
+  "lock": false
 }

@@ -29,7 +29,7 @@ const site = lume({
   cssFile: "/assets/main.css",
   jsFile: "/assets/main.js",
   // @see https://lume.land/plugins/base_path/
-  // location: new URL("https://domein/subdirectory/"),
+  location: new URL("https://example.com/subdirectory/"),
 });
 
 site.use(jsx());
@@ -52,14 +52,21 @@ site.helper("uppercase", (body) => body.toUpperCase(), { type: "tag" });
 site.add("/assets", "/assets");
 site.ignore("README.md", "CHANGELOG.md", "node_modules");
 
-// WORKAROUND: cache busting
 if (!isDev) {
+  // WORKAROUND: cache busting
   const loc = site?.options?.location?.pathname || "/";
   site.script(
     "afterProcess",
     `SITE_LOCATION=${loc} deno run --allow-read --allow-write --allow-env scripts/cacheBuster.ts`,
   );
   site.addEventListener("afterBuild", "afterProcess");
+
+  // WORKAROUND: format HTML
+  site.script(
+    "format",
+    `deno run --allow-read --allow-write --allow-env npm:js-beautify@latest './_site/**/*.html' --indent-size 2 --no-preserve-newlines --end-with-newline false --extra-liners "" --unformatted "script,style,svg,noscript" --replace`,
+  );
+  site.addEventListener("afterBuild", "format");
 }
 
 export default site;

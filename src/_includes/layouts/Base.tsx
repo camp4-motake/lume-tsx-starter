@@ -1,66 +1,67 @@
 export default function (data: Lume.Data, helpers: Lume.Helpers) {
   const {
     canonical,
+    children,
+    comp,
+    config,
     description,
+    isHome,
     keywords,
-    meta,
+    ogDescription,
     ogImage,
     ogTitle,
     ogType,
-    ogDescription,
+    tagline,
     title,
-    siteTitle,
-    siteName,
     url,
-    children,
-    comp,
-    nav,
   } = data;
   const { pathJoin } = helpers;
   const { Assets } = comp;
 
-  const titleText: string | undefined = title && siteTitle || meta?.siteTitle
-    ? (title && `${title} | `) + `${siteTitle || meta?.siteTitle}`
-    : title;
+  const titleText = [!isHome && title, config.siteTitle, isHome && tagline]
+    .filter(Boolean)
+    .join(" &#8211; ");
 
-  const canonicalUrl = pathJoin(meta?.siteUrl || "", canonical || url || "/");
+  const canonicalUrl = pathJoin(config.meta?.siteUrl || "", canonical || url || "/");
 
   return (
-    <html lang={meta?.lang || "ja"}>
+    <html lang={config.meta?.lang || "ja"}>
       <head>
-        <meta charSet={meta?.encoding || "utf-8"} />
+        <meta charset="UTF-8" />
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1.0, viewport-fit=cover"
         />
         <meta name="format-detection" content="telephone=no" />
         <title>{titleText}</title>
-        <meta name="description" content={description || meta?.description || ""} />
-        {(keywords || meta?.keywords) &&
-          <meta name="keywords" content={keywords || meta?.keywords} />}
-        <meta property="og:locale" content={`${meta?.locale}`} />
-        <meta property="og:type" content={ogType || meta.ogType} />
+        <meta name="description" content={description || ""} />
+        {keywords ||
+          config?.keywords && <meta name="keywords" content={keywords || config?.keywords} />}
+        {config?.locale && <meta property="og:locale" content={`${config?.locale}`} />}
+        <meta property="og:type" content={ogType || config?.ogType} />
         <meta property="og:title" content={ogTitle || titleText || ""} />
         <meta
           property="og:description"
-          content={ogDescription || description || meta?.description || ""}
+          content={ogDescription || description || config?.description || ""}
         />
         <meta property="og:url" content={canonicalUrl} />
-        <meta property="og:site_name" content={siteName || meta?.siteName || ""} />
-        {meta?.siteUrl &&
+        <meta property="og:site_name" content={config?.siteName || ""} />
+        {config?.siteUrl &&
           (
             <meta
               property="og:image"
-              content={pathJoin(meta?.siteUrl, ogImage || meta?.ogImage || "")}
+              content={pathJoin(config?.siteUrl, ogImage || config?.ogImage || "")}
             />
           )}
         <meta name="twitter:card" content="summary_large_image" />
+        {config?.twitterSite && <meta name="twitter:site" content={config?.twitterSite} />}
         <meta name="twitter:title" content={ogTitle || titleText || ""} />
-        <meta name="twitter:description" content={description || meta?.description || ""} />
-        {meta?.twitterSite && <meta name="twitter:site" content={meta?.twitterSite} />}
-        <meta name="theme-color" content="#fff" />
-        <link rel="canonical" href={canonicalUrl} />
-        {(meta?.webFonts?.length > 0) && (
+        <meta
+          name="twitter:description"
+          content={ogDescription || description || config?.description || ""}
+        />
+        <link rel="canonical" href={url || ""} />
+        {(config?.webFonts?.length > 0) && (
           <>
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
