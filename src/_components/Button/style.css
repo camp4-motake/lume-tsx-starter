@@ -1,14 +1,14 @@
 @layer components {
   .button {
-    @layer elements {
-      --_color: var(--color-base);
-      --_bg-color: var(--color-primary);
-      --_stroke-color: var(--color-primary);
-      --_inline-size: fit-content;
-      --_min-block-size: 3.75em;
-      --_min-inline-size: calc(300 * var(--rem));
-      --_font-size: 1rem;
+    --_color: var(--color-base);
+    --_bg-color: var(--color-primary);
+    --_stroke-color: var(--color-primary);
+    --_inline-size: fit-content;
+    --_min-block-size: 3.75em;
+    --_min-inline-size: calc(300 * var(--rem));
+    --_font-size: 1rem;
 
+    @layer elements {
       display: inline grid;
       background-color: var(--_bg-color);
       border-radius: var(--infinity);
@@ -90,6 +90,7 @@
         --_font-size: 0.875rem;
         --_min-inline-size: calc(160 * var(--rem));
         --_min-block-size: 3.125rem;
+
         padding-inline: 0.75em;
       }
 
