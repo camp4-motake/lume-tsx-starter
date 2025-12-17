@@ -18,6 +18,7 @@ import { pathJoin, range } from "./scripts/helpers.ts";
 import imageDimensions from "./scripts/imageDimensions.ts";
 
 const isDev = Deno.args.includes("-s");
+const isFormatHtml = true;
 
 /**
  * Lume config
@@ -53,16 +54,18 @@ site.helper("uppercase", (body) => body.toUpperCase(), { type: "tag" });
 site.add("/assets", "/assets");
 site.ignore("README.md", "CHANGELOG.md", "node_modules");
 
+// WORKAROUND: cache busting
 if (!isDev) {
-  // WORKAROUND: cache busting
   const loc = site?.options?.location?.pathname || "/";
   site.script(
     "afterProcess",
     `SITE_LOCATION=${loc} deno run --allow-read --allow-write --allow-env scripts/cacheBuster.ts`,
   );
   site.addEventListener("afterBuild", "afterProcess");
+}
 
-  // WORKAROUND: format HTML
+// WORKAROUND: format HTML
+if (!isDev && isFormatHtml) {
   site.script(
     "format",
     `deno run --allow-read --allow-write --allow-env npm:js-beautify@latest './_site/**/*.html' --indent-size 2 --no-preserve-newlines --end-with-newline false --extra-liners "" --unformatted "script,style,svg,noscript" --replace`,

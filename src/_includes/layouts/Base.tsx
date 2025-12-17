@@ -69,35 +69,6 @@ export default function (data: Lume.Data, helpers: Lume.Helpers) {
 
         <link rel="canonical" href={urlHelper(url, true)} />
 
-        {(config?.webFonts?.length > 0 || webFonts?.length > 0) && (
-          <>
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-            {[config?.webFonts && config?.webFonts, ...(webFonts && webFonts)].map(
-              (url: string, i: number) => (
-                <link
-                  key={`fonts-preload-${i}`}
-                  rel="preload"
-                  as="style"
-                  href={url}
-                  fetchPriority="high"
-                />
-              ),
-            )}
-            {[config?.webFonts && config?.webFonts, ...(webFonts && webFonts)].map((
-              url: string,
-              i: number,
-            ) => (
-              <link
-                key={`fonts-${i}`}
-                rel="stylesheet"
-                href={url}
-                media="print"
-                onload='this.media="all"'
-              />
-            ))}
-          </>
-        )}
         <Assets />
 
         {/* tracking tag */}
