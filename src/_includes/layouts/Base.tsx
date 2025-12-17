@@ -1,6 +1,5 @@
 export default function (data: Lume.Data, helpers: Lume.Helpers) {
   const {
-    canonical,
     children,
     comp,
     config,
