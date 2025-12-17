@@ -2,11 +2,18 @@
  * main assets
  */
 export default function ({ config, webFonts }: Lume.Data) {
-  const fonts = [...(config?.webFonts || []), ...(webFonts || [])];
+  const fonts = [
+    ...(config?.webFonts || []), // global config
+    ...(webFonts || []), // page config
+  ];
 
   return (
     <>
-      {/* google fonts */}
+      {
+        /**
+         * google fonts link
+         */
+      }
       {fonts.length > 0 && (
         <>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -26,13 +33,19 @@ export default function ({ config, webFonts }: Lume.Data) {
               rel="stylesheet"
               href={url}
               media="print"
-              onload='this.media="all"'
+              onload='this.media="all"' // @see https://css-tricks.com/how-to-load-fonts-in-a-way-that-fights-fout-and-makes-lighthouse-happy/#aa-the-optimal-way-to-load-fonts
             />
           ))}
         </>
       )}
-
-      {/* main assets */}
+      {
+        /**
+         * main assets
+         *
+         * @see https://lume.land/docs/getting-started/working-with-assets/
+         * @see https://lume.land/docs/configuration/config-file/
+         */
+      }
       <link rel="stylesheet" href="/assets/main.css" />
       <script type="module" src="/assets//main.js"></script>
     </>
