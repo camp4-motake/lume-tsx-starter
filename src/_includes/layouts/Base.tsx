@@ -69,7 +69,7 @@ export default function (data: Lume.Data, helpers: Lume.Helpers) {
 
         <link rel="canonical" href={urlHelper(url, true)} />
 
-        <Assets />
+        <Assets webFonts={webFonts} />
 
         {/* tracking tag */}
         {/* {{ __html: ``, }} */}

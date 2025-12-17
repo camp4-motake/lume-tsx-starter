@@ -4,6 +4,7 @@ const config = {
   region: "JP",
   twitter: "",
   ogImage: "assets/ogp.png",
+  webFonts: [],
 };
 
 export default config;
