@@ -1,6 +1,6 @@
-import { DOMParser, Element } from "jsr:@b-fuze/deno-dom";
-import { crypto } from "jsr:@std/crypto";
-import { dirname, extname, join } from "jsr:@std/path";
+import { DOMParser, Element } from "@b-fuze/deno-dom";
+import { crypto } from "@std/crypto";
+import { dirname, extname, join } from "@std/path";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 const distDir = join(__dirname, "../_site");

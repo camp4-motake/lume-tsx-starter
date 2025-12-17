@@ -1,5 +1,9 @@
 {
   "imports": {
+    "@b-fuze/deno-dom": "jsr:@b-fuze/deno-dom",
+    "@std/crypto": "jsr:@std/crypto",
+    "@std/path": "jsr:@std/path",
+    "adm-zip": "npm:adm-zip",
     "clsx": "npm:clsx",
     "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.1.2/",
     "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.13/jsx-runtime.ts"

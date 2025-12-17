@@ -1,5 +1,5 @@
-import { resolve } from "jsr:@std/path";
-import AdmZip from "npm:adm-zip";
+import { resolve } from "@std/path";
+import AdmZip from "adm-zip";
 
 const zipPrefix = Deno.env.get("ZIP_PREFIX") || "production-build";
 const date = new Date().toISOString().slice(0, 10).replace(/-/g, "") + "_" +
