@@ -15,7 +15,7 @@ export default ({ comp }: Lume.Data) => {
         />
       </figure>
       <div>
-        <Button attributes={{ href: "#", class: "" }}>
+        <Button href="#" class="sample-btn">
           component sample
         </Button>
       </div>
