@@ -46,10 +46,10 @@ export const useAttrs = (
 ) => omit(props, [...LUME_DATA_KEYS, ...omitKeys]);
 
 const LUME_DATA_KEYS = [
-  // JSX
+  // ------- JSX
   "children",
 
-  // RawData
+  // ------- RawData
   "tags",
   "url",
   "basename",
@@ -61,12 +61,15 @@ const LUME_DATA_KEYS = [
   "templateEngine",
   "mergedKeys",
 
-  // Data
-  "comp",
-  "page",
-  "unmatchedLangUrl",
+  // ------- Data
   "alternates",
+  "comp",
+  "config",
+  "lang",
+  "page",
   "paginate",
   "search",
-  "config",
+  "unmatchedLangUrl",
+  // "type",
+  // "id",
 ] as const;
