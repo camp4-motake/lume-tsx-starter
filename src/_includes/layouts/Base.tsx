@@ -15,7 +15,7 @@ export default function (data: Lume.Data, helpers: Lume.Helpers) {
     url,
     webFonts,
   } = data;
-  const { Assets } = comp;
+  const { Assets, Header, Footer } = comp.layouts;
   const { pathJoin, url: urlHelper } = helpers;
 
   const titleText = [!isHome && title, config.siteTitle, isHome && tagline]
@@ -74,7 +74,9 @@ export default function (data: Lume.Data, helpers: Lume.Helpers) {
         {/* {{ __html: ``, }} */}
       </head>
       <body>
+        <Header title={config.siteTitle} />
         {children}
+        <Footer />
       </body>
     </html>
   );

@@ -1,4 +1,4 @@
-@layer components {
+@layer components.ui {
   .button {
     @layer elements {
       --_color: var(--color-base);
