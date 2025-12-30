@@ -48,7 +48,6 @@ site.use(relativeUrls());
 
 site.helper("pathJoin", pathJoin, { type: "tag" });
 site.helper("range", range, { type: "tag" });
-site.helper("pathJoin", pathJoin, { type: "tag" });
 site.helper("uppercase", (body) => body.toUpperCase(), { type: "tag" });
 site.helper("useAttrs", useAttrs, { type: "tag" });
 
