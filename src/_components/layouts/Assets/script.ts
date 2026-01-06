@@ -3,4 +3,4 @@
  *
  * @note global style (main.css) are here -> src/assets/main.css
  */
-import "../../../_includes/modules/index.ts";
+import "/_includes/scripts/index.ts";
