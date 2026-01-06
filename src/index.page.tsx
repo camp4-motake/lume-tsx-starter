@@ -1,5 +1,6 @@
 export const layout = "layouts/Base.tsx";
 export const title = "example";
+export const description = "";
 
 export default ({ comp }: Lume.Data) => {
   const { Button } = comp.ui;
