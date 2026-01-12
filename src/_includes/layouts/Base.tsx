@@ -37,9 +37,11 @@ export default function (data: Lume.Data, helpers: Lume.Helpers) {
         {keywords || config?.keywords &&
             <meta name="keywords" content={keywords || config?.keywords} />}
 
-        <meta property="og:locale" content={`${config?.locale}`} />
+        <meta property="og:locale" content={`${config.lang}_${config.region}`} />
         <meta property="og:type" content={ogType || "article"} />
         <meta property="og:title" content={ogTitle || titleText || ""} />
+        {config?.siteName &&
+          <meta property="og:site_name" content={config?.siteName || ""} />}
         {ogDescription || description && (
               <meta
                 property="og:description"
@@ -47,7 +49,6 @@ export default function (data: Lume.Data, helpers: Lume.Helpers) {
               />
             )}
         <meta property="og:url" content={urlHelper(url, true)} />
-        <meta property="og:site_name" content={config?.siteName || ""} />
         {ogImage || config?.ogImage &&
             (
               <meta
