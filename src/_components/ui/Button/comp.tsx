@@ -1,12 +1,14 @@
 import clsx from "clsx";
 
 export default function (
-  { children, ...attributes }: Lume.Data,
+  { children, ...attr }: Lume.Data,
   { useAttrs }: Lume.Helpers,
 ) {
+  const attributes = useAttrs(attr, ["content"]);
+
   return (
     <a
-      {...useAttrs(attributes)}
+      {...{ ...attributes }}
       class={clsx("button", attributes?.class)}
     >
       <span class="button__label">{children || `button`}</span>

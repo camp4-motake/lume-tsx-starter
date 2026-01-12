@@ -1,13 +1,15 @@
 import clsx from "clsx";
 
 export default function (
-  { title, ...attributes }: Lume.Data,
+  { title, ...attr }: Lume.Data,
   { useAttrs }: Lume.Helpers,
 ) {
+  const attributes = { ...useAttrs(attr, ["content"]) };
+
   return (
     <header
-      {...useAttrs(attributes)}
-      class={clsx("header", attributes?.class)}
+      {...{ ...attributes }}
+      class={clsx("header", attr?.class)}
     >
       <a href="/">{title}</a>
     </header>

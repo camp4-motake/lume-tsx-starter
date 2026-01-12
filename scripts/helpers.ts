@@ -1,4 +1,39 @@
-import { omit } from "es-toolkit";
+import bcd from "npm:@mdn/browser-compat-data@latest" with { type: "json" };
+
+/**
+ * HTML Attribute sets
+ */
+const HTML_ATTRIBUTES = new Set([
+  ...Object.keys(bcd.html.global_attributes),
+  ...Object.values(bcd.html.elements).flatMap((el) => Object.keys(el || {})),
+]);
+
+/**
+ * Return only HTML attributes, excluding Lume-specific properties.
+ *
+ * @example <a {...useAttrs(props)}>
+ * @example <a {...useAttrs(props, ["variant", "size"])}>
+ */
+export const useAttrs = (
+  props: Lume.Data,
+  omitKeys: string[] = [],
+) => {
+  const attrs: Record<string, unknown> = {};
+  const omitSet = new Set([...omitKeys]);
+
+  for (const key in props) {
+    if (omitSet.has(key)) continue;
+
+    if (
+      HTML_ATTRIBUTES.has(key) ||
+      key.startsWith("data-") ||
+      key.startsWith("aria-")
+    ) {
+      attrs[key] = props[key];
+    }
+  }
+  return attrs;
+};
 
 /**
  * range array
@@ -33,43 +68,3 @@ export function pathJoin(...paths: string[]) {
 
   return protocol + result;
 }
-
-/**
- * Return only HTML attributes, excluding Lume-specific properties.
- *
- * @example <a {...useAttrs(props)}>
- * @example <a {...useAttrs(props, ["variant", "size"])}>
- */
-export const useAttrs = (
-  props: Lume.Data,
-  omitKeys: string[] = [],
-) => omit(props, [...LUME_DATA_KEYS, ...omitKeys]);
-
-const LUME_DATA_KEYS = [
-  // ------- JSX
-  "children",
-
-  // ------- RawData
-  "tags",
-  "url",
-  "basename",
-  "draft",
-  "date",
-  "renderOrder",
-  "content",
-  "layout",
-  "templateEngine",
-  "mergedKeys",
-
-  // ------- Data
-  "alternates",
-  "comp",
-  "config",
-  "lang",
-  "page",
-  "paginate",
-  "search",
-  "unmatchedLangUrl",
-  // "type",
-  // "id",
-] as const;
