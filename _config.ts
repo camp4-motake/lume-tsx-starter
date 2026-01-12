@@ -1,5 +1,6 @@
 /**
  * Lume config
+ * @see https://github.com/lumeland/lume
  */
 
 import lume from "lume/mod.ts";
