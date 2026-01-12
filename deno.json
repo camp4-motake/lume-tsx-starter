@@ -7,15 +7,30 @@
     "adm-zip": "npm:adm-zip",
     "clsx": "npm:clsx",
     "es-toolkit": "npm:es-toolkit",
-    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.1.2/",
-    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.13/jsx-runtime.ts"
+    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.1.4/",
+    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.14/jsx-runtime.ts"
   },
   "tasks": {
-    "lume": "echo \"import 'lume/cli.ts'\" | deno run -A -",
-    "serve": "deno task lume -s",
-    "dev": "deno task lume -s",
-    "build": "deno task lume",
-    "zip": "deno run --allow-read --allow-write --allow-run --allow-env modules/zip.ts"
+    "lume": {
+      "description": "Run Lume command",
+      "command": "deno run -P=lume lume/cli.ts"
+    },
+    "serve": {
+      "description": "Run and serve the site for development",
+      "command": "deno task lume -s"
+    },
+    "dev": {
+      "description": "Run and serve the site for development",
+      "command": "deno task lume -s"
+    },
+    "build": {
+      "description": "Build the site for production",
+      "command": "deno task lume"
+    },
+    "zip": {
+      "description": "zip the site files",
+      "command": "deno run --allow-read --allow-write --allow-run --allow-env modules/zip.ts"
+    }
   },
   "compilerOptions": {
     "types": ["lume/types.ts"],
@@ -28,12 +43,29 @@
       "tags": ["recommended"],
       "exclude": ["no-window", "no-window-prefix", "no-import-prefix"]
     },
-    "plugins": ["https://cdn.jsdelivr.net/gh/lumeland/lume@3.1.2/lint.ts"]
+    "plugins": ["https://cdn.jsdelivr.net/gh/lumeland/lume@3.1.4/lint.ts"]
   },
-  "fmt": {
-    "lineWidth": 100,
-    "exclude": ["./_site"]
-  },
+  "fmt": { "lineWidth": 100, "exclude": ["./_site"] },
   "unstable": ["temporal", "fmt-component"],
-  "lock": false
+  "lock": false,
+  "permissions": {
+    "lume": {
+      "read": true,
+      "write": ["./"],
+      "import": ["cdn.jsdelivr.net:443", "jsr.io:443", "deno.land:443", "esm.sh:443"],
+      "net": [
+        "0.0.0.0",
+        "cdn.jsdelivr.net:443",
+        "data.jsdelivr.com:443",
+        "jsr.io:443",
+        "deno.land:443",
+        "esm.sh:443",
+        "registry.npmjs.org:443"
+      ],
+      "env": true,
+      "run": true,
+      "ffi": true,
+      "sys": true
+    }
+  }
 }
