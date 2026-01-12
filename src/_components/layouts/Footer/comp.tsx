@@ -1,16 +1,16 @@
 import clsx from "clsx";
 
 export default function (
-  { ...attr }: Lume.Data,
+  { ...props }: Lume.Data,
   { useAttrs }: Lume.Helpers,
 ) {
-  const attributes = { ...useAttrs(attr, ["content"]) };
+  const attributes = { ...useAttrs(props, ["content"]) };
   const year = new Date().getFullYear();
 
   return (
     <footer
       {...{ ...attributes }}
-      class={clsx("footer", attr?.class)}
+      class={clsx("footer", props?.class)}
     >
       <p class="copyright">
         <small>Copyright &copy; {year} corp name</small>
