@@ -45,8 +45,14 @@
     },
     "plugins": ["https://cdn.jsdelivr.net/gh/lumeland/lume@3.1.4/lint.ts"]
   },
-  "fmt": { "lineWidth": 100, "exclude": ["./_site"] },
-  "unstable": ["temporal", "fmt-component"],
+  "fmt": {
+    "lineWidth": 100,
+    "exclude": ["./_site"]
+  },
+  "unstable": [
+    "temporal",
+    "fmt-component"
+  ],
   "lock": false,
   "permissions": {
     "lume": {
