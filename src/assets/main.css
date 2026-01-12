@@ -1,7 +1,7 @@
 /* global styles */
 
 /* @see https://lightningcss.dev/bundling.html#cascade-layers */
-@layer config, reset, utilities, components, sections;
+@layer config, reset, utilities, components.layouts, components.ui;
 
 @import "styles/variables.css" layer(config);
 @import "styles/inline-images.css" layer(config);
