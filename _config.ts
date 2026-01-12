@@ -58,19 +58,19 @@ site.ignore("README.md", "CHANGELOG.md", "node_modules");
 if (!isDev) {
   const loc = site?.options?.location?.pathname || "/";
   site.script(
-    "afterProcess",
+    "cacheBuster",
     `SITE_LOCATION=${loc} deno run --allow-read --allow-write --allow-env modules/cacheBuster.ts`,
   );
-  site.addEventListener("afterBuild", "afterProcess");
+  site.addEventListener("afterBuild", "cacheBuster");
 }
 
 // WORKAROUND: format HTML
 if (!isDev && isFormatHtml) {
   site.script(
-    "format",
+    "formatHtml",
     `deno run --allow-read --allow-write --allow-env npm:js-beautify@latest './_site/**/*.html' --indent-size 2 --no-preserve-newlines --end-with-newline false --extra-liners "" --unformatted "script,style,svg,noscript" --replace`,
   );
-  site.addEventListener("afterBuild", "format");
+  site.addEventListener("afterBuild", "formatHtml");
 }
 
 export default site;
