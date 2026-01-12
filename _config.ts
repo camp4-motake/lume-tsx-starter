@@ -14,8 +14,8 @@ import sourceMaps from "lume/plugins/source_maps.ts";
 import svgo from "lume/plugins/svgo.ts";
 import transformImages from "lume/plugins/transform_images.ts";
 
-import { pathJoin, range, useAttrs } from "./scripts/helpers.ts";
-import imageDimensions from "./scripts/imageDimensions.ts";
+import { pathJoin, range, useAttrs } from "./modules/helpers.ts";
+import imageDimensions from "./modules/imageDimensions.ts";
 
 const isDev = Deno.args.includes("-s");
 const isFormatHtml = true;
@@ -59,7 +59,7 @@ if (!isDev) {
   const loc = site?.options?.location?.pathname || "/";
   site.script(
     "afterProcess",
-    `SITE_LOCATION=${loc} deno run --allow-read --allow-write --allow-env scripts/cacheBuster.ts`,
+    `SITE_LOCATION=${loc} deno run --allow-read --allow-write --allow-env modules/cacheBuster.ts`,
   );
   site.addEventListener("afterBuild", "afterProcess");
 }

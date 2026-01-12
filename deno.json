@@ -15,7 +15,7 @@
     "serve": "deno task lume -s",
     "dev": "deno task lume -s",
     "build": "deno task lume",
-    "zip": "deno run --allow-read --allow-write --allow-run --allow-env scripts/zip.ts"
+    "zip": "deno run --allow-read --allow-write --allow-run --allow-env modules/zip.ts"
   },
   "compilerOptions": {
     "types": ["lume/types.ts"],
