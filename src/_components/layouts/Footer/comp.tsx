@@ -13,7 +13,7 @@ export default function (
       class={clsx("footer", attr?.class)}
     >
       <p class="copyright">
-        <small>&copy; {year} corp name</small>
+        <small>Copyright &copy; {year} corp name</small>
       </p>
     </footer>
   );
