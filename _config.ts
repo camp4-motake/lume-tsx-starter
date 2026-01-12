@@ -19,6 +19,7 @@ import imageDimensions from "./modules/imageDimensions.ts";
 
 const isDev = Deno.args.includes("-s");
 const isFormatHtml = true;
+const isRelativeUrls = true;
 
 /**
  * Lume config
@@ -44,7 +45,7 @@ site.use(base_path());
 site.use(picture());
 site.use(transformImages());
 site.use(inline({ copyAttributes: ["role", "title", /^aria-/, /^data-/] }));
-site.use(relativeUrls());
+if (isRelativeUrls) site.use(relativeUrls());
 
 site.helper("pathJoin", pathJoin, { type: "tag" });
 site.helper("range", range, { type: "tag" });
