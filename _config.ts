@@ -1,7 +1,7 @@
 /**
- * Lume Plugins
- * @see https://lume.land/plugins/
+ * Lume config
  */
+
 import lume from "lume/mod.ts";
 import base_path from "lume/plugins/base_path.ts";
 import esbuild from "lume/plugins/esbuild.ts";
@@ -13,7 +13,6 @@ import relativeUrls from "lume/plugins/relative_urls.ts";
 import sourceMaps from "lume/plugins/source_maps.ts";
 import svgo from "lume/plugins/svgo.ts";
 import transformImages from "lume/plugins/transform_images.ts";
-
 import { pathJoin, range, useAttrs } from "./modules/helpers.ts";
 import imageDimensions from "./modules/imageDimensions.ts";
 
@@ -21,20 +20,16 @@ const isDev = Deno.args.includes("-s");
 const isFormatHtml = true;
 const isRelativeUrls = true;
 
-/**
- * Lume config
- * @see https://lume.land/docs/configuration/config-file/
- */
+// @see https://lume.land/docs/configuration/config-file/
 const site = lume({
   src: "./src",
   prettyUrls: true,
   cssFile: "/assets/main.css",
   jsFile: "/assets/main.js",
-
-  // @see https://lume.land/plugins/base_path/
   location: new URL("https://example.com/"),
 });
 
+// @see https://lume.land/docs/getting-started/use-plugins/
 site.use(jsx());
 site.use(esbuild({ options: { target: ["esnext", "safari16"] } }));
 site.use(lightningCss());
@@ -47,11 +42,13 @@ site.use(transformImages());
 site.use(inline({ copyAttributes: ["role", "title", /^aria-/, /^data-/] }));
 if (isRelativeUrls) site.use(relativeUrls());
 
+// @see https://lume.land/docs/configuration/filters/
 site.helper("pathJoin", pathJoin, { type: "tag" });
 site.helper("range", range, { type: "tag" });
 site.helper("uppercase", (body) => body.toUpperCase(), { type: "tag" });
 site.helper("useAttrs", useAttrs, { type: "tag" });
 
+// @see https://lume.land/docs/configuration/add-files/
 site.add("/assets", "/assets");
 site.ignore("README.md", "CHANGELOG.md", "node_modules");
 
