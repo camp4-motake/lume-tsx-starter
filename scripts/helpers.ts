@@ -1,4 +1,4 @@
-import bcd from "npm:@mdn/browser-compat-data@latest" with { type: "json" };
+import bcd from "@mdn/browser-compat-data" with { type: "json" };
 
 /**
  * HTML Attribute sets

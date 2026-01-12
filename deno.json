@@ -1,6 +1,7 @@
 {
   "imports": {
     "@b-fuze/deno-dom": "jsr:@b-fuze/deno-dom",
+    "@mdn/browser-compat-data": "npm:@mdn/browser-compat-data@latest",
     "@std/crypto": "jsr:@std/crypto",
     "@std/path": "jsr:@std/path",
     "adm-zip": "npm:adm-zip",
