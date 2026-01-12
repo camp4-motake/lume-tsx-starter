@@ -33,7 +33,7 @@ export default function ({ config, webFonts }: Lume.Data) {
               rel="stylesheet"
               href={url}
               media="print"
-              onload='this.media="all"' // @see https://css-tricks.com/how-to-load-fonts-in-a-way-that-fights-fout-and-makes-lighthouse-happy/#aa-the-optimal-way-to-load-fonts
+              onload="this.media='all'" // @see https://css-tricks.com/how-to-load-fonts-in-a-way-that-fights-fout-and-makes-lighthouse-happy/#aa-the-optimal-way-to-load-fonts
             />
           ))}
         </>

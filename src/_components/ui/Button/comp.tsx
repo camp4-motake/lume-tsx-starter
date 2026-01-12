@@ -7,10 +7,7 @@ export default function (
   const attributes = useAttrs(props, ["content"]);
 
   return (
-    <a
-      {...{ ...attributes }}
-      class={clsx("button", props?.class)}
-    >
+    <a {...{ ...attributes }} class={clsx("button", props?.class)}>
       <span class="button__label">{children || `button`}</span>
     </a>
   );
