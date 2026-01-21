@@ -5,6 +5,18 @@ import type Site from "lume/core/site.ts";
 
 const hashCache = new Map<string, string>();
 
+// [0] target selector, [1] attribute name
+const targetSelectors = [
+  ['link[rel="stylesheet"][href]', "href"],
+  ["script[src]", "src"],
+  ["img[src]", "src"],
+  ["source[src]", "src"],
+  ["source[srcset]", "srcset"],
+  ["video[src]", "src"],
+  ["video[poster]", "poster"],
+  ["audio[src]", "src"],
+];
+
 async function generateHashCached(filePath: string): Promise<string> {
   if (hashCache.has(filePath)) {
     return hashCache.get(filePath)!;
@@ -120,19 +132,7 @@ async function processHtmlFile(
     const document = new DOMParser().parseFromString(html, "text/html");
     if (!document) throw new Error(`Failed to parse HTML from ${filePath}`);
 
-    // [selector, attributeName]
-    const targets = [
-      ['link[rel="stylesheet"][href]', "href"],
-      ["script[src]", "src"],
-      ["img[src]", "src"],
-      ["source[src]", "src"],
-      ["source[srcset]", "srcset"],
-      ["video[src]", "src"],
-      ["video[poster]", "poster"],
-      ["audio[src]", "src"],
-    ];
-
-    await Promise.all(targets.map(([selector, attributeName]) =>
+    await Promise.all(targetSelectors.map(([selector, attributeName]) =>
       processElements(
         document as unknown as Document,
         filePath,
