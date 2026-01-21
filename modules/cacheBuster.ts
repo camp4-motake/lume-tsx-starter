@@ -120,72 +120,28 @@ async function processHtmlFile(
     const document = new DOMParser().parseFromString(html, "text/html");
     if (!document) throw new Error(`Failed to parse HTML from ${filePath}`);
 
-    await Promise.all([
+    // [selector, attributeName]
+    const targets = [
+      ['link[rel="stylesheet"][href]', "href"],
+      ["script[src]", "src"],
+      ["img[src]", "src"],
+      ["source[src]", "src"],
+      ["source[srcset]", "srcset"],
+      ["video[src]", "src"],
+      ["video[poster]", "poster"],
+      ["audio[src]", "src"],
+    ];
+
+    await Promise.all(targets.map(([selector, attributeName]) =>
       processElements(
         document as unknown as Document,
         filePath,
-        'link[rel="stylesheet"][href]',
-        "href",
+        selector,
+        attributeName,
         distDir,
         siteLocation,
-      ),
-      processElements(
-        document as unknown as Document,
-        filePath,
-        "script[src]",
-        "src",
-        distDir,
-        siteLocation,
-      ),
-      processElements(
-        document as unknown as Document,
-        filePath,
-        "img[src]",
-        "src",
-        distDir,
-        siteLocation,
-      ),
-      processElements(
-        document as unknown as Document,
-        filePath,
-        "source[src]",
-        "src",
-        distDir,
-        siteLocation,
-      ),
-      processElements(
-        document as unknown as Document,
-        filePath,
-        "source[srcset]",
-        "srcset",
-        distDir,
-        siteLocation,
-      ),
-      processElements(
-        document as unknown as Document,
-        filePath,
-        "video[src]",
-        "src",
-        distDir,
-        siteLocation,
-      ),
-      processElements(
-        document as unknown as Document,
-        filePath,
-        "video[poster]",
-        "poster",
-        distDir,
-        siteLocation,
-      ),
-      processElements(
-        document as unknown as Document,
-        filePath,
-        "audio[src]",
-        "src",
-        distDir,
-        siteLocation,
-      ),
-    ]);
+      )
+    ));
 
     // Write the modified HTML back to the file
     const doctype = document.doctype ? `<!DOCTYPE ${document.doctype.name}>` : "";
