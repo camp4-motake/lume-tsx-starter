@@ -14,6 +14,7 @@ import relativeUrls from "lume/plugins/relative_urls.ts";
 import sourceMaps from "lume/plugins/source_maps.ts";
 import svgo from "lume/plugins/svgo.ts";
 import transformImages from "lume/plugins/transform_images.ts";
+import cacheBuster from "./modules/cacheBuster.ts";
 import { pathJoin, range, useAttrs } from "./modules/helpers.ts";
 import imageDimensions from "./modules/imageDimensions.ts";
 
@@ -42,6 +43,7 @@ site.use(picture());
 site.use(transformImages());
 site.use(inline({ copyAttributes: ["role", "title", /^aria-/, /^data-/] }));
 if (isRelativeUrls) site.use(relativeUrls());
+if (!isDev) site.use(cacheBuster());
 
 // @see https://lume.land/docs/configuration/filters/
 site.helper("pathJoin", pathJoin, { type: "tag" });
@@ -52,16 +54,6 @@ site.helper("useAttrs", useAttrs, { type: "tag" });
 // @see https://lume.land/docs/configuration/add-files/
 site.add("/assets", "/assets");
 site.ignore("README.md", "CHANGELOG.md", "node_modules");
-
-// WORKAROUND: cache busting
-if (!isDev) {
-  const loc = site?.options?.location?.pathname || "/";
-  site.script(
-    "cacheBuster",
-    `SITE_LOCATION=${loc} deno run --allow-read --allow-write --allow-env modules/cacheBuster.ts`,
-  );
-  site.addEventListener("afterBuild", "cacheBuster");
-}
 
 // WORKAROUND: format HTML
 if (!isDev && isFormatHtml) {

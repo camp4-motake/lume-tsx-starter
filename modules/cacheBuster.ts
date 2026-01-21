@@ -1,9 +1,7 @@
 import { DOMParser, Element } from "@b-fuze/deno-dom";
 import { crypto } from "@std/crypto";
 import { dirname, extname, join } from "@std/path";
-
-const __dirname = new URL(".", import.meta.url).pathname;
-const distDir = join(__dirname, "../_site");
+import type Site from "lume/core/site.ts";
 
 const hashCache = new Map<string, string>();
 
@@ -30,6 +28,8 @@ async function generateHashCached(filePath: string): Promise<string> {
 async function addHashToAttributeValue(
   htmlFilePath: string,
   attrValue: string | null,
+  distDir: string,
+  siteLocation: string,
 ): Promise<string | null> {
   if (!attrValue || attrValue.startsWith("http") || attrValue.startsWith("data:")) {
     return attrValue;
@@ -37,7 +37,7 @@ async function addHashToAttributeValue(
 
   const [pathOnly] = attrValue.split(/[?#]/);
 
-  const loc = Deno.env.get("SITE_LOCATION") || "/";
+  const loc = siteLocation;
   const fullPath = pathOnly.startsWith(loc)
     ? join(distDir, pathOnly.slice(loc.length))
     : join(dirname(htmlFilePath), pathOnly);
@@ -62,6 +62,8 @@ async function processElements(
   htmlFilePath: string,
   selector: string,
   attributeName: string,
+  distDir: string,
+  siteLocation: string,
 ): Promise<void> {
   const elements = document.querySelectorAll(selector);
   const promises: Promise<void>[] = [];
@@ -77,7 +79,12 @@ async function processElements(
           const newSrcsetParts = await Promise.all(
             srcsetParts.map(async (srcItem) => {
               const [url, descriptor] = srcItem.trim().split(/\s+/);
-              const newUrl = await addHashToAttributeValue(htmlFilePath, url);
+              const newUrl = await addHashToAttributeValue(
+                htmlFilePath,
+                url,
+                distDir,
+                siteLocation,
+              );
               return descriptor ? `${newUrl} ${descriptor}` : newUrl;
             }),
           );
@@ -87,7 +94,12 @@ async function processElements(
     } else if (attrValue) {
       promises.push(
         (async () => {
-          const newValue = await addHashToAttributeValue(htmlFilePath, attrValue);
+          const newValue = await addHashToAttributeValue(
+            htmlFilePath,
+            attrValue,
+            distDir,
+            siteLocation,
+          );
           if (newValue && newValue !== attrValue) {
             elem.setAttribute(attributeName, newValue);
           }
@@ -98,7 +110,11 @@ async function processElements(
   await Promise.all(promises);
 }
 
-async function processHtmlFile(filePath: string): Promise<void> {
+async function processHtmlFile(
+  filePath: string,
+  distDir: string,
+  siteLocation: string,
+): Promise<void> {
   try {
     const html = await Deno.readTextFile(filePath);
     const document = new DOMParser().parseFromString(html, "text/html");
@@ -110,43 +126,104 @@ async function processHtmlFile(filePath: string): Promise<void> {
         filePath,
         'link[rel="stylesheet"][href]',
         "href",
+        distDir,
+        siteLocation,
       ),
-      processElements(document as unknown as Document, filePath, "script[src]", "src"),
-      processElements(document as unknown as Document, filePath, "img[src]", "src"),
-      processElements(document as unknown as Document, filePath, "source[src]", "src"),
-      processElements(document as unknown as Document, filePath, "source[srcset]", "srcset"),
-      processElements(document as unknown as Document, filePath, "video[src]", "src"),
-      processElements(document as unknown as Document, filePath, "video[poster]", "poster"),
-      processElements(document as unknown as Document, filePath, "audio[src]", "src"),
+      processElements(
+        document as unknown as Document,
+        filePath,
+        "script[src]",
+        "src",
+        distDir,
+        siteLocation,
+      ),
+      processElements(
+        document as unknown as Document,
+        filePath,
+        "img[src]",
+        "src",
+        distDir,
+        siteLocation,
+      ),
+      processElements(
+        document as unknown as Document,
+        filePath,
+        "source[src]",
+        "src",
+        distDir,
+        siteLocation,
+      ),
+      processElements(
+        document as unknown as Document,
+        filePath,
+        "source[srcset]",
+        "srcset",
+        distDir,
+        siteLocation,
+      ),
+      processElements(
+        document as unknown as Document,
+        filePath,
+        "video[src]",
+        "src",
+        distDir,
+        siteLocation,
+      ),
+      processElements(
+        document as unknown as Document,
+        filePath,
+        "video[poster]",
+        "poster",
+        distDir,
+        siteLocation,
+      ),
+      processElements(
+        document as unknown as Document,
+        filePath,
+        "audio[src]",
+        "src",
+        distDir,
+        siteLocation,
+      ),
     ]);
 
     // Write the modified HTML back to the file
     const doctype = document.doctype ? `<!DOCTYPE ${document.doctype.name}>` : "";
     await Deno.writeTextFile(filePath, doctype + document.documentElement!.outerHTML);
-    console.log(`Processed: ${filePath}`);
+    // console.log(`Processed: ${filePath}`);
   } catch (error) {
     console.error(`Error processing file ${filePath}:`, error);
   }
 }
 
-async function processDistDirectory(dir: string): Promise<void> {
+async function processDistDirectory(
+  dir: string,
+  distDir: string,
+  siteLocation: string,
+): Promise<void> {
   const filePromises: Promise<void>[] = [];
   for await (const entry of Deno.readDir(dir)) {
     const filePath = join(dir, entry.name);
 
     if (entry.isDirectory) {
-      filePromises.push(processDistDirectory(filePath));
+      filePromises.push(processDistDirectory(filePath, distDir, siteLocation));
     } else if (entry.isFile && extname(entry.name).toLowerCase() === ".html") {
-      filePromises.push(processHtmlFile(filePath));
+      filePromises.push(processHtmlFile(filePath, distDir, siteLocation));
     }
   }
   await Promise.all(filePromises);
 }
 
-if (import.meta.main) {
-  console.log("Starting cache busting process...");
-  const startTime = performance.now();
-  await processDistDirectory(distDir).catch(console.error);
-  const endTime = performance.now();
-  console.log(`Cache busting finished in ${(endTime - startTime).toFixed(2)} ms`);
+export default function cacheBuster() {
+  return (site: Site) => {
+    site.addEventListener("afterBuild", async () => {
+      console.log("Starting cache busting process...");
+      const startTime = performance.now();
+      const distDir = site.dest();
+      const siteLocation = site.options.location?.pathname || "/";
+      await processDistDirectory(distDir, distDir, siteLocation).catch(console.error);
+      const endTime = performance.now();
+      console.log(`Cache busting finished in ${(endTime - startTime).toFixed(2)} ms`);
+    });
+  };
 }
