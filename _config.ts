@@ -14,24 +14,36 @@ import relativeUrls from "lume/plugins/relative_urls.ts";
 import sourceMaps from "lume/plugins/source_maps.ts";
 import svgo from "lume/plugins/svgo.ts";
 import transformImages from "lume/plugins/transform_images.ts";
-import cacheBuster from "./modules/cacheBuster.ts";
-import { pathJoin, range, useAttrs } from "./modules/helpers.ts";
-import imageDimensions from "./modules/imageDimensions.ts";
+import cacheBuster from "./plugins/cacheBuster.ts";
+import formatHtml from "./plugins/formatHtml.ts";
+import { pathJoin, range, useAttrs } from "./plugins/helpers.ts";
+import imageDimensions from "./plugins/imageDimensions.ts";
 
 const isDev = Deno.args.includes("-s");
-const isFormatHtml = true;
+const isFormatHtml = !isDev;
 const isRelativeUrls = true;
 
 // @see https://lume.land/docs/configuration/config-file/
 const site = lume({
   src: "./src",
   prettyUrls: true,
+  location: new URL("https://example.com/"),
   cssFile: "/assets/main.css",
   jsFile: "/assets/main.js",
-  location: new URL("https://example.com/"),
 });
 
-// @see https://lume.land/docs/getting-started/use-plugins/
+/**
+ * Add files
+ * @see https://lume.land/docs/configuration/add-files/
+ */
+site.add("/assets", "/assets");
+site.copy("/_static", "/");
+site.ignore("README.md", "CHANGELOG.md", "node_modules");
+
+/**
+ * Plugins
+ * @see https://lume.land/docs/getting-started/use-plugins/
+ */
 site.use(jsx());
 site.use(esbuild({ options: { target: ["esnext", "safari16"] } }));
 site.use(lightningCss());
@@ -44,24 +56,14 @@ site.use(transformImages());
 site.use(inline({ copyAttributes: ["role", "title", /^aria-/, /^data-/] }));
 if (isRelativeUrls) site.use(relativeUrls());
 if (!isDev) site.use(cacheBuster());
+if (isFormatHtml) site.use(formatHtml());
 
-// @see https://lume.land/docs/configuration/filters/
+/**
+ * Helpers
+ * @see https://lume.land/docs/configuration/filters/
+ */
 site.helper("pathJoin", pathJoin, { type: "tag" });
 site.helper("range", range, { type: "tag" });
-site.helper("uppercase", (body) => body.toUpperCase(), { type: "tag" });
 site.helper("useAttrs", useAttrs, { type: "tag" });
-
-// @see https://lume.land/docs/configuration/add-files/
-site.add("/assets", "/assets");
-site.ignore("README.md", "CHANGELOG.md", "node_modules");
-
-// WORKAROUND: format HTML
-if (!isDev && isFormatHtml) {
-  site.script(
-    "formatHtml",
-    `deno run --allow-read --allow-write --allow-env npm:js-beautify@latest './_site/**/*.html' --indent-size 2 --no-preserve-newlines --end-with-newline false --extra-liners "" --unformatted "script,style,svg,noscript" --replace`,
-  );
-  site.addEventListener("afterBuild", "formatHtml");
-}
 
 export default site;

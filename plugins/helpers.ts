@@ -1,7 +1,7 @@
 import bcd from "@mdn/browser-compat-data" with { type: "json" };
 
 /**
- * HTML Attribute sets
+ * HTML attribute sets
  */
 const HTML_ATTRIBUTES = new Set([
   ...Object.keys(bcd.html.global_attributes),
@@ -36,13 +36,20 @@ export const useAttrs = (
 };
 
 /**
- * range array
+ * Range array
+ *
+ * @param start
+ * @param end
+ * @returns range array
  */
 export const range = (start: number, end: number) =>
   Array.from({ length: end - start + 1 }, (_, i) => start + i);
 
 /**
- * path join
+ * Path join
+ *
+ * @param paths
+ * @returns joined path
  */
 export function pathJoin(...paths: string[]) {
   const firstPath = paths[0] || "";
@@ -68,3 +75,11 @@ export function pathJoin(...paths: string[]) {
 
   return protocol + result;
 }
+
+/**
+ * Uppercase string
+ *
+ * @param body
+ * @returns uppercase string
+ */
+export const uppercase = (body: string) => body.toUpperCase();

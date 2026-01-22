@@ -29,7 +29,7 @@
     },
     "zip": {
       "description": "zip the site files",
-      "command": "deno run --allow-read --allow-write --allow-run --allow-env modules/zip.ts"
+      "command": "deno run --allow-read --allow-write --allow-run --allow-env plugins/zip.ts"
     }
   },
   "compilerOptions": {
