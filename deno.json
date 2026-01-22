@@ -47,12 +47,9 @@
   },
   "fmt": {
     "lineWidth": 100,
-    "exclude": ["./_site"]
+    "exclude": ["./_site", "./src/**/*.svg"]
   },
-  "unstable": [
-    "temporal",
-    "fmt-component"
-  ],
+  "unstable": ["temporal", "fmt-component"],
   "lock": false,
   "permissions": {
     "lume": {
