@@ -3,8 +3,16 @@ import bcd from "@mdn/browser-compat-data" with { type: "json" };
 /**
  * HTML attribute sets
  */
+/**
+ * Global HTML attribute keys
+ */
+const GLOBAL_ATTRIBUTES = new Set(Object.keys(bcd.html.global_attributes));
+
+/**
+ * All HTML attribute keys
+ */
 const HTML_ATTRIBUTES = new Set([
-  ...Object.keys(bcd.html.global_attributes),
+  ...GLOBAL_ATTRIBUTES,
   ...Object.values(bcd.html.elements).flatMap((el) => Object.keys(el || {})),
 ]);
 
@@ -12,20 +20,29 @@ const HTML_ATTRIBUTES = new Set([
  * Return only HTML attributes, excluding Lume-specific properties.
  *
  * @example <a {...useAttrs(props)}>
- * @example <a {...useAttrs(props, ["variant", "size"])}>
+ * @example <a {...useAttrs(props, "", ["variant", "size"])}>
+ * @example <a {...useAttrs(props, "a", ["variant", "size"])}>
  */
 export const useAttrs = (
   props: Lume.Data,
+  tagName?: string,
   omitKeys: string[] = [],
 ) => {
   const attrs: Record<string, unknown> = {};
   const omitSet = new Set([...omitKeys]);
 
+  const allowedAttributes = tagName && bcd.html.elements[tagName]
+    ? new Set([
+      ...GLOBAL_ATTRIBUTES,
+      ...Object.keys(bcd.html.elements[tagName]),
+    ])
+    : HTML_ATTRIBUTES;
+
   for (const key in props) {
     if (omitSet.has(key)) continue;
 
     if (
-      HTML_ATTRIBUTES.has(key) ||
+      allowedAttributes.has(key) ||
       key.startsWith("data-") ||
       key.startsWith("aria-")
     ) {
