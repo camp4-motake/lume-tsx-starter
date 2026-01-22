@@ -1,24 +1,9 @@
 export default function (data: Lume.Data, helpers: Lume.Helpers) {
-  const {
-    children,
-    comp,
-    config,
-    description,
-    isHome,
-    keywords,
-    ogDescription,
-    ogImage,
-    ogTitle,
-    ogType,
-    tagline,
-    title,
-    url,
-    webFonts,
-  } = data;
+  const { children, comp, config } = data;
   const { Assets, Header, Footer } = comp.layouts;
   const { pathJoin, url: urlHelper } = helpers;
 
-  const titleText = [!isHome && title, config.siteTitle, isHome && tagline]
+  const titleText = [!data.isHome && data.title, config.siteTitle, data.isHome && data.tagline]
     .filter(Boolean)
     .join(" | ");
 
@@ -33,48 +18,51 @@ export default function (data: Lume.Data, helpers: Lume.Helpers) {
         <meta name="format-detection" content="telephone=no" />
         <title>{titleText}</title>
 
-        {description && <meta name="description" content={description || ""} />}
-        {keywords || config?.keywords &&
-            <meta name="keywords" content={keywords || config?.keywords} />}
+        {data.description && <meta name="description" content={data.description || ""} />}
+        {data.keywords || config?.keywords &&
+            <meta name="keywords" content={data.keywords || config?.keywords} />}
 
         <meta property="og:locale" content={`${config.lang}_${config.region}`} />
-        <meta property="og:type" content={ogType || "article"} />
-        <meta property="og:title" content={ogTitle || titleText || ""} />
+        <meta property="og:type" content={data.ogType || "article"} />
+        <meta property="og:title" content={data.ogTitle || titleText || ""} />
         {config?.siteName &&
           <meta property="og:site_name" content={config?.siteName || ""} />}
-        {ogDescription || description && (
+        {data.ogDescription || data.description && (
               <meta
                 property="og:description"
-                content={ogDescription || description}
+                content={data.ogDescription || data.description}
               />
             )}
-        <meta property="og:url" content={urlHelper(url, true)} />
-        {ogImage || config?.ogImage &&
+        <meta property="og:url" content={urlHelper(data.url, true)} />
+        {data.ogImage || config?.ogImage &&
             (
               <meta
                 property="og:image"
-                content={urlHelper(pathJoin("/", ogImage || config?.ogImage), true)}
+                content={urlHelper(pathJoin("/", data.ogImage || config?.ogImage), true)}
               />
             )}
 
         {config?.twitterSite && <meta name="twitter:site" content={config?.twitterSite} />}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={ogTitle || titleText || ""} />
-        {ogDescription || description && (
+        <meta name="twitter:title" content={data.ogTitle || titleText || ""} />
+        {data.ogDescription || data.description && (
               <meta
                 name="twitter:description"
-                content={ogDescription || description}
+                content={data.ogDescription || data.description}
               />
             )}
 
-        <link rel="canonical" href={urlHelper(url, true)} />
+        <link rel="canonical" href={urlHelper(data.url, true)} />
 
-        <Assets webFonts={webFonts} />
+        <Assets webFonts={data.webFonts} />
 
         {/* tracking tag */}
         {/* {{ __html: ``, }} */}
       </head>
       <body>
+        {/* tracking tag (noscript) */}
+        {/* {{ __html: ``, }} */}
+
         <Header title={config.siteTitle} />
         {children}
         <Footer />
