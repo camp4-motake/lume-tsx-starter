@@ -23,8 +23,8 @@
   .has-fade-b-in-img,
   .has-decode-in-img {
     position: relative;
-    overflow: clip;
     contain: layout paint;
+    overflow: clip;
   }
 
   .has-page-active:root {
@@ -45,8 +45,8 @@
     }
 
     .has-decode-in-img img {
-      transition: opacity var(--_duration) var(--_delay);
       display: block;
+      transition: opacity var(--_duration) var(--_delay);
     }
 
     .has-decode-in-img img[data-img-decoded="true"] {
@@ -86,16 +86,16 @@
   }
 
   [data-scroll] > .has-text-mask-in {
-    scale: 1.25;
+    white-space: scale, opacity, clip-path;
     opacity: 0.0001;
     clip-path: circle(0% at 50% 50%);
-    white-space: scale, opacity, clip-path;
+    scale: 1.25;
     backface-visibility: hidden;
   }
   [data-scroll="in"] > .has-text-mask-in {
-    scale: 1;
     opacity: 1;
     clip-path: circle(100% at 50% 50%);
+    scale: 1;
     transition:
       clip-path 1.75s var(--ease-out-circ) 0.2s,
       opacity 0.1s 0.2s,
@@ -125,37 +125,37 @@
     --_delay-img: 0.05s;
 
     position: relative;
-    clip-path: inset(7.5% 7.5% 15% 7.5%);
-    overflow: hidden;
     contain: layout paint;
+    overflow: hidden;
+    clip-path: inset(7.5% 7.5% 15% 7.5%);
 
     &::after {
       --_grad-color: var(--color-base);
 
       position: absolute;
-      z-index: 1;
       inset-block-start: calc(var(--_v-dir) * 100%);
       inset-inline-start: calc(var(--_h-dir) * 100%);
+      z-index: 1;
+      inline-size: 100%;
+      block-size: 200%;
+      contain: layout paint;
+      content: "";
       background-image: linear-gradient(
         var(--_grad-deg),
         rgb(0 0 0 / 0) 0%,
         var(--_grad-color) 50%,
         var(--_grad-color) 100%
       );
-      inline-size: 100%;
-      block-size: 200%;
-      content: "";
-      contain: layout paint;
       backface-visibility: hidden;
       will-change: translate;
     }
 
     img {
-      display: block;
-      translate: 0 2em 0;
-      scale: 1.05;
       z-index: 0;
+      display: block;
       filter: brightness(2);
+      scale: 1.05;
+      translate: 0 2em 0;
       backface-visibility: hidden;
       will-change: translate, scale, filter;
     }
@@ -175,9 +175,9 @@
     }
 
     img {
-      translate: 0 0 0;
-      scale: 1;
       filter: brightness(1);
+      scale: 1;
+      translate: 0 0 0;
       transition:
         scale 1.1s var(--ease-out-circ) var(--_delay-img),
         translate 1.1s var(--ease-out-circ) var(--_delay-img),
@@ -206,20 +206,20 @@
 
 @media not print {
   .has-text-line {
-    display: inline;
     position: relative;
+    display: inline;
 
     &::before {
       position: absolute;
       inset-block: auto 0;
       inset-inline: 0;
-      content: "";
-      background-color: var(--color-secondary);
+      z-index: 0;
       inline-size: 100%;
       block-size: 0.2em;
-      scale: 0 1 1;
+      content: "";
+      background-color: var(--color-secondary);
       transform-origin: 0 100%;
-      z-index: 0;
+      scale: 0 1 1;
     }
 
     > span {
@@ -230,8 +230,8 @@
 
   .has-page-active:root [data-scroll="in"].has-text-line {
     &::before {
-      transition: scale 0.6s var(--ease-in-out-circ);
       scale: 1;
+      transition: scale 0.6s var(--ease-in-out-circ);
     }
   }
 }

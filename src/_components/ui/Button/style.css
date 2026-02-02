@@ -10,38 +10,38 @@
       --_font-size: 1rem;
 
       display: inline grid;
-      background-color: var(--_bg-color);
-      border-radius: var(--infinity);
-      border: max(2px, calc(2 * var(--rem))) solid var(--_stroke-color);
-      color: var(--_color);
-      font-weight: var(--font-weight-bold);
-      column-gap: 0.25em;
       grid-template-columns: auto 1fr auto;
+      column-gap: 0.25em;
+      place-items: center;
       inline-size: min(100%, var(--_min-inline-size));
       min-block-size: var(--_min-block-size);
       padding: 0.25em 1em;
-      place-items: center;
+      font-weight: var(--font-weight-bold);
+      color: var(--_color);
       text-decoration: none;
+      background-color: var(--_bg-color);
+      border: max(2px, calc(2 * var(--rem))) solid var(--_stroke-color);
+      border-radius: var(--infinity);
       transition-duration: 200ms;
       transition-property: color, background-color;
 
       &::before,
       &::after {
         display: block;
-        content: "";
         inline-size: 0.25em;
         aspect-ratio: 1;
+        content: "";
         mask: no-repeat center / 1em;
       }
 
       > .button__label {
         display: inline grid;
-        align-items: center;
         column-gap: 0.25em;
+        align-items: center;
         font-size: var(--_font-size);
+        line-height: var(--leading-md);
         word-break: keep-all;
         overflow-wrap: break-word;
-        line-height: var(--leading-md);
       }
     }
 
@@ -61,21 +61,21 @@
 
     @layer modifiers {
       &:is(.is-arrow-next::after) {
+        inline-size: 1.5em;
         background-color: currentColor;
         mask-image: var(--img-ico-arrow-next);
-        inline-size: 1.5em;
       }
 
       &:is(.is-arrow-prev::before) {
+        inline-size: 1.5em;
         background-color: currentColor;
         mask-image: var(--img-ico-arrow-prev);
-        inline-size: 1.5em;
       }
 
       &:is([target="_blank"]::after) {
+        inline-size: 1em;
         background-color: currentColor;
         mask: var(--img-ico-external) no-repeat center / 0.75em;
-        inline-size: 1em;
       }
 
       &:is(.is-small) {
