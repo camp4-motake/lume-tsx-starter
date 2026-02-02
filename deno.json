@@ -8,8 +8,11 @@
     "clsx": "npm:clsx",
     "es-toolkit": "npm:es-toolkit",
     "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.1.4/",
-    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.14/jsx-runtime.ts"
+    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.14/jsx-runtime.ts",
+    "stylelint": "npm:stylelint@^17.1.0",
+    "stylelint-config-recess-order": "npm:stylelint-config-recess-order@^7.6.0"
   },
+  "nodeModulesDir": "auto",
   "tasks": {
     "lume": {
       "description": "Run Lume command",
@@ -30,6 +33,14 @@
     "zip": {
       "description": "zip the site files",
       "command": "deno run --allow-read --allow-write --allow-run --allow-env plugins/zip.ts"
+    },
+    "lint": {
+      "description": "Lint the site files",
+      "command": "deno lint && deno run -A npm:stylelint './src/**/*.css'"
+    },
+    "format": {
+      "description": "Format the site files",
+      "command": "deno fmt && deno run -A npm:stylelint --fix './src/**/*.css'"
     }
   },
   "compilerOptions": {
