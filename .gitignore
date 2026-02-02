@@ -8,3 +8,5 @@ _zip
 .*.sh
 mise.*.local.toml
 mise.local.toml
+node_modules
+.npm
