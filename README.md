@@ -16,6 +16,12 @@ deno task build
 
 # zip
 deno task zip
+
+# lint
+deno task lint
+
+# format
+deno task format
 ```
 
 ## Resources
