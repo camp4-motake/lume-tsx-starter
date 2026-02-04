@@ -6,7 +6,8 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "denoland.vscode-deno",
   "editor.codeActionsOnSave": {
-    "source.organizeImports": "explicit"
+    "source.organizeImports": "explicit",
+    "source.fixAll.stylelint": "explicit"
   },
   "[css]": {
     "editor.defaultFormatter": "denoland.vscode-deno"

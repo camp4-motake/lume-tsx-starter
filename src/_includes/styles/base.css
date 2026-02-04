@@ -1,4 +1,14 @@
 :root {
+  min-block-size: 100vh;
+  scrollbar-gutter: stable;
+  font-size: var(--root-font-size);
+  font-feature-settings: "pkna";
+  font-synthesis: none;
+  line-height: var(--leading-base);
+  color: var(--color-text);
+  letter-spacing: var(--letter-spacing-base);
+  color-scheme: normal;
+  scroll-padding-top: var(--header-block-size, 0);
   -moz-text-size-adjust: none;
   -webkit-text-size-adjust: none;
   text-size-adjust: none;
@@ -6,27 +16,17 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-size-adjust: 100%;
-  font-size: var(--root-font-size);
-  font-synthesis: none;
-  font-feature-settings: "pkna";
-  min-block-size: 100vh;
-  color: var(--color-text);
-  letter-spacing: var(--letter-spacing-base);
-  line-height: var(--leading-base);
-  color-scheme: normal;
   text-spacing-trim: trim-start;
-  scrollbar-gutter: stable;
-  scroll-padding-top: var(--header-block-size, 0);
 }
 
 body {
-  background-color: var(--color-base);
+  min-block-size: 100%;
+  min-block-size: 100vh;
   padding: 0;
   margin: 0;
-  min-block-size: 100%;
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-medium);
-  min-block-size: 100vh;
+  background-color: var(--color-base);
 }
 
 .lenis body {
@@ -34,10 +34,10 @@ body {
 }
 
 :where(main) {
+  max-inline-size: var(--container-max-width-view);
+  margin-inline: auto;
   container-name: main;
   container-type: inline-size;
-  margin-inline: auto;
-  max-inline-size: var(--container-max-width-view);
   backface-visibility: hidden;
 }
 
@@ -77,8 +77,8 @@ body {
 
 :where(td, th) {
   padding: 0.5em 0.75em;
-  border: max(1px, calc(1 * var(--rem))) solid;
   line-break: anywhere;
+  border: max(1px, calc(1 * var(--rem))) solid;
 }
 
 :where(dialog) {
@@ -88,10 +88,10 @@ body {
   max-block-size: unset;
   padding: unset;
   margin: unset;
+  overflow: unset;
   color: unset;
   background-color: unset;
   border: unset;
-  overflow: unset;
 }
 
 :focus:not(:focus-visible) {
@@ -107,8 +107,8 @@ body {
 }
 
 :where(a, button, summary) {
-  text-underline-offset: 0.25em;
   text-wrap: pretty;
+  text-underline-offset: 0.25em;
 }
 
 :where(a) {
@@ -126,9 +126,9 @@ body {
 }
 
 :where(button) {
+  touch-action: manipulation;
   background-color: transparent;
   border: 0;
-  touch-action: manipulation;
 }
 
 a:not([class*="button"], :has(img, svg, [data-external-icon]))[target="_blank"]::after,
@@ -138,10 +138,10 @@ a[target="_blank"] > [data-external-icon]::after {
   display: inline-block;
   inline-size: 0.75em;
   aspect-ratio: 1;
+  margin-block-end: 0.125em;
   margin-inline-start: 0.25em;
   content: "";
   background-color: var(--_color);
-  margin-block-end: 0.125em;
   mask: var(--img-ico-external) no-repeat center / contain;
 }
 
@@ -174,8 +174,8 @@ a[target="_blank"] > [data-external-icon]::after {
 
 :where(time) {
   font-family: var(--font-family-sans-serif-roman);
-  font-weight: var(--font-weight-semi-bold);
   font-size: var(--font-size-12);
+  font-weight: var(--font-weight-semi-bold);
   letter-spacing: 0.05em;
 }
 

@@ -1,12 +1,12 @@
 :where(.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6) {
   margin-block: 0.5em;
-  text-wrap: pretty;
+  margin-block: 1.5em 0.75em;
   font-weight: var(--font-weight-bold);
   line-height: var(--leading-hd);
+  letter-spacing: 0;
+  text-wrap: pretty;
   text-wrap: wrap;
   overflow-wrap: break-word;
-  margin-block: 1.5em 0.75em;
-  letter-spacing: 0;
   backface-visibility: hidden;
 
   &:first-child {
@@ -53,8 +53,8 @@
 }
 
 :where(h1) {
-  font-size: var(--font-size-32);
   margin-block-end: 1em;
+  font-size: var(--font-size-32);
 }
 
 :where(.heading) {
