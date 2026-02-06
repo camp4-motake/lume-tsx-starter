@@ -10,10 +10,6 @@
   display: block;
 }
 
-.has-display-contents {
-  display: contents;
-}
-
 .has-line-block {
   > span {
     display: inline-block;

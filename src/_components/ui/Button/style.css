@@ -60,24 +60,6 @@
     }
 
     @layer modifiers {
-      &:is(.is-arrow-next::after) {
-        inline-size: 1.5em;
-        background-color: currentColor;
-        mask-image: var(--img-ico-arrow-next);
-      }
-
-      &:is(.is-arrow-prev::before) {
-        inline-size: 1.5em;
-        background-color: currentColor;
-        mask-image: var(--img-ico-arrow-prev);
-      }
-
-      &:is([target="_blank"]::after) {
-        inline-size: 1em;
-        background-color: currentColor;
-        mask: var(--img-ico-external) no-repeat center / 0.75em;
-      }
-
       &:is(.is-small) {
         --_font-size: 0.875rem;
         column-gap: 0.125em;
@@ -97,6 +79,24 @@
 
       &:is(.is-thin) {
         --_min-block-size: 2.5em;
+      }
+
+      &:is(.is-arrow-next::after) {
+        inline-size: 1.5em;
+        background-color: currentColor;
+        mask-image: var(--img-ico-arrow-next);
+      }
+
+      &:is(.is-arrow-prev::before) {
+        inline-size: 1.5em;
+        background-color: currentColor;
+        mask-image: var(--img-ico-arrow-prev);
+      }
+
+      &:is([target="_blank"]::after) {
+        inline-size: 1em;
+        background-color: currentColor;
+        mask: var(--img-ico-external) no-repeat center / 0.75em;
       }
 
       /*
