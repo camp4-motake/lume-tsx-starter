@@ -80,7 +80,7 @@
     "temporal",
     "fmt-component"
   ],
-  "lock": false,
+  "lock": true,
   "permissions": {
     "lume": {
       "read": true,
