@@ -7,7 +7,7 @@
     "adm-zip": "npm:adm-zip@^0.5.16",
     "clsx": "npm:clsx@^2.1.1",
     "es-toolkit": "npm:es-toolkit@^1.44.0",
-    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.1.4/",
+    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.1/",
     "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.14/jsx-runtime.ts",
     "stylelint": "npm:stylelint@^17.1.0",
     "stylelint-config-recess-order": "npm:stylelint-config-recess-order@^7.6.0",
@@ -66,7 +66,7 @@
       ]
     },
     "plugins": [
-      "https://cdn.jsdelivr.net/gh/lumeland/lume@3.1.4/lint.ts"
+      "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.1/lint.ts"
     ]
   },
   "fmt": {
