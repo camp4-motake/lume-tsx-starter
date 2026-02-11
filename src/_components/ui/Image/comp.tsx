@@ -4,20 +4,6 @@
  * @see https://lume.land/plugins/image_size/
  * @see https://lume.land/plugins/picture/
  * @see https://lume.land/plugins/transform_images/
- *
- * @example
- * ```tsx
- * // default
- * <Image src="/assets/img/img.png" />
- *
- * // with sources
- * <Image
- *   src="/assets/img/img.png"
- *   sources={[
- *     { srcset: "/assets/img/large-img.png", media: "(min-width: 48em)" },
- *   ]}
- * />
- * ```
  */
 
 interface Props {
