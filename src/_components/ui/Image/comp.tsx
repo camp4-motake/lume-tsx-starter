@@ -33,8 +33,8 @@ export default function Image(
 ) {
   const attributes = {
     "image-size": "",
-    "transform-images": "avif png",
-    loading: "lazy",
+    "transform-images": props["transform-images"] || "avif png",
+    loading: props.loading || "lazy",
     ...useAttrs(props, "img"),
   };
 
