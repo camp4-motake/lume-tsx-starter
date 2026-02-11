@@ -41,7 +41,7 @@ export default function Image(
   if (sources.length > 0) {
     return (
       <picture>
-        {sources.map((source: { srcset: string }) =>
+        {sources.map((source) =>
           source?.srcset && (
             <source key={source.srcset} transform-images="avif png" {...{ ...source }} />
           )
