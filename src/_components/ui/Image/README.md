@@ -1,6 +1,6 @@
 # Auto Image Component
 
-auto width and height attributes are added.
+width and height and Lume Plugins attributes are auto added.
 
 ## Usage
 
