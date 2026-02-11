@@ -20,10 +20,14 @@ import formatHtml from "./plugins/formatHtml.ts";
 import { pathJoin, range, useAttrs } from "./plugins/helpers.ts";
 
 const isDev = Deno.args.includes("-s");
-const isFmt = !isDev;
-const isRel = true;
+const isCacheBuster = !isDev;
+const isFormatHtml = !isDev;
+const isRelativeUrls = true;
 
-// @see https://lume.land/docs/configuration/config-file/
+/**
+ * Lume configuration
+ * @see https://lume.land/docs/configuration/config-file/
+ */
 const site = lume({
   src: "./src",
   prettyUrls: true,
@@ -45,7 +49,7 @@ site.ignore("README.md", "CHANGELOG.md", "node_modules");
  * @see https://lume.land/docs/getting-started/use-plugins/
  */
 site.use(jsx());
-site.use(esbuild({ options: { target: ["esnext", "safari16"] } }));
+site.use(esbuild({ options: { target: ["safari17"] } }));
 site.use(lightningCss());
 if (isDev) site.use(sourceMaps());
 site.use(base_path());
@@ -54,9 +58,9 @@ site.use(transformImages());
 site.use(imageSize());
 site.use(svgo());
 site.use(inline({ copyAttributes: ["role", "title", /^aria-/, /^data-/] }));
-if (isRel) site.use(relativeUrls());
-if (!isDev) site.use(cacheBuster());
-if (isFmt) site.use(formatHtml());
+if (isRelativeUrls) site.use(relativeUrls());
+if (isCacheBuster) site.use(cacheBuster());
+if (isFormatHtml) site.use(formatHtml());
 
 /**
  * Helpers
