@@ -17,9 +17,10 @@ export default function Image(
   { sources = [], ...props }: Props & Lume.Data,
   { useAttrs }: Lume.Helpers,
 ) {
+  const defaultSrcSet = "avif png";
   const attributes = {
     "image-size": "",
-    "transform-images": props["transform-images"] || "avif png",
+    "transform-images": props["transform-images"] || defaultSrcSet,
     loading: props.loading || "lazy",
     ...useAttrs(props, "img"),
   };
@@ -29,7 +30,10 @@ export default function Image(
       <picture>
         {sources.map((source) =>
           source?.srcset && (
-            <source key={source.srcset} transform-images="avif png" {...{ ...source }} />
+            <source
+              transform-images={defaultSrcSet}
+              {...{ ...source }}
+            />
           )
         )}
         <img {...{ ...attributes }} />
