@@ -4,6 +4,20 @@
  * @see https://lume.land/plugins/image_size/
  * @see https://lume.land/plugins/picture/
  * @see https://lume.land/plugins/transform_images/
+ *
+ * @example
+ * ```tsx
+ * // default
+ * <Image src="/assets/img/img.png" />
+ *
+ * // with sources
+ * <Image
+ *   src="/assets/img/img.png"
+ *   sources={[
+ *     { srcset: "/assets/img/large-img.png", media: "(min-width: 48em)" },
+ *   ]}
+ * />
+ * ```
  */
 
 interface Props {
@@ -18,8 +32,8 @@ export default function Image(
   { useAttrs }: Lume.Helpers,
 ) {
   const attributes = {
-    "image-size": "", // @see https://lume.land/plugins/image_size/
-    "transform-images": "avif png", // @see https://lume.land/plugins/picture/
+    "image-size": "",
+    "transform-images": "avif png",
     loading: "lazy",
     ...useAttrs(props, "img"),
   };

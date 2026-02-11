@@ -9,19 +9,8 @@ export default ({ comp }: Lume.Data) => {
     <div>
       <h1>Hello world!</h1>
 
-      {/* default */}
       <figure>
-        <Image src="/assets/img/test300x300.png" loading="eager" />
-      </figure>
-
-      {/* with sources */}
-      <figure>
-        <Image
-          src="/assets/img/test300x300.png"
-          sources={[
-            { srcset: "/assets/img/test300x300.png", media: "(min-width: 48em)" },
-          ]}
-        />
+        <Image src="/assets/img/test300x300.png" />
       </figure>
 
       <div>
