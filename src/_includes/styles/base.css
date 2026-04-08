@@ -1,6 +1,7 @@
 :root {
   min-block-size: 100vh;
   scrollbar-gutter: stable;
+  scroll-behavior: auto;
   font-size: var(--root-font-size);
   font-feature-settings: "pkna";
   font-synthesis: none;
@@ -11,7 +12,6 @@
   scroll-padding-top: var(--header-block-size, 0);
   -moz-text-size-adjust: none;
   -webkit-text-size-adjust: none;
-  scroll-behavior: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-size-adjust: 100%;
