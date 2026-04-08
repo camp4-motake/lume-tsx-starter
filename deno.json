@@ -1,16 +1,17 @@
 {
   "imports": {
+    "#helpers": "./plugins/helpers.ts",
     "@b-fuze/deno-dom": "jsr:@b-fuze/deno-dom@^0.1.56",
-    "@mdn/browser-compat-data": "npm:@mdn/browser-compat-data@latest",
+    "@mdn/browser-compat-data": "npm:@mdn/browser-compat-data@^7.3.10",
     "@std/crypto": "jsr:@std/crypto@^1.0.5",
     "@std/path": "jsr:@std/path@^1.1.4",
-    "adm-zip": "npm:adm-zip@^0.5.16",
+    "adm-zip": "npm:adm-zip@^0.5.17",
     "clsx": "npm:clsx@^2.1.1",
-    "es-toolkit": "npm:es-toolkit@^1.44.0",
-    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.1/",
+    "es-toolkit": "npm:es-toolkit@^1.45.1",
+    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.2/",
     "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.14/jsx-runtime.ts",
-    "stylelint": "npm:stylelint@^17.1.0",
-    "stylelint-config-recess-order": "npm:stylelint-config-recess-order@^7.6.0",
+    "stylelint": "npm:stylelint@^17.6.0",
+    "stylelint-config-recess-order": "npm:stylelint-config-recess-order@^7.7.0",
     "stylelint-config-recommended": "npm:stylelint-config-recommended@^18.0.0"
   },
   "nodeModulesDir": "auto",
@@ -66,7 +67,7 @@
       ]
     },
     "plugins": [
-      "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.1/lint.ts"
+      "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.2/lint.ts"
     ]
   },
   "fmt": {
@@ -107,5 +108,10 @@
       "ffi": true,
       "sys": true
     }
+  },
+  "allowScripts": {
+    "deny": [
+      "npm:sharp"
+    ]
   }
 }

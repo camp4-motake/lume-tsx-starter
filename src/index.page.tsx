@@ -3,14 +3,14 @@ export const title = "example";
 export const description = "";
 
 export default ({ comp }: Lume.Data) => {
-  const { Button, Image } = comp.ui;
+  const { Button } = comp.ui;
 
   return (
     <div>
       <h1>Hello world!</h1>
 
       <figure>
-        <Image src="/assets/img/test300x300.png" />
+        <img src="/assets/img/test300x300.png" transform-images="avif png" />
       </figure>
 
       <div>
