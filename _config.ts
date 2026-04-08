@@ -32,8 +32,8 @@ const site = lume({
   src: "./src",
   prettyUrls: true,
   location: new URL("https://example.com/"),
-  cssFile: "/assets/css/main.css",
-  jsFile: "/assets/js/main.js",
+  cssFile: "/assets/main.css",
+  jsFile: "/assets/main.js",
 });
 
 /**
@@ -52,11 +52,11 @@ site.use(jsx());
 site.use(esbuild({/*  options: { target: ["safari17.4"] } */}));
 site.use(lightningCss({/*  options: { targets: { safari: version([17, 4]) } } */}));
 if (isDev) site.use(sourceMaps());
+site.use(base_path());
 site.use(picture());
 site.use(transformImages());
 site.use(imageDimensions());
 site.use(svgo());
-site.use(base_path());
 site.use(inline({ copyAttributes: ["role", "title", /^aria-/, /^data-/] }));
 if (isRelativeUrls) site.use(relativeUrls());
 if (isCacheBuster) site.use(cacheBuster());
