@@ -1,3 +1,4 @@
+import { useAttrs } from "#helpers";
 import clsx from "clsx";
 
 export interface Props {
@@ -6,7 +7,6 @@ export interface Props {
 
 export default function Button(
   { Tag = "a", children, ...props }: Props & Lume.Data,
-  { useAttrs }: Lume.Helpers,
 ) {
   const attributes = useAttrs(props, Tag);
 
