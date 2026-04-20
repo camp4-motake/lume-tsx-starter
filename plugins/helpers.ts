@@ -107,5 +107,5 @@ export const uppercase = (body: string) => body.toUpperCase();
  * @param path
  * @returns root path
  */
-export const langPath = (path: string, lang: string) =>
-  pathJoin("/", lang === "ja" ? "" : `/${lang}/`, path);
+export const langPath = (path: string, lang: string, defaultLang: string = "ja") =>
+  pathJoin("/", lang === defaultLang ? "" : `/${lang}/`, path);
