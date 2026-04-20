@@ -3,6 +3,7 @@
  * @see https://github.com/lumeland/lume
  */
 
+import { pathJoin, range, useAttrs } from "#helpers";
 import lume from "lume/mod.ts";
 import base_path from "lume/plugins/base_path.ts";
 import esbuild from "lume/plugins/esbuild.ts";
@@ -16,7 +17,6 @@ import svgo from "lume/plugins/svgo.ts";
 import transformImages from "lume/plugins/transform_images.ts";
 import cacheBuster from "./plugins/cacheBuster.ts";
 import formatHtml from "./plugins/formatHtml.ts";
-import { pathJoin, range, useAttrs } from "./plugins/helpers.ts";
 import imageDimensions from "./plugins/imageDimensions.ts";
 
 const isDev = Deno.args.includes("-s");
