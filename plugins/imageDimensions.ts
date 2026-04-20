@@ -14,55 +14,30 @@ export default function imageDimensions() {
   return (site: Site) => {
     site.process([".html"], async (pages) => {
       for (const page of pages) {
-        const { document } = page;
-        const images = document.querySelectorAll("img");
-
-        for (const img of images) {
-          const src = img.getAttribute("src");
-
-          if (isAbsoluteUrl(String(src))) {
-            continue;
-          }
-
-          if (!src || img.getAttribute("width") || img.getAttribute("height")) {
-            continue;
-          }
-
-          const filePath = site.src(`${src}`);
-          try {
-            const { width, height } = await imageSizeFromFile(filePath);
-            if (width && height) {
-              img.setAttribute("width", String(width));
-              img.setAttribute("height", String(height));
-            }
-          } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : String(err);
-            console.warn(`サイズ取得失敗: ${src}`, message);
-          }
-        }
+        const images = page.document.querySelectorAll("img");
+        await Promise.all(Array.from(images).map((img) => applyDimensions(site, img)));
       }
     });
   };
 }
 
-function isAbsoluteUrl(url: string): boolean {
-  if (!url || typeof url !== "string") {
-    return false;
+async function applyDimensions(site: Site, img: Element): Promise<void> {
+  const src = img.getAttribute("src");
+  if (!src || isExternalUrl(src)) return;
+  if (img.getAttribute("width") && img.getAttribute("height")) return;
+
+  try {
+    const { width, height } = await imageSizeFromFile(site.src(src));
+    if (width && height) {
+      img.setAttribute("width", String(width));
+      img.setAttribute("height", String(height));
+    }
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn(`サイズ取得失敗: ${src}`, message);
   }
-  if (url.startsWith("/")) {
-    return false;
-  }
-  if (url.startsWith("./") || url.startsWith("../")) {
-    return false;
-  }
-  if (url.startsWith("?") || url.startsWith("#")) {
-    return false;
-  }
-  if (/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(url)) {
-    return true;
-  }
-  if (/^[^\/]+\.[^\/]+/.test(url)) {
-    return true;
-  }
-  return false;
+}
+
+function isExternalUrl(url: string): boolean {
+  return /^[a-z][a-z\d+\-.]*:/i.test(url) || url.startsWith("//");
 }

@@ -24,7 +24,7 @@ const HTML_ATTRIBUTES = new Set([
  * @example <a {...useAttrs(props, "a", ["variant", "size"])}>
  */
 export const useAttrs = (
-  props: Lume.Data,
+  props: Partial<Lume.Data>,
   tagName?: string,
   omitKeys: string[] = [],
 ) => {
@@ -100,3 +100,12 @@ export function pathJoin(...paths: string[]) {
  * @returns uppercase string
  */
 export const uppercase = (body: string) => body.toUpperCase();
+
+/**
+ * Get Lang Root path
+ *
+ * @param path
+ * @returns root path
+ */
+export const langPath = (path: string, lang: string) =>
+  pathJoin("/", lang === "ja" ? "" : `/${lang}/`, path);

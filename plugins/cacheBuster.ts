@@ -1,173 +1,116 @@
-import { DOMParser, Element } from "@b-fuze/deno-dom";
+import { DOMParser, type Element } from "@b-fuze/deno-dom";
 import { crypto } from "@std/crypto";
-import { dirname, extname, join } from "@std/path";
+import { encodeHex } from "@std/encoding/hex";
+import { walk } from "@std/fs/walk";
+import { dirname, join } from "@std/path";
 import type Site from "lume/core/site.ts";
+
+type RewriteContext = {
+  htmlFilePath: string;
+  distDir: string;
+  siteLocation: string;
+};
+
+const targetSelectors: ReadonlyArray<{ selector: string; attribute: string }> = [
+  { selector: 'link[rel="stylesheet"][href]', attribute: "href" },
+  { selector: "script[src]", attribute: "src" },
+  { selector: "img[src]", attribute: "src" },
+  { selector: "source[src]", attribute: "src" },
+  { selector: "source[srcset]", attribute: "srcset" },
+  { selector: "video[src]", attribute: "src" },
+  { selector: "video[poster]", attribute: "poster" },
+  { selector: "audio[src]", attribute: "src" },
+];
 
 const hashCache = new Map<string, string>();
 
-// [0] target selector, [1] attribute name
-const targetSelectors = [
-  ['link[rel="stylesheet"][href]', "href"],
-  ["script[src]", "src"],
-  ["img[src]", "src"],
-  ["source[src]", "src"],
-  ["source[srcset]", "srcset"],
-  ["video[src]", "src"],
-  ["video[poster]", "poster"],
-  ["audio[src]", "src"],
-];
-
-async function generateHashCached(filePath: string): Promise<string> {
-  if (hashCache.has(filePath)) {
-    return hashCache.get(filePath)!;
-  }
+async function hashFile(filePath: string): Promise<string | null> {
+  const cached = hashCache.get(filePath);
+  if (cached) return cached;
 
   try {
-    const fileBytes = await Deno.readFile(filePath);
-    const hashBuffer = await crypto.subtle.digest("MD5", fileBytes);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-    const shortHash = hashHex.slice(0, 8);
+    const bytes = await Deno.readFile(filePath);
+    const digest = await crypto.subtle.digest("MD5", bytes);
+    const shortHash = encodeHex(new Uint8Array(digest)).slice(0, 8);
     hashCache.set(filePath, shortHash);
     return shortHash;
   } catch (error) {
     console.error(`Error generating hash for ${filePath}:`, error);
-    hashCache.set(filePath, "error");
-    return "error";
+    return null;
   }
 }
 
-async function addHashToAttributeValue(
-  htmlFilePath: string,
-  attrValue: string | null,
-  distDir: string,
-  siteLocation: string,
-): Promise<string | null> {
-  if (!attrValue || attrValue.startsWith("http") || attrValue.startsWith("data:")) {
-    return attrValue;
-  }
+function resolveAssetPath(pathOnly: string, ctx: RewriteContext): string {
+  return pathOnly.startsWith(ctx.siteLocation)
+    ? join(ctx.distDir, pathOnly.slice(ctx.siteLocation.length))
+    : join(dirname(ctx.htmlFilePath), pathOnly);
+}
 
-  const [pathOnly] = attrValue.split(/[?#]/);
+async function rewriteUrl(value: string, ctx: RewriteContext): Promise<string> {
+  if (value.startsWith("http") || value.startsWith("data:")) return value;
 
-  const loc = siteLocation;
-  const fullPath = pathOnly.startsWith(loc)
-    ? join(distDir, pathOnly.slice(loc.length))
-    : join(dirname(htmlFilePath), pathOnly);
+  const [pathOnly] = value.split(/[?#]/);
+  const fullPath = resolveAssetPath(pathOnly, ctx);
 
   try {
     await Deno.stat(fullPath);
   } catch {
-    return attrValue;
+    return value;
   }
 
-  const hash = await generateHashCached(fullPath);
-
-  if (hash === "error") {
-    return attrValue;
-  }
-
-  return `${pathOnly}?v=${hash}`;
+  const hash = await hashFile(fullPath);
+  return hash ? `${pathOnly}?v=${hash}` : value;
 }
 
-async function processElements(
-  document: Document,
-  htmlFilePath: string,
-  selector: string,
-  attributeName: string,
-  distDir: string,
-  siteLocation: string,
-): Promise<void> {
-  const elements = document.querySelectorAll(selector);
-  const promises: Promise<void>[] = [];
-
-  for (let i = 0; i < elements.length; i++) {
-    const elem = elements[i] as unknown as Element;
-    const attrValue = elem.getAttribute(attributeName);
-
-    if (attributeName === "srcset" && attrValue) {
-      promises.push(
-        (async () => {
-          const srcsetParts = attrValue.split(",");
-          const newSrcsetParts = await Promise.all(
-            srcsetParts.map(async (srcItem) => {
-              const [url, descriptor] = srcItem.trim().split(/\s+/);
-              const newUrl = await addHashToAttributeValue(
-                htmlFilePath,
-                url,
-                distDir,
-                siteLocation,
-              );
-              return descriptor ? `${newUrl} ${descriptor}` : newUrl;
-            }),
-          );
-          elem.setAttribute(attributeName, newSrcsetParts.join(", "));
-        })(),
-      );
-    } else if (attrValue) {
-      promises.push(
-        (async () => {
-          const newValue = await addHashToAttributeValue(
-            htmlFilePath,
-            attrValue,
-            distDir,
-            siteLocation,
-          );
-          if (newValue && newValue !== attrValue) {
-            elem.setAttribute(attributeName, newValue);
-          }
-        })(),
-      );
-    }
-  }
-  await Promise.all(promises);
+async function rewriteSrcset(value: string, ctx: RewriteContext): Promise<string> {
+  const parts = await Promise.all(
+    value.split(",").map(async (item) => {
+      const [url, descriptor] = item.trim().split(/\s+/);
+      const newUrl = await rewriteUrl(url, ctx);
+      return descriptor ? `${newUrl} ${descriptor}` : newUrl;
+    }),
+  );
+  return parts.join(", ");
 }
 
-async function processHtmlFile(
-  filePath: string,
-  distDir: string,
-  siteLocation: string,
+async function rewriteElement(
+  elem: Element,
+  attribute: string,
+  ctx: RewriteContext,
 ): Promise<void> {
+  const current = elem.getAttribute(attribute);
+  if (!current) return;
+
+  const next = attribute === "srcset"
+    ? await rewriteSrcset(current, ctx)
+    : await rewriteUrl(current, ctx);
+
+  if (next !== current) elem.setAttribute(attribute, next);
+}
+
+function serializeDocument(document: Document): string {
+  const doctype = document.doctype ? `<!DOCTYPE ${document.doctype.name}>` : "";
+  return doctype + document.documentElement!.outerHTML;
+}
+
+async function processHtmlFile(filePath: string, distDir: string, siteLocation: string) {
   try {
     const html = await Deno.readTextFile(filePath);
-    const document = new DOMParser().parseFromString(html, "text/html");
-    if (!document) throw new Error(`Failed to parse HTML from ${filePath}`);
+    const parsed = new DOMParser().parseFromString(html, "text/html");
+    if (!parsed) throw new Error(`Failed to parse HTML from ${filePath}`);
+    const document = parsed as unknown as Document;
 
-    await Promise.all(targetSelectors.map(([selector, attributeName]) =>
-      processElements(
-        document as unknown as Document,
-        filePath,
-        selector,
-        attributeName,
-        distDir,
-        siteLocation,
-      )
-    ));
+    const ctx: RewriteContext = { htmlFilePath: filePath, distDir, siteLocation };
 
-    // Write the modified HTML back to the file
-    const doctype = document.doctype ? `<!DOCTYPE ${document.doctype.name}>` : "";
-    await Deno.writeTextFile(filePath, doctype + document.documentElement!.outerHTML);
-    // console.log(`Processed: ${filePath}`);
+    await Promise.all(targetSelectors.map(async ({ selector, attribute }) => {
+      const elements = Array.from(document.querySelectorAll(selector)) as unknown as Element[];
+      await Promise.all(elements.map((el) => rewriteElement(el, attribute, ctx)));
+    }));
+
+    await Deno.writeTextFile(filePath, serializeDocument(document));
   } catch (error) {
     console.error(`Error processing file ${filePath}:`, error);
   }
-}
-
-async function processDistDirectory(
-  dir: string,
-  distDir: string,
-  siteLocation: string,
-): Promise<void> {
-  const filePromises: Promise<void>[] = [];
-  for await (const entry of Deno.readDir(dir)) {
-    const filePath = join(dir, entry.name);
-
-    if (entry.isDirectory) {
-      filePromises.push(processDistDirectory(filePath, distDir, siteLocation));
-    } else if (entry.isFile && extname(entry.name).toLowerCase() === ".html") {
-      filePromises.push(processHtmlFile(filePath, distDir, siteLocation));
-    }
-  }
-  await Promise.all(filePromises);
 }
 
 export default function cacheBuster() {
@@ -177,7 +120,13 @@ export default function cacheBuster() {
       const startTime = performance.now();
       const distDir = site.dest();
       const siteLocation = site.options.location?.pathname || "/";
-      await processDistDirectory(distDir, distDir, siteLocation).catch(console.error);
+
+      const tasks: Promise<void>[] = [];
+      for await (const entry of walk(distDir, { includeDirs: false, exts: [".html"] })) {
+        tasks.push(processHtmlFile(entry.path, distDir, siteLocation));
+      }
+      await Promise.all(tasks).catch(console.error);
+
       const endTime = performance.now();
       console.log(`Cache busting finished in ${(endTime - startTime).toFixed(2)} ms`);
     });
