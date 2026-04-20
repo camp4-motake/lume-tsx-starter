@@ -27,3 +27,10 @@ deno task format
 ## Resources
 
 [Deno](https://deno.com/) | [Lume3](https://github.com/lumeland/lume)
+
+### How can I support multi-languages, Tailwind CSS, etc.?
+
+It can be supported using [Lume plugins](https://lume.land/plugins/). Please refer to the official documentation.
+
+- [Multi languages](https://lume.land/plugins/multilanguage/)
+- [Tailwind CSS](https://lume.land/plugins/tailwindcss/)
