@@ -20,9 +20,9 @@ export default function (data: Lume.Data, helpers: Lume.Helpers) {
         <meta name="format-detection" content="telephone=no" />
         <title>{titleText}</title>
 
-        <link rel="canonical" href={canonicalUrl} />
-
         <Assets webFonts={data?.webFonts} />
+
+        <link rel="canonical" href={canonicalUrl} />
 
         {/* tracking tag */}
         {/* {{ __html: ``, }} */}

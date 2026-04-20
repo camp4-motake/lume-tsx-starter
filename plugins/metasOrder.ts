@@ -1,7 +1,7 @@
 /**
  * lume metas order plugin
  *
- * `<head>` 内の meta タグを最初の <link> / <script> より前に並べ替える。
+ * SEO/OGP 系 meta タグを critical CSS/JS より後、canonical / icon / manifest 系 link より前に集約する。
  *
  * usage:
  * site.use(metas());
@@ -21,7 +21,13 @@ const META_SELECTOR = [
   'meta[name^="fediverse:"]',
 ].join(",");
 
-const ANCHOR_TAGS = new Set(["LINK", "SCRIPT"]);
+const ANCHOR_SELECTOR = [
+  'link[rel="canonical"]',
+  'link[rel="icon"]',
+  'link[rel="shortcut icon"]',
+  'link[rel="apple-touch-icon"]',
+  'link[rel="manifest"]',
+].join(",");
 
 export default function metasOrder() {
   return (site: Site) => {
@@ -30,7 +36,7 @@ export default function metasOrder() {
         const head = page.document.head;
         if (!head) continue;
 
-        const anchor = findFirstAnchor(head);
+        const anchor = head.querySelector(ANCHOR_SELECTOR);
         if (!anchor) continue;
 
         for (const tag of head.querySelectorAll(META_SELECTOR)) {
@@ -39,11 +45,4 @@ export default function metasOrder() {
       }
     });
   };
-}
-
-function findFirstAnchor(head: HTMLHeadElement): Element | null {
-  for (const child of head.children) {
-    if (ANCHOR_TAGS.has(child.tagName)) return child;
-  }
-  return null;
 }
