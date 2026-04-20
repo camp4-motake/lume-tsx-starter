@@ -8,7 +8,7 @@ Lume 3 on Deno. Do not run `npm install` — `node_modules/` exists only because
 
 ## Commands
 
-- `deno task serve` — dev server
+- `deno task serve` (alias: `dev`) — dev server
 - `deno task build` — production build to `_site/`
 - `deno task build:fmt` — build with `FORMAT_HTML=true` (pretty HTML via `js-beautify`)
 - `deno task zip` — build + zip `_site/` into `_zip/` (override prefix with `ZIP_PREFIX`)
@@ -22,8 +22,10 @@ Lume 3 on Deno. Do not run `npm install` — `node_modules/` exists only because
 - `src/_components/<category>/<Name>/comp.tsx` — components are accessed as `comp.<category>.<Name>`. Sibling `style.css` and `script.ts` are auto-loaded by Lume; do not import them.
 - `src/_includes/layouts/Base.tsx` — the only layout. All pages set `export const layout = "layouts/Base.tsx"`.
 - `src/_data/config.ts` — site-wide config exposed as `config` on every page.
+- `src/assets/main.css` — CSS entry. Global cascade-layer order: `config, reset, utilities, components.layouts, components.ui`. Shared styles live in `src/_includes/styles/`.
+- `src/_includes/scripts/index.ts` — global JS; bundled into `main.js` via the `layouts/Assets` component's `script.ts`.
 - `plugins/` — custom plugins (`cacheBuster`, `formatHtml`, `imageDimensions`) and the standalone `zip.ts` script.
-- `#helpers` import alias → `plugins/helpers.ts`. Use `useAttrs(props, tagName)` when spreading props onto a DOM element.
+- `#helpers` import alias → `plugins/helpers.ts`. Use `useAttrs(props, tagName?, omitKeys?)` when spreading props onto a DOM element.
 
 ## Conventions
 
