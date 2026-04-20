@@ -1,5 +1,5 @@
 export default function (data: Lume.Data, helpers: Lume.Helpers) {
-  const { children, comp, config } = data;
+  const { children, comp, config, lang } = data;
   const { Assets, Header, Footer } = comp.layouts;
   const { url: urlHelper } = helpers;
 
@@ -10,7 +10,7 @@ export default function (data: Lume.Data, helpers: Lume.Helpers) {
   const canonicalUrl = urlHelper(data?.url, true);
 
   return (
-    <html lang={config.lang || "ja"}>
+    <html lang={lang || config.lang || "ja"}>
       <head>
         <meta charset="UTF-8" />
         <meta
