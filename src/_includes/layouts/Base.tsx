@@ -23,7 +23,7 @@ export default function (
         <meta name="format-detection" content="telephone=no" />
         <title>{titleText}</title>
 
-        <Assets webFonts={data?.webFonts} />
+        <Assets />
 
         <link rel="canonical" href={canonicalUrl} />
 
