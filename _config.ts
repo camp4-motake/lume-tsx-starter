@@ -3,7 +3,6 @@
  * @see https://github.com/lumeland/lume
  */
 
-import { version } from "lume/core/utils/browsers.ts";
 import lume from "lume/mod.ts";
 import base_path from "lume/plugins/base_path.ts";
 import esbuild from "lume/plugins/esbuild.ts";
@@ -50,8 +49,8 @@ site.ignore("README.md", "CHANGELOG.md", "node_modules");
  * @see https://lume.land/docs/getting-started/use-plugins/
  */
 site.use(jsx());
-site.use(esbuild({ options: { target: ["safari17.4"] } }));
-site.use(lightningCss({ options: { targets: { safari: version([17, 4]) } } }));
+site.use(esbuild());
+site.use(lightningCss());
 if (isDev) site.use(sourceMaps());
 site.use(base_path());
 site.use(picture());
