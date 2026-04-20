@@ -2,9 +2,7 @@
  * lume auto dimension plugin
  *
  * usage:
- * site.use(imageDimensions()); // set before  "picture" and "transformImages" plugin
- * site.use(picture());
- * site.use(transformImages());
+ *   site.use(imageDimensions()); // set before "base_path" / "relative_urls" / "picture" / "transformImages"
  */
 
 import type Site from "lume/core/site.ts";
