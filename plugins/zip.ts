@@ -1,32 +1,44 @@
-import { resolve } from "@std/path";
+import { dirname, resolve } from "@std/path";
+import { ensureDir } from "@std/fs";
 import AdmZip from "adm-zip";
 
-const zipPrefix = Deno.env.get("ZIP_PREFIX") || "production-build";
-const date = new Date().toISOString().slice(0, 10).replace(/-/g, "") + "_" +
-  Math.floor(Date.now() / 1000);
+const ZIP_PREFIX = Deno.env.get("ZIP_PREFIX") || "production-build";
+const SITE_DIR = "./_site";
+const OUTPUT_DIR = "./_zip";
 
-console.log("date", date);
+function buildTimestamp(now: Date = new Date()): string {
+  const date = now.toISOString().slice(0, 10).replaceAll("-", "");
+  const epoch = Math.floor(now.getTime() / 1000);
+  return `${date}_${epoch}`;
+}
 
-try {
-  // build site
-  const { success: buildSuccess } = await new Deno.Command("deno", {
+async function runBuild(): Promise<void> {
+  const { success } = await new Deno.Command("deno", {
     args: ["task", "build"],
     stdout: "inherit",
     stderr: "inherit",
   }).output();
 
-  if (!buildSuccess) throw new Error("Build Failed");
+  if (!success) throw new Error("Build Failed");
+}
 
-  const currentDir = Deno.cwd();
-  const zipDirRelative = "./_site";
-  const zipDir = resolve(currentDir, zipDirRelative);
-
-  // zip
+async function createZip(sourceDir: string, outputPath: string): Promise<void> {
+  await ensureDir(dirname(outputPath));
   const zip = new AdmZip();
-  zip.addLocalFolder(zipDir);
-  zip.writeZip(`./_zip/${zipPrefix}-${date}.zip`);
+  zip.addLocalFolder(sourceDir);
+  zip.writeZip(outputPath);
+}
 
-  console.log("ZIP file generation succeeded");
+try {
+  await runBuild();
+
+  const cwd = Deno.cwd();
+  const sourceDir = resolve(cwd, SITE_DIR);
+  const outputPath = resolve(cwd, OUTPUT_DIR, `${ZIP_PREFIX}-${buildTimestamp()}.zip`);
+
+  await createZip(sourceDir, outputPath);
+
+  console.log(`ZIP file generated: ${outputPath}`);
 } catch (error) {
   console.error("Error:", error);
   Deno.exit(1);
