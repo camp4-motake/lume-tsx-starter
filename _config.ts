@@ -48,17 +48,24 @@ site.ignore("README.md", "CHANGELOG.md", "node_modules");
  * Plugins
  * @see https://lume.land/docs/getting-started/use-plugins/
  */
+// Compile
 site.use(jsx());
 site.use(esbuild());
 site.use(lightningCss());
 if (isDev) site.use(sourceMaps());
+
+// URLs
 site.use(base_path());
+if (isRelativeUrls) site.use(relativeUrls());
+
+// Images
+site.use(imageDimensions());
 site.use(picture());
 site.use(transformImages());
-site.use(imageDimensions());
 site.use(svgo());
+
+// Inline & HTML post-processing
 site.use(inline({ copyAttributes: ["role", "title", /^aria-/, /^data-/] }));
-if (isRelativeUrls) site.use(relativeUrls());
 if (isCacheBuster) site.use(cacheBuster());
 if (isFormatHtml) site.use(formatHtml());
 

@@ -36,7 +36,7 @@
     },
     "build:fmt": {
       "description": "Build the site for production with format html",
-      "command": "deno task lume --FORMAT_HTML=true"
+      "command": "FORMAT_HTML=true deno task lume"
     },
     "zip": {
       "description": "zip the site files",
