@@ -10,6 +10,7 @@ import esbuild from "lume/plugins/esbuild.ts";
 import inline from "lume/plugins/inline.ts";
 import jsx from "lume/plugins/jsx.ts";
 import lightningCss from "lume/plugins/lightningcss.ts";
+import metas from "lume/plugins/metas.ts";
 import picture from "lume/plugins/picture.ts";
 import relativeUrls from "lume/plugins/relative_urls.ts";
 import sourceMaps from "lume/plugins/source_maps.ts";
@@ -63,6 +64,9 @@ site.use(imageDimensions());
 site.use(picture());
 site.use(transformImages());
 site.use(svgo());
+
+// Metas
+site.use(metas());
 
 // Inline & HTML post-processing
 site.use(inline({ copyAttributes: ["role", "title", /^aria-/, /^data-/] }));
