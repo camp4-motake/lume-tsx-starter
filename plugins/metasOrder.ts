@@ -8,7 +8,6 @@
  * site.use(metasOrder()); // metas プラグインの後で使用する
  */
 
-import { type Element, type Node } from "@b-fuze/deno-dom";
 import type Site from "lume/core/site.ts";
 
 const META_SELECTOR = [
@@ -22,21 +21,19 @@ const META_SELECTOR = [
   'meta[name^="fediverse:"]',
 ].join(",");
 
-const ELEMENT_NODE = 1;
 const ANCHOR_TAGS = new Set(["LINK", "SCRIPT"]);
 
 export default function metasOrder() {
   return (site: Site) => {
     site.process([".html"], (pages) => {
       for (const page of pages) {
-        const head = page.document?.head as unknown as Element | undefined;
+        const head = page.document.head;
         if (!head) continue;
 
-        const anchor = findFirstLinkOrScript(head);
+        const anchor = findFirstAnchor(head);
         if (!anchor) continue;
 
-        const tags = head.querySelectorAll(META_SELECTOR);
-        for (const tag of Array.from(tags) as unknown as Element[]) {
+        for (const tag of head.querySelectorAll(META_SELECTOR)) {
           head.insertBefore(tag, anchor);
         }
       }
@@ -44,11 +41,9 @@ export default function metasOrder() {
   };
 }
 
-function findFirstLinkOrScript(head: Element): Node | null {
-  for (const node of Array.from(head.childNodes) as Node[]) {
-    if (node.nodeType === ELEMENT_NODE && ANCHOR_TAGS.has((node as Element).tagName)) {
-      return node;
-    }
+function findFirstAnchor(head: HTMLHeadElement): Element | null {
+  for (const child of head.children) {
+    if (ANCHOR_TAGS.has(child.tagName)) return child;
   }
   return null;
 }
