@@ -1,4 +1,7 @@
-export default function (data: Lume.Data, helpers: Lume.Helpers) {
+export default function (
+  data: Lume.Data,
+  helpers: Lume.Helpers,
+) {
   const { children, comp, config, lang } = data;
   const { Assets, Header, Footer } = comp.layouts;
   const { url: urlHelper } = helpers;

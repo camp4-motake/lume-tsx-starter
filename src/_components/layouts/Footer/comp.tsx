@@ -1,9 +1,7 @@
+import { useAttrs } from "#helpers";
 import clsx from "clsx";
 
-export default function (
-  { ...props }: Lume.Data,
-  { useAttrs }: Lume.Helpers,
-) {
+export default function ({ ...props }: Lume.Data) {
   const attributes = useAttrs(props, "footer");
   const year = new Date().getFullYear();
 
