@@ -85,9 +85,9 @@ else site.use(minifyHTML());
  * Helpers
  * @see https://lume.land/docs/configuration/filters/
  */
+site.helper("langPath", langPath, { type: "tag" });
 site.helper("pathJoin", pathJoin, { type: "tag" });
 site.helper("range", range, { type: "tag" });
 site.helper("useAttrs", useAttrs, { type: "tag" });
-site.helper("langPath", langPath, { type: "tag" });
 
 export default site;
