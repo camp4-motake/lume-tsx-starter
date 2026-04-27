@@ -14,19 +14,19 @@ paths: "**/comp.tsx"
 
 ### Configurable Wrapper Tag
 
-- Expose a `Tag?` prop (union of allowed tags, with a default) when the wrapper tag is not
-  dictated by the component's purpose.
+- Expose a `Tag?` prop (union of allowed tags, with a default) when the wrapper tag is not dictated
+  by the component's purpose.
   - Example: `Tag?: "div" | "li"` for card-like components.
   - Example: `Tag?: "a" | "button"` for actionable controls.
-- Pass the resolved `Tag` to `useAttrs(props, Tag)` so attribute filtering matches the
-  rendered element.
-- Do not expose `Tag` when the tag is semantically fixed (e.g. `a`, `button`, `details`,
-  `header`, `section`, `footer`, `nav`); hardcode the element.
+- Pass the resolved `Tag` to `useAttrs(props, Tag)` so attribute filtering matches the rendered
+  element.
+- Do not expose `Tag` when the tag is semantically fixed (e.g. `a`, `button`, `details`, `header`,
+  `section`, `footer`, `nav`); hardcode the element.
 
 ### Button Defaults
 
-- When `Tag === "button"` and `attributes.type` is unset, default it to `"button"` to avoid
-  implicit form submission.
+- When `Tag === "button"` and `attributes.type` is unset, default it to `"button"` to avoid implicit
+  form submission.
 
 ### Template
 
@@ -158,9 +158,8 @@ Scope child selectors within the elements layer:
   `<picture>` manually.
 - Avoid CSS `background-image` for decorative or content images unless there is a specific reason
   (e.g., gradients, dynamic tiling).
-- For `.jpg` and `.png` sources, set `transform-images="avif <ext>"` so an AVIF variant is
-  generated alongside the original. Match `<ext>` to the source format (`jpg` for `.jpg`, `png`
-  for `.png`).
+- For `.jpg` and `.png` sources, set `transform-images="avif <ext>"` so an AVIF variant is generated
+  alongside the original. Match `<ext>` to the source format (`jpg` for `.jpg`, `png` for `.png`).
 
 ```tsx
 <img
@@ -173,8 +172,8 @@ Scope child selectors within the elements layer:
 
 ### Responsive variants
 
-Append width specs to the format list to generate multiple sizes. Pair with the `sizes` attribute
-so the browser selects the correct source.
+Append width specs to the format list to generate multiple sizes. Pair with the `sizes` attribute so
+the browser selects the correct source.
 
 - `360 640` — generate 360px and 640px widths.
 - `300@2` — generate 300px plus a 2× (600px) variant for high-DPI displays.
@@ -194,9 +193,9 @@ Pick widths that cover the largest rendered size × DPR; oversized variants wast
 
 ### Container-level configuration
 
-Place `transform-images` on a wrapper element to apply the same settings to all descendant
-`<img>`s. Per-image `transform-images` overrides the container value; `transform-images=""` on a
-child opts out of transformation.
+Place `transform-images` on a wrapper element to apply the same settings to all descendant `<img>`s.
+Per-image `transform-images` overrides the container value; `transform-images=""` on a child opts
+out of transformation.
 
 > Reference: <https://lume.land/plugins/picture/>
 
