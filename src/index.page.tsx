@@ -6,7 +6,7 @@ export default ({ comp }: Lume.Data) => {
   const { Button } = comp.ui;
 
   return (
-    <div>
+    <main>
       <h1>Hello world!</h1>
 
       <figure>
@@ -18,6 +18,6 @@ export default ({ comp }: Lume.Data) => {
           component sample
         </Button>
       </div>
-    </div>
+    </main>
   );
 };
