@@ -3,7 +3,7 @@
  * @see https://github.com/lumeland/lume
  */
 
-import { pathJoin, range, useAttrs } from "#helpers";
+import { langPath, pathJoin, range, useAttrs } from "#helpers";
 import lume from "lume/mod.ts";
 import base_path from "lume/plugins/base_path.ts";
 import esbuild from "lume/plugins/esbuild.ts";
@@ -11,6 +11,7 @@ import inline from "lume/plugins/inline.ts";
 import jsx from "lume/plugins/jsx.ts";
 import lightningCss from "lume/plugins/lightningcss.ts";
 import metas from "lume/plugins/metas.ts";
+import minifyHTML from "lume/plugins/minify_html.ts";
 import picture from "lume/plugins/picture.ts";
 import relativeUrls from "lume/plugins/relative_urls.ts";
 import sourceMaps from "lume/plugins/source_maps.ts";
@@ -56,24 +57,29 @@ site.use(esbuild());
 site.use(lightningCss());
 if (isDev) site.use(sourceMaps());
 
-// URLs
-site.use(base_path());
-if (isRelativeUrls) site.use(relativeUrls());
-
-// Images
+// Images (URL 書き換え前に動かして TSX 記述どおりの src を解決する)
 site.use(imageDimensions());
 site.use(picture());
 site.use(transformImages());
 site.use(svgo());
 
+// Inline (URL 書き換え前に動かして ?inline 参照のソースファイルを解決できるようにする)
+site.use(inline({ copyAttributes: ["role", "title", /^aria-/, /^data-/] }));
+
+// URLs (img.src や CSS url() の書き換えを含むので画像系 / inline の後)
+// deno-lint-ignore lume/plugin-order
+site.use(base_path());
+if (isRelativeUrls) site.use(relativeUrls());
+
 // Metas
+// deno-lint-ignore lume/plugin-order
 site.use(metas());
 site.use(metasOrder());
 
-// Inline & HTML post-processing
-site.use(inline({ copyAttributes: ["role", "title", /^aria-/, /^data-/] }));
+// HTML post-processing
 if (isCacheBuster) site.use(cacheBuster());
 if (isFormatHtml) site.use(formatHtml());
+else site.use(minifyHTML());
 
 /**
  * Helpers
@@ -82,5 +88,6 @@ if (isFormatHtml) site.use(formatHtml());
 site.helper("pathJoin", pathJoin, { type: "tag" });
 site.helper("range", range, { type: "tag" });
 site.helper("useAttrs", useAttrs, { type: "tag" });
+site.helper("langPath", langPath, { type: "tag" });
 
 export default site;
