@@ -1,4 +1,4 @@
-@custom-media --breakpoint (width >= 48em);
+@custom-media --breakpoint (width >= 36em);
 
 @layer components.layouts {
   .desktop-view {
@@ -11,7 +11,7 @@
 
       @media (--breakpoint) {
         --_main-view-columns: 1fr var(--_main-view-inline-size) 1fr;
-        --_aside-display: block;
+        --_aside-display: grid;
       }
 
       display: grid;
@@ -24,7 +24,10 @@
       }
 
       > aside {
+        position: sticky;
+        inset-block-start: 0;
         display: var(--_aside-display);
+        place-items: center;
         background-color: var(--_aside-bg-color);
       }
     }
