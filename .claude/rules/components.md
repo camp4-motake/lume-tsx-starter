@@ -14,19 +14,19 @@ paths: "**/comp.tsx"
 
 ### Configurable Wrapper Tag
 
-- Expose a `Tag?` prop (union of allowed tags, with a default) when the wrapper tag is not dictated
-  by the component's purpose.
+- Expose a `Tag?` prop (union of allowed tags, with a default) when the wrapper tag is not
+  dictated by the component's purpose.
   - Example: `Tag?: "div" | "li"` for card-like components.
   - Example: `Tag?: "a" | "button"` for actionable controls.
-- Pass the resolved `Tag` to `useAttrs(props, Tag)` so attribute filtering matches the rendered
-  element.
-- Do not expose `Tag` when the tag is semantically fixed (e.g. `a`, `button`, `details`, `header`,
-  `section`, `footer`, `nav`); hardcode the element.
+- Pass the resolved `Tag` to `useAttrs(props, Tag)` so attribute filtering matches the
+  rendered element.
+- Do not expose `Tag` when the tag is semantically fixed (e.g. `a`, `button`, `details`,
+  `header`, `section`, `footer`, `nav`); hardcode the element.
 
 ### Button Defaults
 
-- When `Tag === "button"` and `attributes.type` is unset, default it to `"button"` to avoid implicit
-  form submission.
+- When `Tag === "button"` and `attributes.type` is unset, default it to `"button"` to avoid
+  implicit form submission.
 
 ### Template
 
@@ -63,14 +63,6 @@ Component stylesheets (`style.css`) must use nested CSS cascade layers.
 
 Use `@layer components.<category>` where `<category>` matches the component directory (e.g., `ui`,
 `layouts`).
-
-```css
-@layer components.ui {
-  .button {
-    /* ... */
-  }
-}
-```
 
 ### Sublayer Structure
 
@@ -130,18 +122,8 @@ Three sublayers in cascade order:
 
 ## Child Element Class Names
 
-Child elements use `_{element}` format (e.g., `_title`, `_label`). Do not use BEM-style
-`{component}__{element}`.
-
-```tsx
-// Good
-<span class="_title" />
-
-// Bad
-<span class="header__title" />
-```
-
-Scope child selectors within the elements layer:
+Child elements use the `_{element}` format (e.g., `_title`, `_label`); never use BEM-style
+`{component}__{element}`. Scope child selectors within the elements layer:
 
 ```css
 @layer elements {
@@ -154,32 +136,19 @@ Scope child selectors within the elements layer:
 ## Images
 
 - Render images with `<img>` and a `transform-images` attribute. The Lume picture plugin
-  auto-generates the `<picture>` wrapper and per-format `<source>` elements, so do not wrap in
+  auto-generates the `<picture>` wrapper and per-format `<source>` elements; do not wrap in
   `<picture>` manually.
-- Avoid CSS `background-image` for decorative or content images unless there is a specific reason
-  (e.g., gradients, dynamic tiling).
-- For `.jpg` and `.png` sources, set `transform-images="avif <ext>"` so an AVIF variant is generated
-  alongside the original. Match `<ext>` to the source format (`jpg` for `.jpg`, `png` for `.png`).
-
-```tsx
-<img
-  src="/assets/img/section.jpg"
-  alt=""
-  transform-images="avif jpg"
-  loading="lazy"
-/>;
-```
-
-### Responsive variants
-
-Append width specs to the format list to generate multiple sizes. Pair with the `sizes` attribute so
-the browser selects the correct source.
-
-- `360 640` — generate 360px and 640px widths.
-- `300@2` — generate 300px plus a 2× (600px) variant for high-DPI displays.
-- `300x150@2` — crop to 300×150 plus a 2× variant.
-
-Pick widths that cover the largest rendered size × DPR; oversized variants waste bandwidth.
+- Avoid CSS `background-image` for decorative or content images unless required (e.g., gradients,
+  dynamic tiling).
+- For `.jpg` / `.png` sources, set `transform-images="avif <ext>"` to generate an AVIF variant
+  alongside the original (`jpg` for `.jpg`, `png` for `.png`).
+- Append width specs to generate responsive variants; pair with `sizes` so the browser picks the
+  right source. Syntax:
+  - `360 640` — 360px and 640px widths.
+  - `300@2` — 300px plus a 2× (600px) variant for high-DPI.
+  - `300x150@2` — crop to 300×150 plus a 2× variant.
+- Place `transform-images` on a wrapper to apply to all descendant `<img>`s; per-image values
+  override, and `transform-images=""` opts out.
 
 ```tsx
 <img
@@ -190,12 +159,6 @@ Pick widths that cover the largest rendered size × DPR; oversized variants wast
   loading="lazy"
 />;
 ```
-
-### Container-level configuration
-
-Place `transform-images` on a wrapper element to apply the same settings to all descendant `<img>`s.
-Per-image `transform-images` overrides the container value; `transform-images=""` on a child opts
-out of transformation.
 
 > Reference: <https://lume.land/plugins/picture/>
 
