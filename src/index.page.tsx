@@ -1,4 +1,4 @@
-export const layout = "layouts/Base.tsx";
+export const layout = "layouts/MobileOnly.tsx";
 export const title = "example";
 export const description = "";
 

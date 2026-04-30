@@ -3,7 +3,7 @@ export default function (
   helpers: Lume.Helpers,
 ) {
   const { children, comp, config, lang } = data;
-  const { Assets, Header, Footer } = comp.layouts;
+  const { Assets } = comp.layouts;
   const { url: urlHelper } = helpers;
 
   const titleText = [!data?.isHome && data?.title, config.siteTitle, data?.isHome && data?.tagline]
@@ -34,9 +34,7 @@ export default function (
         {/* tracking tag (noscript) */}
         {/* {{ __html: ``, }} */}
 
-        <Header title={config.siteTitle} />
         {children}
-        <Footer />
       </body>
     </html>
   );

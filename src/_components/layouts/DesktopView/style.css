@@ -1,0 +1,32 @@
+@custom-media --breakpoint (width >= 48em);
+
+@layer components.layouts {
+  .desktop-view {
+    @layer elements {
+      --_aside-bg-color: var(--color-bg-fill);
+      --_aside-display: none;
+      --_main-view-bg-color: var(--color-base);
+      --_main-view-columns: 1fr;
+      --_main-view-inline-size: calc(var(--base-view-size-ref-value, 402) * var(--rem));
+
+      @media (--breakpoint) {
+        --_main-view-columns: 1fr var(--_main-view-inline-size) 1fr;
+        --_aside-display: block;
+      }
+
+      display: grid;
+      grid-template-columns: var(--_main-view-columns);
+      min-block-size: 100dvb;
+
+      > main {
+        inline-size: 100%;
+        background-color: var(--_main-view-bg-color);
+      }
+
+      > aside {
+        display: var(--_aside-display);
+        background-color: var(--_aside-bg-color);
+      }
+    }
+  }
+}
