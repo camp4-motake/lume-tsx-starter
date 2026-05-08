@@ -10,7 +10,7 @@ export default ({ comp }: Lume.Data) => {
       <h1>Hello world!</h1>
 
       <figure>
-        <img src="/assets/img/test300x300.png" transform-images="avif png" />
+        <img src="/assets/img/test300x300.png" transform-images="avif" />
       </figure>
 
       <div>
