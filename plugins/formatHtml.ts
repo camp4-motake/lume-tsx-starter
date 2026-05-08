@@ -45,6 +45,10 @@ const INLINE = new Set([
   "wbr",
 ]);
 
+const ELEMENT_NODE = 1;
+const TEXT_NODE = 3;
+const COMMENT_NODE = 8;
+
 type Options = { indent?: string };
 
 export default function formatHtml({ indent = "  " }: Options = {}) {
@@ -92,15 +96,16 @@ function serializeElement(
   }
 
   out.push(pad + openTag(el));
+  const childPad = indent.repeat(depth + 1);
   for (const node of Array.from(el.childNodes)) {
-    if (node.nodeType === 1) {
+    if (node.nodeType === ELEMENT_NODE) {
       serializeElement(node as unknown as Element, depth + 1, indent, out);
-    } else if (node.nodeType === 3) {
+    } else if (node.nodeType === TEXT_NODE) {
       const text = node.textContent?.trim();
-      if (text) out.push(indent.repeat(depth + 1) + text);
-    } else if (node.nodeType === 8) {
+      if (text) out.push(childPad + text);
+    } else if (node.nodeType === COMMENT_NODE) {
       const data = (node as unknown as { data: string }).data ?? "";
-      out.push(indent.repeat(depth + 1) + `<!--${data}-->`);
+      out.push(childPad + `<!--${data}-->`);
     }
   }
   out.push(pad + `</${tag}>`);
@@ -108,7 +113,7 @@ function serializeElement(
 
 function isInlineOnly(el: Element): boolean {
   for (const node of Array.from(el.childNodes)) {
-    if (node.nodeType !== 1) continue;
+    if (node.nodeType !== ELEMENT_NODE) continue;
     const childTag = (node as unknown as Element).tagName.toLowerCase();
     if (!INLINE.has(childTag) && !PRESERVE.has(childTag)) return false;
   }
@@ -116,7 +121,8 @@ function isInlineOnly(el: Element): boolean {
 }
 
 function openTag(el: Element): string {
-  const html = el.outerHTML;
-  const idx = html.indexOf(">");
-  return idx === -1 ? html : html.slice(0, idx + 1);
+  const tag = el.tagName.toLowerCase();
+  const html = (el.cloneNode(false) as unknown as Element).outerHTML;
+  const close = `</${tag}>`;
+  return html.endsWith(close) ? html.slice(0, -close.length) : html;
 }
