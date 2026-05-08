@@ -1,11 +1,122 @@
+import { DOMParser, type Element } from "@b-fuze/deno-dom";
+import { walk } from "@std/fs/walk";
 import type Site from "lume/core/site.ts";
 
-export default function formatHtml(src = "./_site/**/*.html") {
+const PRESERVE = new Set([
+  "script",
+  "style",
+  "svg",
+  "noscript",
+  "pre",
+  "textarea",
+]);
+
+const INLINE = new Set([
+  "a",
+  "abbr",
+  "b",
+  "bdi",
+  "bdo",
+  "br",
+  "cite",
+  "code",
+  "data",
+  "dfn",
+  "em",
+  "i",
+  "img",
+  "kbd",
+  "label",
+  "mark",
+  "q",
+  "rp",
+  "rt",
+  "ruby",
+  "s",
+  "samp",
+  "small",
+  "span",
+  "strong",
+  "sub",
+  "sup",
+  "time",
+  "u",
+  "var",
+  "wbr",
+]);
+
+type Options = { indent?: string };
+
+export default function formatHtml({ indent = "  " }: Options = {}) {
   return (site: Site) => {
-    site.script(
-      "formatHtml",
-      `deno run --allow-read --allow-write --allow-env npm:js-beautify@latest '${src}' --indent-size 2 --no-preserve-newlines --end-with-newline false --extra-liners "" --unformatted "script,style,svg,noscript" --replace`,
-    );
-    site.addEventListener("afterBuild", "formatHtml");
+    site.addEventListener("afterBuild", async () => {
+      const distDir = site.dest();
+      const tasks: Promise<void>[] = [];
+      for await (
+        const entry of walk(distDir, { includeDirs: false, exts: [".html"] })
+      ) {
+        tasks.push(formatFile(entry.path, indent));
+      }
+      await Promise.all(tasks).catch(console.error);
+    });
   };
+}
+
+async function formatFile(filePath: string, indent: string): Promise<void> {
+  try {
+    const html = await Deno.readTextFile(filePath);
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    if (!doc?.documentElement) return;
+
+    const out: string[] = [];
+    if (doc.doctype) out.push(`<!DOCTYPE ${doc.doctype.name}>`);
+    serializeElement(doc.documentElement, 0, indent, out);
+    await Deno.writeTextFile(filePath, out.join("\n") + "\n");
+  } catch (error) {
+    console.error(`Error formatting file ${filePath}:`, error);
+  }
+}
+
+function serializeElement(
+  el: Element,
+  depth: number,
+  indent: string,
+  out: string[],
+): void {
+  const pad = indent.repeat(depth);
+  const tag = el.tagName.toLowerCase();
+
+  if (PRESERVE.has(tag) || isInlineOnly(el)) {
+    out.push(pad + el.outerHTML);
+    return;
+  }
+
+  out.push(pad + openTag(el));
+  for (const node of Array.from(el.childNodes)) {
+    if (node.nodeType === 1) {
+      serializeElement(node as unknown as Element, depth + 1, indent, out);
+    } else if (node.nodeType === 3) {
+      const text = node.textContent?.trim();
+      if (text) out.push(indent.repeat(depth + 1) + text);
+    } else if (node.nodeType === 8) {
+      const data = (node as unknown as { data: string }).data ?? "";
+      out.push(indent.repeat(depth + 1) + `<!--${data}-->`);
+    }
+  }
+  out.push(pad + `</${tag}>`);
+}
+
+function isInlineOnly(el: Element): boolean {
+  for (const node of Array.from(el.childNodes)) {
+    if (node.nodeType !== 1) continue;
+    const childTag = (node as unknown as Element).tagName.toLowerCase();
+    if (!INLINE.has(childTag) && !PRESERVE.has(childTag)) return false;
+  }
+  return true;
+}
+
+function openTag(el: Element): string {
+  const html = el.outerHTML;
+  const idx = html.indexOf(">");
+  return idx === -1 ? html : html.slice(0, idx + 1);
 }
