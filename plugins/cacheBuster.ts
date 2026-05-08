@@ -15,6 +15,7 @@ const targetSelectors: ReadonlyArray<{ selector: string; attribute: string }> = 
   { selector: 'link[rel="stylesheet"][href]', attribute: "href" },
   { selector: "script[src]", attribute: "src" },
   { selector: "img[src]", attribute: "src" },
+  { selector: "img[srcset]", attribute: "srcset" },
   { selector: "source[src]", attribute: "src" },
   { selector: "source[srcset]", attribute: "srcset" },
   { selector: "video[src]", attribute: "src" },
