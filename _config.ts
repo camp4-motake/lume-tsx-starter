@@ -20,7 +20,6 @@ import transformImages from "lume/plugins/transform_images.ts";
 import cacheBuster from "./plugins/cacheBuster.ts";
 import formatHtml from "./plugins/formatHtml.ts";
 import imageDimensions from "./plugins/imageDimensions.ts";
-import metasOrder from "./plugins/metasOrder.ts";
 
 const isDev = Deno.args.includes("-s");
 const isCacheBuster = !isDev;
@@ -74,7 +73,6 @@ if (isRelativeUrls) site.use(relativeUrls());
 // Metas
 // deno-lint-ignore lume/plugin-order
 site.use(metas());
-site.use(metasOrder());
 
 // HTML post-processing
 if (isCacheBuster) site.use(cacheBuster());
