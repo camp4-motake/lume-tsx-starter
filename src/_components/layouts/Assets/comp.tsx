@@ -66,8 +66,16 @@ export default function ({ config, webFonts }: Lume.Data) {
           ))}
         </>
       )}
+
       <link rel="stylesheet" href="/assets/main.css" />
       <script type="module" src="/assets/main.js"></script>
+
+      {
+        /* favicon
+          <link href="/assets/favicon.svg" rel="icon" sizes="any" type="image/svg+xml" />
+          <link href="/assets/apple-touch-icon.png" rel="apple-touch-icon" />
+          */
+      }
     </>
   );
 }

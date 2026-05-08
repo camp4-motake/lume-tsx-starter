@@ -21,20 +21,42 @@ export default function (
           content="width=device-width, initial-scale=1.0, viewport-fit=cover"
         />
         <meta name="format-detection" content="telephone=no" />
+
         <title>{titleText}</title>
+        <link rel="canonical" href={canonicalUrl} />
 
         <Assets />
 
-        <link rel="canonical" href={canonicalUrl} />
-
         {/* tracking tag */}
-        {/* {{ __html: ``, }} */}
+        {{ __html: "" }}
+
+        {titleText && <meta property="og:title" content={titleText} />}
       </head>
       <body>
         {/* tracking tag (noscript) */}
-        {/* {{ __html: ``, }} */}
+        {{ __html: "" }}
 
         {children}
+
+        <script
+          type="speculationrules"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "prerender": [{
+                "where": {
+                  "and": [
+                    { "href_matches": "/*" },
+                    { "not": { "selector_matches": "[rel~='nofollow']" } },
+                    { "not": { "selector_matches": ["[data-no-prerender]"] } },
+                    // { "not": { "href_matches": ["/wp-*", "/*\\?(.+)"] } },
+                  ],
+                },
+                "eagerness": "moderate",
+              }],
+            }),
+          }}
+        >
+        </script>
       </body>
     </html>
   );

@@ -6,7 +6,7 @@
  */
 const metas = {
   site: "site name",
-  title: "=title",
+  title: "", // not edited when `title` and `site` both exist
   description: "=description",
   image: "=ogImage || /assets/ogp.png",
   lang: "ja_JP",
