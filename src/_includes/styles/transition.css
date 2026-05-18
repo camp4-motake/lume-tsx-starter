@@ -1,18 +1,27 @@
-@media not print {
-  .has-fade-b-in,
-  .has-fade-b-in-img img {
+@media screen and (prefers-reduced-motion: no-preference) {
+  [data-scroll-fade-in] {
     --_delay: 0.08s;
     --_duration: 0.8s;
-    --_y: calc(1.75rem + 2.5%);
+    --_x: 0;
+    --_y: calc(1.25rem + 2cqi);
 
     /* Avoid NO_LCP */
     opacity: 0.001;
-
-    transform: translateY(var(--_y));
+    transform: translate3d(var(--_x), var(--_y), 0);
     will-change: opacity, transform;
   }
 
-  .has-decode-in-img img {
+  [data-scroll-fade-in="lx"] {
+    --_x: calc(-1.125rem - 1.5cqi);
+    --_y: 0;
+  }
+
+  [data-scroll-fade-in="rx"] {
+    --_x: calc(1.125rem + 1.5cqi);
+    --_y: 0;
+  }
+
+  [data-decode-in-img] img {
     --_delay: 0s;
     --_duration: 0.2s;
 
@@ -20,16 +29,14 @@
     will-change: opacity;
   }
 
-  .has-fade-b-in-img,
-  .has-decode-in-img {
+  [data-decode-in-img] {
     position: relative;
     contain: layout paint;
     overflow: clip;
   }
 
-  .has-page-active:root {
-    .has-fade-b-in,
-    .has-fade-b-in-img img {
+  [data-page-active]:root {
+    [data-scroll-fade-in] {
       transition:
         transform var(--_duration) var(--ease-out-circ),
         opacity calc(var(--_duration) * 0.6) ease;
@@ -38,26 +45,24 @@
         var(--_delay);
     }
 
-    .has-decode-in-img img {
-      display: block;
-      transition: opacity var(--_duration) var(--_delay);
+    [data-decode-in-img] {
+      img {
+        display: block;
+        transition: opacity var(--_duration) var(--_delay);
+
+        &[data-img-decoded="true"] {
+          opacity: 1;
+        }
+      }
     }
 
-    .has-decode-in-img img[data-img-decoded="true"] {
+    [data-scroll="in"][data-scroll-fade-in] {
       opacity: 1;
+      filter: none;
+      transform: translate3d(0, 0, 0);
     }
 
-    [data-scroll="in"].has-fade-b-in,
-    [data-scroll="in"].has-fade-b-in-img img[data-img-decoded="true"] {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    :is(
-      .has-fade-b-in-img,
-      .has-img-bright-in,
-      .has-decode-in-img:has(img)
-    ) {
+    :is([data-decode-in-img]):has(img) {
       &:not(:has(img[data-img-decoded="true"])):before {
         position: absolute;
         z-index: 3;
@@ -71,7 +76,7 @@
           rgb(220 220 220 / 0) 100%
         );
         translate: -100% 0 0;
-        animation: shimmer 1s infinite 1.2s;
+        animation: shimmer 1s infinite 0.4s;
       }
 
       &.is-grad-lighten:not(:has(img[data-img-decoded="true"]))::before {
@@ -84,23 +89,6 @@
       }
     }
   }
-
-  [data-scroll] > .has-text-mask-in {
-    opacity: 0.0001;
-    clip-path: circle(0% at 50% 50%);
-    scale: 1.25;
-    backface-visibility: hidden;
-    will-change: scale, opacity, clip-path;
-  }
-  [data-scroll="in"] > .has-text-mask-in {
-    opacity: 1;
-    clip-path: circle(100% at 50% 50%);
-    scale: 1;
-    transition:
-      clip-path 1.75s var(--ease-out-circ) 0.2s,
-      opacity 0.1s 0.2s,
-      scale 1.2s var(--ease-out-circ) 0.2s;
-  }
 }
 
 @keyframes shimmer {
@@ -109,129 +97,5 @@
   }
   100% {
     translate: 100% 0 0;
-  }
-}
-
-/* -- image --- */
-
-@media not print {
-  .has-img-bright-in:where([data-scroll]) {
-    --_v-dir: -1;
-    --_h-dir: 0;
-    --_grad-deg: 180deg;
-    --_grad-color: transparent;
-    --_delay-clip: 0.1s;
-    --_delay-grad: 0.05s;
-    --_delay-img: 0.05s;
-
-    position: relative;
-    contain: layout paint;
-    overflow: hidden;
-    clip-path: inset(7.5% 7.5% 15% 7.5%);
-
-    &::after {
-      --_grad-color: var(--color-base);
-
-      position: absolute;
-      inset-block-start: calc(var(--_v-dir) * 100%);
-      inset-inline-start: calc(var(--_h-dir) * 100%);
-      z-index: 1;
-      inline-size: 100%;
-      block-size: 200%;
-      contain: layout paint;
-      content: "";
-      background-image: linear-gradient(
-        var(--_grad-deg),
-        rgb(0 0 0 / 0) 0%,
-        var(--_grad-color) 50%,
-        var(--_grad-color) 100%
-      );
-      backface-visibility: hidden;
-      will-change: translate;
-    }
-
-    img {
-      z-index: 0;
-      display: block;
-      filter: brightness(2);
-      scale: 1.05;
-      translate: 0 2em 0;
-      backface-visibility: hidden;
-      will-change: translate, scale, filter;
-    }
-
-    &.is-overlay-primary::after {
-      --_grad-color: var(--color-primary);
-    }
-  }
-
-  .has-page-active:root .has-img-bright-in[data-scroll="in"]:has([data-img-decoded="true"]) {
-    clip-path: inset(0);
-    transition: clip-path 1.1s var(--ease-out-circ) var(--_delay-clip);
-
-    &::after {
-      translate: calc(var(--_h-dir) * -100%) calc(var(--_v-dir) * -100%) 0;
-      transition: translate 1.4s var(--ease-out-circ) var(--_delay-grad);
-    }
-
-    img {
-      filter: brightness(1);
-      scale: 1;
-      translate: 0 0 0;
-      transition:
-        scale 1.1s var(--ease-out-circ) var(--_delay-img),
-        translate 1.1s var(--ease-out-circ) var(--_delay-img),
-        filter 1.4s var(--ease-out-circ) var(--_delay-img);
-    }
-  }
-}
-/*
-@media not print {
-  .has-hover-brightness {
-    --_brightness: 1.035;
-
-    transition: 0.2s filter ease;
-
-    &:focus-visible {
-      filter: brightness(var(--_brightness));
-    }
-    @media (any-hover: hover) {
-      &:hover {
-        filter: brightness(var(--_brightness));
-      }
-    }
-  }
-}
- */
-
-@media not print {
-  .has-text-line {
-    position: relative;
-    display: inline;
-
-    &::before {
-      position: absolute;
-      inset-block: auto 0;
-      inset-inline: 0;
-      z-index: 0;
-      inline-size: 100%;
-      block-size: 0.2em;
-      content: "";
-      background-color: var(--color-secondary);
-      transform-origin: 0 100%;
-      scale: 0 1 1;
-    }
-
-    > span {
-      position: relative;
-      z-index: 1;
-    }
-  }
-
-  .has-page-active:root [data-scroll="in"].has-text-line {
-    &::before {
-      scale: 1;
-      transition: scale 0.6s var(--ease-in-out-circ);
-    }
   }
 }

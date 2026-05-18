@@ -21,6 +21,7 @@ const targetSelectors: ReadonlyArray<{ selector: string; attribute: string }> = 
   { selector: "video[src]", attribute: "src" },
   { selector: "video[poster]", attribute: "poster" },
   { selector: "audio[src]", attribute: "src" },
+  { selector: "image[href]", attribute: "href" },
 ];
 
 const hashCache = new Map<string, string>();

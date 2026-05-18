@@ -31,6 +31,7 @@ function handleAnchorClick(event: MouseEvent): void {
     document.dispatchEvent(new CustomEvent("nav-menu:hidden"));
   }
   scrollToElement(targetElement);
+  history.pushState(null, "", url.hash);
   requestAnimationFrame(() => document.dispatchEvent(new CustomEvent("scrollLock:disable")));
 }
 

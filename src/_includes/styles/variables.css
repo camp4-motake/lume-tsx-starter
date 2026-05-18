@@ -26,16 +26,16 @@
   --base-view-size-ref-value: 400;
 
   /* root font size */
-  --root-font-size: calc(16 / var(--base-view-size-ref-value) * 100vi);
+  --base-font-size: 16;
+  --preferred-text-scale: env(preferred-text-scale, 1);
+  --root-font-size: calc(
+    var(--base-font-size) / var(--base-view-size-ref-value) * 100vi * var(--preferred-text-scale)
+  );
   @media (width >= 540px) {
-    --root-font-size: clamp(0.5rem, 0.34vi + 0.91rem, 1.19rem);
+    --root-font-size: calc(clamp(0.5rem, 0.34vi + 0.91rem, 1.19rem) * var(--preferred-text-scale));
   }
-  @media (width >= 992px) {
-    --root-font-size: 1em;
-  }
-  @media (width >= 1600px) {
-    --root-font-size: clamp(0.5rem, 0.34vi + 0.91rem, 1.19rem);
-  }
+  /* @media (width >= 992px) { --root-font-size: calc(1em * var(--preferred-text-scale)); } */
+  /* @media (width >= 1600px) { --root-font-size: calc(clamp(0.5rem, 0.34vi + 0.91rem, 1.19rem) * var(--preferred-text-scale)); } */
 
   --font-family-sans-serif: "Noto Sans JP", sans-serif;
   --font-family-sans-serif-roman: "Montserrat", sans-serif;
