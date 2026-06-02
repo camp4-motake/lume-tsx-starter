@@ -1,7 +1,6 @@
 # AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this
-repository.
+This file provides guidance to coding agents when working with code in this repository.
 
 ## Runtime
 
@@ -12,7 +11,8 @@ Lume 3 on Deno. Do not run `npm install` — `node_modules/` exists only because
 
 - `deno task serve` (alias: `dev`) — dev server
 - `deno task build` — production build to `_site/`
-- `deno task build:fmt` — build with `FORMAT_HTML=true` (pretty HTML via `js-beautify`)
+- `deno task build:fmt` — build with `FORMAT_HTML=true` (pretty HTML via the native Deno DOM
+  `formatHtml` plugin; otherwise non-dev builds run `minify_html`)
 - `deno task zip` — build + zip `_site/` into `_zip/` (override prefix with `ZIP_PREFIX`)
 - `deno task lint` / `deno task format` — `deno lint`/`fmt` + `stylelint` on `src/**/*.css`
 
@@ -39,7 +39,3 @@ non-dev builds.
 - `#helpers` import alias → `plugins/helpers.ts`. Use `useAttrs(props, tagName?, omitKeys?)` when
   spreading props onto a DOM element.
 
-## Conventions
-
-Domain rules live in `.claude/rules/` and must be followed: `ts.md`, `components.md`, `css.md`,
-`rules.md`.
