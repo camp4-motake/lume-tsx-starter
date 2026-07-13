@@ -60,7 +60,7 @@ if (isDev) site.use(sourceMaps());
 site.use(imageDimensions());
 site.use(picture());
 site.use(transformImages());
-site.use(svgo());
+site.use(svgo({ options: { plugins: ["preset-default", "prefixIds"] } }));
 
 // Inline (URL 書き換え前に動かして ?inline 参照のソースファイルを解決できるようにする)
 site.use(inline({ copyAttributes: ["role", "title", /^aria-/, /^data-/] }));
