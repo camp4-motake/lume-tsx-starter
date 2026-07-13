@@ -5,7 +5,8 @@ Lume/TSX Static Site Development Environment
 ## Task
 
 Please set up [Deno](https://deno.com/) first. `npm install -g deno` or
-[other installation](https://docs.deno.com/runtime/getting_started/installation/).
+[other installation](https://docs.deno.com/runtime/getting_started/installation/). You can also
+install it via a version manager such as [mise](https://mise.jdx.dev/).
 
 ```sh
 # dev
