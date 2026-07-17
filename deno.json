@@ -11,8 +11,8 @@
     "clsx": "npm:clsx@^2.1.1",
     "es-toolkit": "npm:es-toolkit@^1.45.1",
     "image-size": "npm:image-size@2.0.1",
-    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.4/",
-    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.14/jsx-runtime.ts",
+    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.6/",
+    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.15/jsx-runtime.ts",
     "stylelint": "npm:stylelint@^17.6.0",
     "stylelint-config-recess-order": "npm:stylelint-config-recess-order@^7.7.0",
     "stylelint-config-recommended": "npm:stylelint-config-recommended@^18.0.0"
@@ -50,6 +50,10 @@
     "format": {
       "description": "Format the site files",
       "command": "deno fmt && deno run -A npm:stylelint --fix './src/**/*.css'"
+    },
+    "new": {
+      "description": "Create new content or code using artifacts",
+      "command": "deno task lume new"
     }
   },
   "compilerOptions": {
@@ -74,7 +78,7 @@
       ]
     },
     "plugins": [
-      "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.4/lint.ts"
+      "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.6/lint.ts"
     ]
   },
   "fmt": {
@@ -118,7 +122,8 @@
   },
   "allowScripts": {
     "deny": [
-      "npm:sharp"
+      "npm:sharp",
+      "npm:@parcel/watcher"
     ]
   }
 }
