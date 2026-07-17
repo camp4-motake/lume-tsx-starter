@@ -1,17 +1,28 @@
 /**
- * lume drop-redundant-images plugin
+ * dropRedundantImages — AVIF 変換済みの原本画像を出力から除外する
  *
- * transformImages が `.avif` 変種を生成したあと、同じ stem を持つ
- * `.png` / `.jpg` / `.jpeg` ページを出力から除外する。picture/source タグは
- * 既に AVIF を参照しているので、原本を出さないことで配信容量を削る。
+ * transformImages が `.avif` 変種を生成したあと、同じ stem を持つ原本画像
+ * (デフォルト: `.png` / `.jpg` / `.jpeg`) のページを除外する。picture/source
+ * タグは既に AVIF を参照しているので、原本を出さないことで配信容量を削る。
  *
- * usage:
- *   site.use(dropRedundantImages()); // place AFTER transformImages()
+ * Ordering: transformImages() の後に登録する
+ * Register: site.use(dropRedundantImages());
+ * Remove:   このファイルと _config.ts の import + 登録ブロックを削除
  */
 
 import type Site from "lume/core/site.ts";
 
-export default function dropRedundantImages() {
+type Options = {
+  /** 除外対象の原本拡張子 (default: ["png", "jpg", "jpeg"]) */
+  extensions?: string[];
+};
+
+export default function dropRedundantImages(
+  { extensions = ["png", "jpg", "jpeg"] }: Options = {},
+) {
+  const escaped = extensions.map((ext) => ext.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const redundantUrl = new RegExp(`^(.+)\\.(${escaped.join("|")})$`);
+
   return (site: Site) => {
     site.process((_, allPages) => {
       const avifUrls = new Set(
@@ -22,7 +33,7 @@ export default function dropRedundantImages() {
       for (let i = allPages.length - 1; i >= 0; i--) {
         const url = allPages[i].data.url;
         if (typeof url !== "string") continue;
-        const match = url.match(/^(.+)\.(png|jpe?g)$/);
+        const match = url.match(redundantUrl);
         if (match && avifUrls.has(match[1])) {
           allPages.splice(i, 1);
         }

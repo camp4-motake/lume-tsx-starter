@@ -1,18 +1,20 @@
 /**
- * lume image quality plugin
+ * imageQuality — 画像フォーマットごとのエンコード品質を指定する
  *
  * picture プラグインが `transform-images="avif"` のような書式名だけを文字列で
  * 渡す結果、sharp はその format のデフォルト品質(AVIF=50 など)で出力する。
- * このプラグインは picture() と transformImages() の間に挟み、配列に積まれた
- * format 文字列を `{ format, quality }` の FormatOptions に格上げする。
+ * このプラグインは配列に積まれた format 文字列を `{ format, quality }` の
+ * FormatOptions に格上げする。
  *
- * usage:
- *   site.use(imageQuality({ formats: { avif: 80 } })); // place between picture() and transformImages()
+ * Ordering: picture() と transformImages() の間に登録する
+ * Register: site.use(imageQuality({ formats: { avif: 80 } }));
+ * Remove:   このファイルと _config.ts の import + 登録ブロックを削除
  */
 
 import type Site from "lume/core/site.ts";
 
 type Options = {
+  /** フォーマット名 → quality の対応 (例: { avif: 80 }) */
   formats?: Record<string, number>;
 };
 

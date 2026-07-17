@@ -1,3 +1,14 @@
+/**
+ * cacheBuster — ローカルアセット URL にコンテンツハッシュのクエリを付与する
+ *
+ * afterBuild で出力 HTML を走査し、css / js / img / source / video / audio / image の
+ * ローカル参照 URL に `?v=<md5 先頭8桁>` を付けてブラウザキャッシュを無効化する。
+ *
+ * Register: site.use(cacheBuster()); // _config.ts では本番ビルドのみ (if (!isDev))
+ * Remove:   このファイルと _config.ts の import + 登録ブロックを削除
+ * Deps:     @b-fuze/deno-dom, @std/crypto, @std/encoding, @std/fs, @std/path
+ */
+
 import { DOMParser, type Element } from "@b-fuze/deno-dom";
 import { crypto } from "@std/crypto";
 import { encodeHex } from "@std/encoding/hex";
@@ -5,13 +16,25 @@ import { walk } from "@std/fs/walk";
 import { dirname, join } from "@std/path";
 import type Site from "lume/core/site.ts";
 
+type Options = {
+  /** 書き換え対象の要素セレクタと属性 (default: css/js/img/source/video/audio/image) */
+  selectors?: ReadonlyArray<{ selector: string; attribute: string }>;
+  /** クエリに付与するハッシュの桁数 (default: 8) */
+  hashLength?: number;
+  /** クエリパラメータ名 (default: "v") */
+  paramName?: string;
+};
+
 type RewriteContext = {
   htmlFilePath: string;
   distDir: string;
   siteLocation: string;
+  hashLength: number;
+  paramName: string;
+  hashCache: Map<string, string>;
 };
 
-const targetSelectors: ReadonlyArray<{ selector: string; attribute: string }> = [
+const defaultSelectors: ReadonlyArray<{ selector: string; attribute: string }> = [
   { selector: 'link[rel="stylesheet"][href]', attribute: "href" },
   { selector: "script[src]", attribute: "src" },
   { selector: "img[src]", attribute: "src" },
@@ -24,17 +47,15 @@ const targetSelectors: ReadonlyArray<{ selector: string; attribute: string }> = 
   { selector: "image[href]", attribute: "href" },
 ];
 
-const hashCache = new Map<string, string>();
-
-async function hashFile(filePath: string): Promise<string | null> {
-  const cached = hashCache.get(filePath);
+async function hashFile(filePath: string, ctx: RewriteContext): Promise<string | null> {
+  const cached = ctx.hashCache.get(filePath);
   if (cached) return cached;
 
   try {
     const bytes = await Deno.readFile(filePath);
     const digest = await crypto.subtle.digest("MD5", bytes);
-    const shortHash = encodeHex(new Uint8Array(digest)).slice(0, 8);
-    hashCache.set(filePath, shortHash);
+    const shortHash = encodeHex(new Uint8Array(digest)).slice(0, ctx.hashLength);
+    ctx.hashCache.set(filePath, shortHash);
     return shortHash;
   } catch (error) {
     console.error(`Error generating hash for ${filePath}:`, error);
@@ -60,8 +81,8 @@ async function rewriteUrl(value: string, ctx: RewriteContext): Promise<string> {
     return value;
   }
 
-  const hash = await hashFile(fullPath);
-  return hash ? `${pathOnly}?v=${hash}` : value;
+  const hash = await hashFile(fullPath, ctx);
+  return hash ? `${pathOnly}?${ctx.paramName}=${hash}` : value;
 }
 
 async function rewriteSrcset(value: string, ctx: RewriteContext): Promise<string> {
@@ -95,16 +116,20 @@ function serializeDocument(document: Document): string {
   return doctype + document.documentElement!.outerHTML;
 }
 
-async function processHtmlFile(filePath: string, distDir: string, siteLocation: string) {
+async function processHtmlFile(
+  filePath: string,
+  selectors: ReadonlyArray<{ selector: string; attribute: string }>,
+  base: Omit<RewriteContext, "htmlFilePath">,
+) {
   try {
     const html = await Deno.readTextFile(filePath);
     const parsed = new DOMParser().parseFromString(html, "text/html");
     if (!parsed) throw new Error(`Failed to parse HTML from ${filePath}`);
     const document = parsed as unknown as Document;
 
-    const ctx: RewriteContext = { htmlFilePath: filePath, distDir, siteLocation };
+    const ctx: RewriteContext = { ...base, htmlFilePath: filePath };
 
-    await Promise.all(targetSelectors.map(async ({ selector, attribute }) => {
+    await Promise.all(selectors.map(async ({ selector, attribute }) => {
       const elements = Array.from(document.querySelectorAll(selector)) as unknown as Element[];
       await Promise.all(elements.map((el) => rewriteElement(el, attribute, ctx)));
     }));
@@ -115,17 +140,22 @@ async function processHtmlFile(filePath: string, distDir: string, siteLocation: 
   }
 }
 
-export default function cacheBuster() {
+export default function cacheBuster(
+  { selectors = defaultSelectors, hashLength = 8, paramName = "v" }: Options = {},
+) {
   return (site: Site) => {
     site.addEventListener("afterBuild", async () => {
       console.log("Starting cache busting process...");
       const startTime = performance.now();
       const distDir = site.dest();
       const siteLocation = site.options.location?.pathname || "/";
+      // ビルドごとに作り直す (watch 時に変更済みアセットの古いハッシュを残さない)
+      const hashCache = new Map<string, string>();
+      const base = { distDir, siteLocation, hashLength, paramName, hashCache };
 
       const tasks: Promise<void>[] = [];
       for await (const entry of walk(distDir, { includeDirs: false, exts: [".html"] })) {
-        tasks.push(processHtmlFile(entry.path, distDir, siteLocation));
+        tasks.push(processHtmlFile(entry.path, selectors, base));
       }
       await Promise.all(tasks).catch(console.error);
 

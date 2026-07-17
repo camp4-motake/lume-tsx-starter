@@ -18,14 +18,12 @@ import sourceMaps from "lume/plugins/source_maps.ts";
 import svgo from "lume/plugins/svgo.ts";
 import transformImages from "lume/plugins/transform_images.ts";
 import cacheBuster from "./plugins/cacheBuster.ts";
+import dropRedundantImages from "./plugins/dropRedundantImages.ts";
 import formatHtml from "./plugins/formatHtml.ts";
 import imageDimensions from "./plugins/imageDimensions.ts";
-import dropRedundantImages from "./plugins/dropRedundantImages.ts";
+import imageQuality from "./plugins/imageQuality.ts";
 
 const isDev = Deno.args.includes("-s");
-const isCacheBuster = !isDev;
-const isFormatHtml = !isDev && Deno.env.get("FORMAT_HTML") === "true";
-const isRelativeUrls = Deno.env.get("RELATIVE_URLS") === "true";
 
 /**
  * Lume configuration
@@ -49,40 +47,37 @@ site.ignore("README.md", "CHANGELOG.md", "node_modules");
 
 /**
  * Plugins
+ * カスタムプラグイン (./plugins/*) は import + site.use を消せば外せる。
  * @see https://lume.land/docs/getting-started/use-plugins/
  */
-// Compile
 site.use(jsx());
 site.use(esbuild());
 site.use(lightningCss());
 if (isDev) site.use(sourceMaps());
 
-// Images (URL 書き換え前に動かして TSX 記述どおりの src を解決する)
-site.use(imageDimensions());
+// 画像系 / inline は URL 書き換えより前に動かし、TSX 記述どおりのパスでソースを解決する
+site.use(imageDimensions()); // picture() が transform-images 属性を消す前に読む
 site.use(picture());
+site.use(imageQuality({ formats: { avif: 80 } })); // transformImages() が読む前に quality を仕込む
 site.use(transformImages());
-site.use(dropRedundantImages());
+site.use(dropRedundantImages()); // avif 生成後でないと除外対象を判定できない
 site.use(svgo({ options: { plugins: ["preset-default", "prefixIds"] } }));
-
-// Inline (URL 書き換え前に動かして ?inline 参照のソースファイルを解決できるようにする)
 site.use(inline({ copyAttributes: ["role", "title", /^aria-/, /^data-/] }));
 
-// URLs (img.src や CSS url() の書き換えを含むので画像系 / inline の後)
+// img.src や CSS url() の書き換えを含むので画像系 / inline の後
 // deno-lint-ignore lume/plugin-order
 site.use(base_path());
-if (isRelativeUrls) site.use(relativeUrls());
+if (Deno.env.get("RELATIVE_URLS") === "true") site.use(relativeUrls());
 
-// Metas
 // deno-lint-ignore lume/plugin-order
 site.use(metas());
 
-// HTML post-processing
-if (isCacheBuster) site.use(cacheBuster());
-if (isFormatHtml) site.use(formatHtml());
+if (!isDev) site.use(cacheBuster());
+if (!isDev && Deno.env.get("FORMAT_HTML") === "true") site.use(formatHtml());
 else site.use(minifyHTML());
 
 /**
- * Helpers
+ * Helpers (src/_includes/helpers.ts via #helpers)
  * @see https://lume.land/docs/configuration/filters/
  */
 site.helper("langPath", langPath, { type: "tag" });

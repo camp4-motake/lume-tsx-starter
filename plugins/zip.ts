@@ -1,3 +1,15 @@
+/**
+ * zip — ビルドして _site/ を zip 化するスタンドアロン CLI (Lume プラグインではない)
+ *
+ * `deno task build` を実行し、`_site/` を `_zip/<ZIP_PREFIX>-<timestamp>.zip` に圧縮する。
+ * site.use() には登録せず、deno task から直接実行する。
+ *
+ * Run:    deno task zip
+ * Env:    ZIP_PREFIX — zip ファイル名の接頭辞 (default: "production-build")
+ * Remove: このファイルと deno.json の "zip" タスクを削除
+ * Deps:   @std/fs, @std/path, adm-zip
+ */
+
 import { dirname, resolve } from "@std/path";
 import { ensureDir } from "@std/fs";
 import AdmZip from "adm-zip";

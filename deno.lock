@@ -2831,6 +2831,7 @@
       "npm:adm-zip@~0.5.17",
       "npm:clsx@^2.1.1",
       "npm:es-toolkit@^1.45.1",
+      "npm:image-size@2.0.1",
       "npm:stylelint-config-recess-order@^7.7.0",
       "npm:stylelint-config-recommended@18",
       "npm:stylelint@^17.6.0"

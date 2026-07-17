@@ -1,3 +1,14 @@
+/**
+ * formatHtml — 出力 HTML をインデント付きで整形する
+ *
+ * afterBuild で出力 HTML を走査し、deno-dom で再シリアライズして
+ * 可読なインデント付き HTML にする (minify_html の代替)。
+ *
+ * Register: site.use(formatHtml()); // _config.ts では FORMAT_HTML=true の本番ビルドのみ
+ * Remove:   このファイルと _config.ts の import + 登録ブロックを削除
+ * Deps:     @b-fuze/deno-dom, @std/fs
+ */
+
 import { DOMParser, type Element } from "@b-fuze/deno-dom";
 import { walk } from "@std/fs/walk";
 import type Site from "lume/core/site.ts";
@@ -49,7 +60,10 @@ const ELEMENT_NODE = 1;
 const TEXT_NODE = 3;
 const COMMENT_NODE = 8;
 
-type Options = { indent?: string };
+type Options = {
+  /** インデント文字列 (default: スペース2つ) */
+  indent?: string;
+};
 
 export default function formatHtml({ indent = "  " }: Options = {}) {
   return (site: Site) => {

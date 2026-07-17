@@ -1,6 +1,6 @@
 {
   "imports": {
-    "#helpers": "./plugins/helpers.ts",
+    "#helpers": "./src/_includes/helpers.ts",
     "@b-fuze/deno-dom": "jsr:@b-fuze/deno-dom@^0.1.56",
     "@mdn/browser-compat-data": "npm:@mdn/browser-compat-data@^7.3.10",
     "@std/crypto": "jsr:@std/crypto@^1.0.5",
@@ -10,6 +10,7 @@
     "adm-zip": "npm:adm-zip@^0.5.17",
     "clsx": "npm:clsx@^2.1.1",
     "es-toolkit": "npm:es-toolkit@^1.45.1",
+    "image-size": "npm:image-size@2.0.1",
     "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.4/",
     "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.14/jsx-runtime.ts",
     "stylelint": "npm:stylelint@^17.6.0",

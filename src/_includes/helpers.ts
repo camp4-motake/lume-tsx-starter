@@ -1,3 +1,10 @@
+/**
+ * helpers — コンポーネントと _config.ts で共有するユーティリティ (Lume プラグインではない)
+ *
+ * コンポーネントからは `#helpers` エイリアス (deno.json) で import し、
+ * _config.ts では tag helper として登録される。
+ */
+
 import bcd from "@mdn/browser-compat-data" with { type: "json" };
 
 /**
@@ -92,14 +99,6 @@ export function pathJoin(...paths: string[]) {
 
   return protocol + result;
 }
-
-/**
- * Uppercase string
- *
- * @param body
- * @returns uppercase string
- */
-export const uppercase = (body: string) => body.toUpperCase();
 
 /**
  * Get Lang Root path

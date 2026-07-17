@@ -1,16 +1,19 @@
 /**
- * lume auto dimension plugin
+ * imageDimensions — 元画像から <img> の width / height 属性を設定する
  *
  * 元画像のサイズと transform-images 属性 (例: "avif 360") から、
- * transformImages が生成する画像のサイズを width / height 属性に設定する。
+ * transformImages が生成する画像のサイズを width / height 属性に設定し、
+ * レイアウトシフトを防ぐ。オプションなし。
  *
- * usage:
- *   site.use(imageDimensions()); // set before "base_path" / "relative_urls" / "picture" / "transformImages"
- *   (picture が transform-images 属性を削除する前に読む必要があるため、必ず picture より前に登録する)
+ * Ordering: picture() より前に登録する (picture が transform-images 属性を
+ *           削除する前に読む必要がある。base_path / relative_urls より前でもある)
+ * Register: site.use(imageDimensions());
+ * Remove:   このファイルと _config.ts の import + 登録ブロックを削除
+ * Deps:     image-size
  */
 
 import type Site from "lume/core/site.ts";
-import { imageSizeFromFile } from "npm:image-size@2.0.1/fromFile";
+import { imageSizeFromFile } from "image-size/fromFile";
 
 export default function imageDimensions() {
   return (site: Site) => {

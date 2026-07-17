@@ -19,8 +19,9 @@ non-dev builds.
 
 ## Architecture
 
-- `_config.ts` — Lume config. `imageDimensions()` must be registered **before** `picture()` and
-  `transformImages()` so natural dimensions are read from the source file.
+- `_config.ts` — Lume config; the composition root for plugins. Image pipeline order is
+  `imageDimensions → picture → imageQuality → transformImages → dropRedundantImages`; each
+  constraint is documented in the plugin's own header.
 - `src/_components/<category>/<Name>/comp.tsx` — components are accessed as
   `comp.<category>.<Name>`. Sibling `style.css` and `script.ts` are auto-loaded by Lume; do not
   import them.
@@ -32,10 +33,12 @@ non-dev builds.
   `src/_includes/styles/`.
 - `src/_includes/scripts/index.ts` — global JS; bundled into `main.js` via the `layouts/Assets`
   component's `script.ts`.
-- `plugins/` — custom plugins (`cacheBuster`, `formatHtml`, `imageDimensions`) and the standalone
-  `zip.ts` script.
-- `#helpers` import alias → `plugins/helpers.ts`. Use `useAttrs(props, tagName?, omitKeys?)` when
-  spreading props onto a DOM element.
+- `plugins/` — self-contained, individually detachable Lume plugins (`cacheBuster`,
+  `dropRedundantImages`, `formatHtml`, `imageDimensions`, `imageQuality`) plus the standalone
+  `zip.ts` CLI script. Each file's JSDoc header documents purpose, ordering, registration, and how
+  to remove it (delete the file plus its import/block in `_config.ts`).
+- `#helpers` import alias → `src/_includes/helpers.ts`. Use `useAttrs(props, tagName?, omitKeys?)`
+  when spreading props onto a DOM element.
 
 ## Conventions
 
