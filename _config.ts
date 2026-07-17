@@ -20,6 +20,7 @@ import transformImages from "lume/plugins/transform_images.ts";
 import cacheBuster from "./plugins/cacheBuster.ts";
 import formatHtml from "./plugins/formatHtml.ts";
 import imageDimensions from "./plugins/imageDimensions.ts";
+import dropRedundantImages from "./plugins/dropRedundantImages.ts";
 
 const isDev = Deno.args.includes("-s");
 const isCacheBuster = !isDev;
@@ -60,6 +61,7 @@ if (isDev) site.use(sourceMaps());
 site.use(imageDimensions());
 site.use(picture());
 site.use(transformImages());
+site.use(dropRedundantImages());
 site.use(svgo({ options: { plugins: ["preset-default", "prefixIds"] } }));
 
 // Inline (URL 書き換え前に動かして ?inline 参照のソースファイルを解決できるようにする)
