@@ -28,10 +28,6 @@ body {
   background-color: var(--color-base);
 }
 
-.lenis body {
-  backface-visibility: hidden;
-}
-
 :where(main) {
   max-inline-size: var(--container-max-width-view);
   margin-inline: auto;
@@ -94,14 +90,6 @@ body {
 }
 
 :focus:not(:focus-visible) {
-  outline: none;
-}
-
-:where(:root[data-mousedown] dialog *) {
-  outline: none;
-}
-
-[data-modal-open]:where(:root[data-mousedown] *) {
   outline: none;
 }
 

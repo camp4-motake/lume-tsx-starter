@@ -1,4 +1,4 @@
-const EXCLUDE_SELECTORS = ["[data-gt-lang]", `[href*="#"]`].join(",");
+const EXCLUDE_SELECTORS = `[href*="#"]`;
 
 export function ariaCurrent(selector = "a"): void {
   const { origin, pathname } = window.location;

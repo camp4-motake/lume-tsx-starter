@@ -13,7 +13,7 @@ export default function (
   const canonicalUrl = urlHelper(data?.url, true);
 
   return (
-    <html lang={lang || config.lang || "ja"}>
+    <html lang={lang || config.lang}>
       <head>
         <meta charset="UTF-8" />
         <meta

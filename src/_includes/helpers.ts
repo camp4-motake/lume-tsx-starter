@@ -6,6 +6,7 @@
  */
 
 import bcd from "@mdn/browser-compat-data" with { type: "json" };
+import config from "../_data/config.ts";
 
 /**
  * HTML attribute sets
@@ -106,5 +107,5 @@ export function pathJoin(...paths: string[]) {
  * @param path
  * @returns root path
  */
-export const langPath = (path: string, lang: string, defaultLang: string = "ja") =>
+export const langPath = (path: string, lang: string, defaultLang: string = config.lang) =>
   pathJoin("/", lang === defaultLang ? "" : `/${lang}/`, path);

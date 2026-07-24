@@ -5,11 +5,11 @@
  * @see https://lume.land/plugins/metas/
  */
 const metas = {
-  site: "site name",
+  site: "=config.siteTitle",
   title: "", // not edited when `title` and `site` both exist
   description: "=description",
   image: "=ogImage || /assets/ogp.png",
-  lang: "ja_JP",
+  lang: "=config.locale",
   twitter: "",
   keywords: "=keywords",
   generator: false,

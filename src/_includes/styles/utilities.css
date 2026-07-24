@@ -48,10 +48,6 @@
   line-height: var(--leading-md);
 }
 
-.entry-content > * + .caption {
-  margin-block-start: 0.75em !important;
-}
-
 @media print {
   .has-no-print {
     display: none !important;
