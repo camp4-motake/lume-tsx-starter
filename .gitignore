@@ -11,6 +11,8 @@ _tmp
 .claude/*
 !.claude/rules
 !.claude/skills
+!.claude/agents
+!.claude/settings.json
 .claude/skills/playwright-cli/
 *.zip
 .*.sh

@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in */_site/*|_site/*|*/_zip/*|_zip/*|*/deno.lock|deno.lock) echo \"Blocked: $f is generated output (_site/, _zip/, deno.lock). Edit the sources instead; deno.lock is managed by Deno itself.\" >&2; exit 2 ;; esac"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in */node_modules/*|*/_site/*) ;; *.ts|*.tsx) deno fmt \"$f\" >/dev/null 2>&1 ;; *.css) deno fmt \"$f\" >/dev/null 2>&1; deno run -A npm:stylelint --fix \"$f\" >/dev/null 2>&1 ;; esac; exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}
