@@ -14,19 +14,19 @@ paths: "**/comp.tsx"
 
 ### Configurable Wrapper Tag
 
-- Expose a `Tag?` prop (union of allowed tags, with a default) when the wrapper tag is not
-  dictated by the component's purpose.
+- Expose a `Tag?` prop (union of allowed tags, with a default) when the wrapper tag is not dictated
+  by the component's purpose.
   - Example: `Tag?: "div" | "li"` for card-like components.
   - Example: `Tag?: "a" | "button"` for actionable controls.
-- Pass the resolved `Tag` to `useAttrs(props, Tag)` so attribute filtering matches the
-  rendered element.
-- Do not expose `Tag` when the tag is semantically fixed (e.g. `a`, `button`, `details`,
-  `header`, `section`, `footer`, `nav`); hardcode the element.
+- Pass the resolved `Tag` to `useAttrs(props, Tag)` so attribute filtering matches the rendered
+  element.
+- Do not expose `Tag` when the tag is semantically fixed (e.g. `a`, `button`, `details`, `header`,
+  `section`, `footer`, `nav`); hardcode the element.
 
 ### Button Defaults
 
-- When `Tag === "button"` and `attributes.type` is unset, default it to `"button"` to avoid
-  implicit form submission.
+- When `Tag === "button"` and `attributes.type` is unset, default it to `"button"` to avoid implicit
+  form submission.
 
 ### Template
 
@@ -76,6 +76,8 @@ Three sublayers in cascade order:
 
 ### Template
 
+<!-- {component-name} placeholders are not valid CSS -->
+<!-- deno-fmt-ignore -->
 ```css
 @layer components.ui {
   .{component-name} {

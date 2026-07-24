@@ -11,22 +11,21 @@ Scaffold a new component at `src/_components/<category>/<Name>/` from the argume
 ## Steps
 
 1. Validate: `<category>` is an existing directory under `src/_components/` (currently `ui` or
-   `layouts`); `<Name>` is PascalCase. Abort if `src/_components/<category>/<Name>/` already
-   exists.
-2. Derive the kebab-case class name from `<Name>` (e.g. `Card` → `card`, `NewsList` →
-   `news-list`).
-3. Create `comp.tsx` and `style.css` from the templates below, replacing `{Name}`,
-   `{class-name}`, and `{category}`.
+   `layouts`); `<Name>` is PascalCase. Abort if `src/_components/<category>/<Name>/` already exists.
+2. Derive the kebab-case class name from `<Name>` (e.g. `Card` → `card`, `NewsList` → `news-list`).
+3. Create `comp.tsx` and `style.css` from the templates below, replacing `{Name}`, `{class-name}`,
+   and `{category}`.
 4. Only create `script.ts` if the user asked for client-side behavior; Lume auto-loads it, so an
    empty file adds a useless request.
 5. For decisions beyond the templates (Tag prop rules, images), the auto-loaded rules in
    `.claude/rules/` govern; if a template here disagrees with them, the rules win.
-6. Report the created files and the usage snippet: `<comp.{category}.{Name}>...</comp.{category}.{Name}>`.
+6. Report the created files and the usage snippet:
+   `<comp.{category}.{Name}>...</comp.{category}.{Name}>`.
 
 ## comp.tsx template
 
-For actionable/generic components expose a `Tag?` prop; hardcode the element when semantics fix
-it (see components.md). Default shape:
+For actionable/generic components expose a `Tag?` prop; hardcode the element when semantics fix it
+(see components.md). Default shape:
 
 ```tsx
 import { useAttrs } from "#helpers";
@@ -51,6 +50,8 @@ export default function {Name}(
 
 ## style.css template
 
+<!-- {category} / {class-name} placeholders are not valid CSS -->
+<!-- deno-fmt-ignore -->
 ```css
 @layer components.{category} {
   .{class-name} {
@@ -60,11 +61,9 @@ export default function {Name}(
       display: block grid;
     }
 
-    @layer states {
-    }
+    @layer states {}
 
-    @layer modifiers {
-    }
+    @layer modifiers {}
   }
 }
 ```

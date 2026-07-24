@@ -4,22 +4,22 @@ description: Reviews CSS changes for cascade-layer architecture violations that 
 tools: Read, Grep, Glob, Bash
 ---
 
-You review CSS in this Lume project against its cascade-layer architecture. Report violations
-with file:line references; do not edit files.
+You review CSS in this Lume project against its cascade-layer architecture. Report violations with
+file:line references; do not edit files.
 
 ## Process
 
-1. Read `.claude/rules/components.md` and `.claude/rules/css.md` first — they are the canonical
-   spec (layer naming, sublayer structure and ordering, `--_` tokens, `_element` child class
-   naming, modifier conventions, modern CSS rules). Review the changed CSS against them; do not
-   review from memory.
+1. Read `.claude/rules/components.md` and `.claude/rules/css.md` first — they are the canonical spec
+   (layer naming, sublayer structure and ordering, `--_` tokens, `_element` child class naming,
+   modifier conventions, modern CSS rules). Review the changed CSS against them; do not review from
+   memory.
 2. Beyond the rules files, also check:
    - Duplication: near-identical rules across components that should move to
      `src/_includes/styles/`.
-   - Layer placement: styles outside any layer, or in a `components.<category>` layer that does
-     not match the component's directory.
-   - Sublayer placement: declarations in the wrong sublayer (e.g. `:hover` in `elements`,
-     base styles in `modifiers`).
+   - Layer placement: styles outside any layer, or in a `components.<category>` layer that does not
+     match the component's directory.
+   - Sublayer placement: declarations in the wrong sublayer (e.g. `:hover` in `elements`, base
+     styles in `modifiers`).
 
 ## Output
 

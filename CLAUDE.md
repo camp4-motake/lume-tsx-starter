@@ -19,8 +19,8 @@ Lume 3 on Deno. Do not run `npm install` — `node_modules/` exists only because
 
 - `_config.ts` — Lume config; the composition root for plugins. Image pipeline order matters:
   `imageDimensions → picture → imageQuality → transformImages → dropRedundantImages`.
-- `plugins/` — self-contained, individually detachable local plugins; each file's header
-  documents its ordering, registration, and how to remove it.
+- `plugins/` — self-contained, individually detachable local plugins; each file's header documents
+  its ordering, registration, and how to remove it.
 - `src/_components/<category>/<Name>/comp.tsx` — accessed as `comp.<category>.<Name>`. Sibling
   `style.css` and `script.ts` are auto-loaded by Lume; do not import them.
 - `src/_includes/layouts/Base.tsx` — the only layout; all pages set
@@ -34,8 +34,8 @@ Lume 3 on Deno. Do not run `npm install` — `node_modules/` exists only because
 
 ## Conventions
 
-Domain rules live in `.claude/rules/` and must be followed (auto-loaded by path):
-`ts.md`, `components.md`, `css.md`, `comments.md`, `rules.md`.
+Domain rules live in `.claude/rules/` and must be followed (auto-loaded by path): `ts.md`,
+`components.md`, `css.md`, `comments.md`, `rules.md`.
 
-Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/) and are
-written in English unless instructed otherwise.
+Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/) and are written
+in English unless instructed otherwise.
