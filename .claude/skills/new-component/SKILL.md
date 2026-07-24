@@ -19,8 +19,8 @@ Scaffold a new component at `src/_components/<category>/<Name>/` from the argume
    `{class-name}`, and `{category}`.
 4. Only create `script.ts` if the user asked for client-side behavior; Lume auto-loads it, so an
    empty file adds a useless request.
-5. Follow `.claude/rules/components.md` and `.claude/rules/css.md` for any adjustments beyond the
-   templates (Tag prop rules, image rules, child class naming `_element`).
+5. For decisions beyond the templates (Tag prop rules, images), the auto-loaded rules in
+   `.claude/rules/` govern; if a template here disagrees with them, the rules win.
 6. Report the created files and the usage snippet: `<comp.{category}.{Name}>...</comp.{category}.{Name}>`.
 
 ## comp.tsx template
@@ -70,5 +70,4 @@ export default function {Name}(
 ```
 
 Remove empty `states` / `modifiers` sublayers only if stylelint complains; otherwise keep the
-three-sublayer skeleton. Child elements use `_element` class names (never BEM
-`block__element`), scoped inside the `elements` sublayer.
+three-sublayer skeleton.

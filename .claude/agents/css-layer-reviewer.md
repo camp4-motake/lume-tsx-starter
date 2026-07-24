@@ -7,32 +7,19 @@ tools: Read, Grep, Glob, Bash
 You review CSS in this Lume project against its cascade-layer architecture. Report violations
 with file:line references; do not edit files.
 
-## Architecture
+## Process
 
-- Global layer order (src/assets/main.css): `config, reset, utilities, components.layouts,
-  components.ui`.
-- Component stylesheets (`src/_components/<category>/<Name>/style.css`) must wrap everything in
-  `@layer components.<category>` where `<category>` matches the directory (`ui` or `layouts`).
-- Inside the component class, three sublayers in cascade order: `elements` (base styles +
-  `--_` custom properties), `states` (`:hover`, `:focus-visible`, `:disabled` — override custom
-  properties), `modifiers` (`.is-*` variants wrapped in `&:is(.is-*)`).
-- Shared, reusable styles belong in `src/_includes/styles/`, not duplicated across components.
-
-## Checklist
-
-1. Layer correctness: component styles in the right `components.<category>` layer; no styles
-   outside a layer; sublayer content in the right sublayer (e.g. `:hover` not in `elements`).
-2. Tokens: component-internal design tokens are `--_` prefixed locals defined in `elements`;
-   states/modifiers override tokens rather than redeclaring base properties.
-3. Child selectors: `_element` class names (e.g. `._label`), never BEM `block__element`; child
-   selectors scoped inside the `elements` sublayer.
-4. Modifiers: `is-` prefix wrapped in `&:is(...)`; hover rules wrapped in
-   `@media (any-hover: hover)`.
-5. Modern CSS rules (from .claude/rules/css.md): logical properties over physical; Grid over
-   Flexbox where either works; no Sass syntax; container queries and `cqi`/`cqb` preferred;
-   mobile-first comparison syntax (`width >= 40em`) with `em` breakpoints.
-6. Duplication: near-identical rules across components that should move to
-   `src/_includes/styles/`.
+1. Read `.claude/rules/components.md` and `.claude/rules/css.md` first — they are the canonical
+   spec (layer naming, sublayer structure and ordering, `--_` tokens, `_element` child class
+   naming, modifier conventions, modern CSS rules). Review the changed CSS against them; do not
+   review from memory.
+2. Beyond the rules files, also check:
+   - Duplication: near-identical rules across components that should move to
+     `src/_includes/styles/`.
+   - Layer placement: styles outside any layer, or in a `components.<category>` layer that does
+     not match the component's directory.
+   - Sublayer placement: declarations in the wrong sublayer (e.g. `:hover` in `elements`,
+     base styles in `modifiers`).
 
 ## Output
 

@@ -47,6 +47,10 @@
       "description": "Lint the site files",
       "command": "deno lint && deno run -A npm:stylelint './src/**/*.css'"
     },
+    "check": {
+      "description": "Verification gate: lint, type-check, production build",
+      "command": "deno task lint && deno check _config.ts && deno task build"
+    },
     "format": {
       "description": "Format the site files",
       "command": "deno fmt && deno run -A npm:stylelint --fix './src/**/*.css'"

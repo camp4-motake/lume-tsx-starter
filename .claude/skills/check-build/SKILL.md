@@ -1,19 +1,14 @@
 ---
 name: check-build
 description: Run the full verification gate (lint, type-check, production build) and summarize failures. Run before committing or when asked to verify the site builds.
-allowed-tools: Bash(deno task *) Bash(deno check *)
+allowed-tools: Bash(deno task:*), Bash(deno check:*)
 ---
 
-Run the project's verification gate in order. Continue through all steps even if one fails, then
-summarize.
+Run `deno task check` — the project's verification gate. The canonical step list lives in the
+`check` task in `deno.json` (currently: lint, `deno check _config.ts`, production build).
 
-## Steps
-
-1. `deno task lint` — deno lint + stylelint on `src/**/*.css`.
-2. `deno check _config.ts` — type-checks the config, plugins, and their import graph.
-3. `deno task build` — production build to `_site/`; this is where the image pipeline
-   (`imageDimensions → picture → imageQuality → transformImages → dropRedundantImages`) and
-   cache busting surface errors that lint cannot catch.
+The task stops at the first failing step. When that happens, run the remaining steps from the
+task individually so the report covers all failures, not just the first.
 
 ## Report
 
