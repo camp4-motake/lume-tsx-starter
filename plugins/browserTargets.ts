@@ -16,54 +16,53 @@
 import browserslist from "browserslist";
 // Lume がピン留めしている lightningcss-wasm と同じ実体を使う
 import { browserslistToTargets, type Targets } from "lume/deps/lightningcss.ts";
+import { defaults as lightningCssDefaults } from "lume/plugins/lightningcss.ts";
 
-export const BROWSERS = "> 0.5% in JP and last 2 years and not dead";
+const BROWSERS = "> 0.5% in JP and last 2 years and not dead";
 
-const resolved = browserslist(BROWSERS);
-
-const targets: Record<string, number> = { ...browserslistToTargets(resolved) };
 // lightningcss-wasm 1.32 の browserslistToTargets は and_chr → chrome などの
-// 名前マッピングを定義しながら適用しないため、Targets に無いキーが混入する。
-// ここで同名マッピングを適用し直す(バージョンは低い方を採用)
-for (
-  const [from, to] of [
-    ["and_chr", "chrome"],
-    ["and_ff", "firefox"],
-    ["ie_mob", "ie"],
-    ["op_mob", "opera"],
-  ] as const
-) {
-  const version = targets[from];
-  if (version != null) {
-    targets[to] = targets[to] == null ? version : Math.min(targets[to], version);
-    delete targets[from];
+// 名前マッピングを定義しながら適用しないため、解決リスト側を先に正規化する。
+// 重複したブラウザ名の最小バージョン採用は browserslistToTargets が行う
+const CANIUSE_ALIASES: Record<string, string> = {
+  and_chr: "chrome",
+  and_ff: "firefox",
+  ie_mob: "ie",
+  op_mob: "opera",
+};
+
+const resolved = browserslist(BROWSERS).map((entry) => {
+  const [name, version] = entry.split(" ");
+  return `${CANIUSE_ALIASES[name] ?? name} ${version}`;
+});
+
+const targets = browserslistToTargets(resolved) as Record<string, number>;
+
+// Lume の merge() はキー単位の深マージで、渡さないキーには内蔵デフォルト
+// (古いバージョン)が残ってしまう。デフォルトが持つキーのうちクエリ結果に
+// 無いものは同系エンジンの値で埋めて、古いターゲットへの巻き戻りを防ぐ
+const ENGINE_FALLBACKS: Record<string, string> = {
+  android: "chrome",
+  edge: "chrome",
+  opera: "chrome",
+  samsung: "chrome",
+  ios_saf: "safari",
+  safari: "ios_saf",
+};
+for (const key of Object.keys(lightningCssDefaults.options?.targets ?? {})) {
+  const fallback = ENGINE_FALLBACKS[key];
+  if (targets[key] == null && fallback != null && targets[fallback] != null) {
+    targets[key] = targets[fallback];
   }
 }
-// Lume の merge() はキー単位の深マージで、渡さないキーには内蔵デフォルト
-// (古いバージョン)が残ってしまう。クエリ結果に無いキーは同系エンジンの
-// 値で埋めて、意図しない古いターゲットへの巻き戻りを防ぐ。
-for (
-  const [key, from] of [
-    ["android", "chrome"],
-    ["edge", "chrome"],
-    ["ios_saf", "safari"],
-    ["safari", "ios_saf"],
-  ] as const
-) {
-  targets[key] ??= targets[from];
-}
 
-/** lightningCss({ options: { targets } }) に渡す */
 export const cssTargets: Targets = targets;
 
-// caniuse 名 → esbuild ターゲット名。載っていないもの(samsung, op_mob など)は
+// caniuse 名 → esbuild ターゲット名。載っていないもの(samsung など)は
 // esbuild が受け付けないためスキップする
 const ESBUILD_NAMES: Record<string, string> = {
   chrome: "chrome",
-  and_chr: "chrome",
   edge: "edge",
   firefox: "firefox",
-  and_ff: "firefox",
   safari: "safari",
   ios_saf: "ios",
   opera: "opera",
@@ -92,5 +91,4 @@ function toEsbuildTargets(list: string[]): string[] {
   return [...min].map(([name, version]) => `${name}${version.join(".")}`).sort();
 }
 
-/** esbuild({ options: { target } }) に渡す */
 export const jsTargets = toEsbuildTargets(resolved);
