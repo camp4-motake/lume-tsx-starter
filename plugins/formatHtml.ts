@@ -1,16 +1,15 @@
 /**
  * formatHtml — 出力 HTML をインデント付きで整形する
  *
- * afterBuild で出力 HTML を走査し、deno-dom で再シリアライズして
+ * HTML プロセッサとして page.document を独自シリアライザで再出力し、
  * 可読なインデント付き HTML にする (minify_html の代替)。
  *
+ * Ordering: 最後の .html プロセッサとして登録する (cacheBuster より後)
  * Register: site.use(formatHtml()); // _config.ts では FORMAT_HTML=true の本番ビルドのみ
  * Remove:   このファイルと _config.ts の import + 登録ブロックを削除
- * Deps:     @b-fuze/deno-dom, @std/fs
  */
 
-import { DOMParser, type Element } from "@b-fuze/deno-dom";
-import { walk } from "@std/fs/walk";
+import type { Element } from "lume/deps/dom.ts";
 import type Site from "lume/core/site.ts";
 
 const PRESERVE = new Set([
@@ -67,32 +66,18 @@ type Options = {
 
 export default function formatHtml({ indent = "  " }: Options = {}) {
   return (site: Site) => {
-    site.addEventListener("afterBuild", async () => {
-      const distDir = site.dest();
-      const tasks: Promise<void>[] = [];
-      for await (
-        const entry of walk(distDir, { includeDirs: false, exts: [".html"] })
-      ) {
-        tasks.push(formatFile(entry.path, indent));
+    site.process([".html"], (pages) => {
+      for (const page of pages) {
+        const { document } = page;
+        if (!document.documentElement) continue;
+
+        const out: string[] = [];
+        if (document.doctype) out.push(`<!DOCTYPE ${document.doctype.name}>`);
+        serializeElement(document.documentElement as unknown as Element, 0, indent, out);
+        page.text = out.join("\n") + "\n";
       }
-      await Promise.all(tasks).catch(console.error);
     });
   };
-}
-
-async function formatFile(filePath: string, indent: string): Promise<void> {
-  try {
-    const html = await Deno.readTextFile(filePath);
-    const doc = new DOMParser().parseFromString(html, "text/html");
-    if (!doc?.documentElement) return;
-
-    const out: string[] = [];
-    if (doc.doctype) out.push(`<!DOCTYPE ${doc.doctype.name}>`);
-    serializeElement(doc.documentElement, 0, indent, out);
-    await Deno.writeTextFile(filePath, out.join("\n") + "\n");
-  } catch (error) {
-    console.error(`Error formatting file ${filePath}:`, error);
-  }
 }
 
 function serializeElement(

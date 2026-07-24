@@ -1,10 +1,7 @@
 {
   "imports": {
     "#helpers": "./src/_includes/helpers.ts",
-    "@b-fuze/deno-dom": "jsr:@b-fuze/deno-dom@^0.1.56",
     "@mdn/browser-compat-data": "npm:@mdn/browser-compat-data@^7.3.10",
-    "@std/crypto": "jsr:@std/crypto@^1.0.5",
-    "@std/encoding": "jsr:@std/encoding@^1.0.10",
     "@std/fs": "jsr:@std/fs@^1.0.19",
     "@std/path": "jsr:@std/path@^1.1.4",
     "adm-zip": "npm:adm-zip@^0.5.17",
