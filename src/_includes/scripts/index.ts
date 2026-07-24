@@ -14,7 +14,7 @@ const main = async () => {
   decodeTracker();
   inView();
   await sleep(100);
-  document.documentElement.classList.add("has-page-active");
+  document.documentElement.dataset.pageActive = "true";
 };
 
 document.addEventListener("DOMContentLoaded", main);

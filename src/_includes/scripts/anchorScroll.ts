@@ -8,7 +8,7 @@ export function anchorScroll(): void {
     'a[href*="#"]',
   );
   for (const el of anchor) {
-    if (!isMatchURL(el.href)) return;
+    if (!isMatchURL(el.href)) continue;
     el.addEventListener("click", handleAnchorClick);
   }
 }
@@ -26,13 +26,8 @@ function handleAnchorClick(event: MouseEvent): void {
   if (!targetElement) return;
 
   event.preventDefault();
-  document.dispatchEvent(new CustomEvent("scrollLock:enable"));
-  if (!anchor.hasAttribute("data-nav-menu-close-ignore")) {
-    document.dispatchEvent(new CustomEvent("nav-menu:hidden"));
-  }
   scrollToElement(targetElement);
   history.pushState(null, "", url.hash);
-  requestAnimationFrame(() => document.dispatchEvent(new CustomEvent("scrollLock:disable")));
 }
 
 function scrollToElement(element: HTMLElement): void {

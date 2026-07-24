@@ -16,7 +16,7 @@ export default function Button(
 
   return (
     <Tag {...{ ...attributes }} class={clsx("button", props?.class)}>
-      <span class="button__label">{children || `button`}</span>
+      <span class="_label">{children || `button`}</span>
     </Tag>
   );
 }

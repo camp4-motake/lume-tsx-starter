@@ -5,6 +5,10 @@
  * (デフォルト: `.png` / `.jpg` / `.jpeg`) のページを除外する。picture/source
  * タグは既に AVIF を参照しているので、原本を出さないことで配信容量を削る。
  *
+ * 原本かどうかは `data.transformImages` の有無で判別する: picture プラグインが
+ * ソース画像にのみセットし、transformImages が生成する変種 (jpg/png フォールバック
+ * 含む) は duplicate 時に unset されるため、生成物を誤って落とさない。
+ *
  * Ordering: transformImages() の後に登録する
  * Register: site.use(dropRedundantImages());
  * Remove:   このファイルと _config.ts の import + 登録ブロックを削除
@@ -31,8 +35,8 @@ export default function dropRedundantImages(
           .map((p) => p.data.url.slice(0, -5)),
       );
       for (let i = allPages.length - 1; i >= 0; i--) {
-        const url = allPages[i].data.url;
-        if (typeof url !== "string") continue;
+        const { url, transformImages } = allPages[i].data;
+        if (typeof url !== "string" || transformImages == null) continue;
         const match = url.match(redundantUrl);
         if (match && avifUrls.has(match[1])) {
           allPages.splice(i, 1);
