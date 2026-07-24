@@ -1,16 +1,16 @@
 {
   "imports": {
     "#helpers": "./src/_includes/helpers.ts",
-    "@mdn/browser-compat-data": "npm:@mdn/browser-compat-data@^7.3.10",
-    "@std/fs": "jsr:@std/fs@^1.0.19",
-    "@std/path": "jsr:@std/path@^1.1.4",
-    "adm-zip": "npm:adm-zip@^0.5.17",
+    "@mdn/browser-compat-data": "npm:@mdn/browser-compat-data@^8.0.7",
+    "@std/fs": "jsr:@std/fs@^1.0.24",
+    "@std/path": "jsr:@std/path@^1.1.6",
+    "adm-zip": "npm:adm-zip@^0.6.0",
     "clsx": "npm:clsx@^2.1.1",
-    "es-toolkit": "npm:es-toolkit@^1.45.1",
-    "image-size": "npm:image-size@2.0.1",
+    "es-toolkit": "npm:es-toolkit@^1.49.0",
+    "image-size": "npm:image-size@2.0.2",
     "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.6/",
     "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.15/jsx-runtime.ts",
-    "stylelint": "npm:stylelint@^17.6.0",
+    "stylelint": "npm:stylelint@^17.14.1",
     "stylelint-config-recess-order": "npm:stylelint-config-recess-order@^7.7.0",
     "stylelint-config-recommended": "npm:stylelint-config-recommended@^18.0.0"
   },
