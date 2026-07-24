@@ -5,6 +5,7 @@
     "@std/fs": "jsr:@std/fs@^1.0.24",
     "@std/path": "jsr:@std/path@^1.1.6",
     "adm-zip": "npm:adm-zip@^0.6.0",
+    "browserslist": "npm:browserslist@^4.28.0",
     "clsx": "npm:clsx@^2.1.1",
     "es-toolkit": "npm:es-toolkit@^1.49.0",
     "image-size": "npm:image-size@2.0.2",

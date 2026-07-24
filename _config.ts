@@ -17,6 +17,7 @@ import relativeUrls from "lume/plugins/relative_urls.ts";
 import sourceMaps from "lume/plugins/source_maps.ts";
 import svgo from "lume/plugins/svgo.ts";
 import transformImages from "lume/plugins/transform_images.ts";
+import { cssTargets, jsTargets } from "./plugins/browserTargets.ts";
 import cacheBuster from "./plugins/cacheBuster.ts";
 import dropRedundantImages from "./plugins/dropRedundantImages.ts";
 import formatHtml from "./plugins/formatHtml.ts";
@@ -51,8 +52,8 @@ site.ignore("README.md", "CHANGELOG.md", "node_modules");
  * @see https://lume.land/docs/getting-started/use-plugins/
  */
 site.use(jsx());
-site.use(esbuild());
-site.use(lightningCss());
+site.use(esbuild({ options: { target: jsTargets } }));
+site.use(lightningCss({ options: { targets: cssTargets } }));
 if (isDev) site.use(sourceMaps());
 
 // 画像系 / inline は URL 書き換えより前に動かし、TSX 記述どおりのパスでソースを解決する
