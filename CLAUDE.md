@@ -36,3 +36,6 @@ Lume 3 on Deno. Do not run `npm install` — `node_modules/` exists only because
 
 Domain rules live in `.claude/rules/` and must be followed (auto-loaded by path):
 `ts.md`, `components.md`, `css.md`, `comments.md`, `rules.md`.
+
+Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/) and are
+written in English unless instructed otherwise.
