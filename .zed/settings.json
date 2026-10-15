@@ -17,28 +17,43 @@
       "language_servers": [
         "deno",
         "!typescript-language-server",
-        "!vtsls"
+        "!vtsls",
+        "..."
       ]
     },
     "TSX": {
       "language_servers": [
         "deno",
         "!typescript-language-server",
-        "!vtsls"
+        "!vtsls",
+        "..."
       ]
     },
     "JavaScript": {
       "language_servers": [
         "deno",
         "!typescript-language-server",
-        "!vtsls"
+        "!vtsls",
+        "..."
       ]
     },
     "CSS": {
-      "code_actions_on_format": {
-        "source.fixAll.stylelint": true
+      // WHY: same pipeline as `deno task format` — `deno fmt` then `stylelint --fix`, both over stdin.
+      // SAFETY: stylelint exits non-zero on unfixable errors while still emitting the fixed CSS, so the
+      // wrapper drops its exit code and falls back to the untouched buffer when stdout comes back empty.
+      "formatter": {
+        "external": {
+          "command": "sh",
+          "arguments": [
+            "-c",
+            "src=$(cat); out=$(printf \"%s\\n\" \"$src\" | deno fmt --ext css - | deno run -A npm:stylelint --fix --stdin --stdin-filename \"$1\" 2>/dev/null); if [ -n \"$out\" ]; then printf \"%s\\n\" \"$out\"; else printf \"%s\\n\" \"$src\"; fi",
+            "sh",
+            "{buffer_path}"
+          ]
+        }
       }
     }
   },
+  "format_on_save": "on",
   "formatter": "language_server"
 }
