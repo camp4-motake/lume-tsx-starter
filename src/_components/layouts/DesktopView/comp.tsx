@@ -6,13 +6,9 @@ export default ({ children, ...props }: Lume.Data) => {
 
   return (
     <div {...{ ...attributes }} class={clsx("desktop-view", props?.class)}>
-      <aside>
-        {/* Left column content */}
-      </aside>
+      <aside>{/* Left column content */}</aside>
       {children}
-      <aside>
-        {/* Right column content */}
-      </aside>
+      <aside>{/* Right column content */}</aside>
     </div>
   );
 };

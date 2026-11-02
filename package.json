@@ -1,0 +1,63 @@
+{
+  "name": "lume-tsx-starter",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "#helpers": "./src/_includes/helpers.ts"
+  },
+  "scripts": {
+    "lume": "lume",
+    "serve": "lume build -s",
+    "dev": "lume build -s",
+    "build": "lume build",
+    "build:fmt": "FORMAT_HTML=true lume build",
+    "zip": "lume build && node plugins/zip.ts",
+    "lint": "oxlint && stylelint './src/**/*.css'",
+    "typecheck": "tsc",
+    "check": "pnpm lint && pnpm typecheck && pnpm build",
+    "format": "oxfmt && stylelint --fix './src/**/*.css'",
+    "new": "lume run"
+  },
+  "dependencies": {
+    "@lumeland/core": "^1.0.1",
+    "@lumeland/lume": "^4.0.0",
+    "@lumeland/plugin-base-path": "^1.0.0",
+    "@lumeland/plugin-esbuild": "^1.0.0",
+    "@lumeland/plugin-inline": "^1.0.0",
+    "@lumeland/plugin-jsx": "^1.0.0",
+    "@lumeland/plugin-lightningcss": "^1.0.0",
+    "@lumeland/plugin-metas": "^1.0.0",
+    "@lumeland/plugin-minify-html": "^1.0.0",
+    "@lumeland/plugin-picture": "^1.0.0",
+    "@lumeland/plugin-relative-urls": "^1.0.0",
+    "@lumeland/plugin-source-maps": "^1.0.0",
+    "@lumeland/plugin-svgo": "^1.0.0",
+    "@lumeland/plugin-transform-images": "^1.0.0",
+    "@lumeland/ssx": "^0.1.16",
+    "@mdn/browser-compat-data": "^8.1.7",
+    "adm-zip": "^0.6.1",
+    "browserslist": "^4.29.5",
+    "clsx": "^2.1.1",
+    "es-toolkit": "^1.53.1",
+    "image-size": "2.0.2",
+    "lightningcss": "^1.33.0",
+    "stylelint": "^17.16.0",
+    "stylelint-config-recess-order": "^7.9.0",
+    "stylelint-config-recommended": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.6.0",
+    "@types/node": "^24.19.2",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "allowScripts": {
+    "esbuild": false,
+    "fsevents": false,
+    "@parcel/watcher": false
+  }
+}

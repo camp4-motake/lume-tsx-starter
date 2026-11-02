@@ -3,42 +3,9 @@
 // For a full list of overridable settings, and general information on folder-specific settings,
 // see the documentation: https://zed.dev/docs/configuring-zed#settings-files
 {
-  "lsp": {
-    "deno": {
-      "settings": {
-        "deno": {
-          "enable": true
-        }
-      }
-    }
-  },
   "languages": {
-    "TypeScript": {
-      "language_servers": [
-        "deno",
-        "!typescript-language-server",
-        "!vtsls",
-        "..."
-      ]
-    },
-    "TSX": {
-      "language_servers": [
-        "deno",
-        "!typescript-language-server",
-        "!vtsls",
-        "..."
-      ]
-    },
-    "JavaScript": {
-      "language_servers": [
-        "deno",
-        "!typescript-language-server",
-        "!vtsls",
-        "..."
-      ]
-    },
     "CSS": {
-      // WHY: same pipeline as `deno task format` — `deno fmt` then `stylelint --fix`, both over stdin.
+      // WHY: same pipeline as `pnpm format` — `oxfmt` then `stylelint --fix`, both over stdin.
       // SAFETY: stylelint exits non-zero on unfixable errors while still emitting the fixed CSS, so the
       // wrapper drops its exit code and falls back to the untouched buffer when stdout comes back empty.
       "formatter": {
@@ -46,7 +13,7 @@
           "command": "sh",
           "arguments": [
             "-c",
-            "src=$(cat); out=$(printf \"%s\\n\" \"$src\" | deno fmt --ext css - | deno run -A npm:stylelint --fix --stdin --stdin-filename \"$1\" 2>/dev/null); if [ -n \"$out\" ]; then printf \"%s\\n\" \"$out\"; else printf \"%s\\n\" \"$src\"; fi",
+            "src=$(cat); out=$(printf \"%s\\n\" \"$src\" | node_modules/.bin/oxfmt --stdin-filepath \"$1\" | node_modules/.bin/stylelint --fix --stdin --stdin-filename \"$1\" 2>/dev/null); if [ -n \"$out\" ]; then printf \"%s\\n\" \"$out\"; else printf \"%s\\n\" \"$src\"; fi",
             "sh",
             "{buffer_path}"
           ]
@@ -54,6 +21,11 @@
       }
     }
   },
-  "format_on_save": "on",
-  "formatter": "language_server"
+  "formatter": {
+    "external": {
+      "command": "node_modules/.bin/oxfmt",
+      "arguments": ["--stdin-filepath", "{buffer_path}"]
+    }
+  },
+  "format_on_save": "on"
 }

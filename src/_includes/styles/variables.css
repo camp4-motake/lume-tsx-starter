@@ -16,7 +16,7 @@
   --color-placeholder: #dddddd;
   --color-stroke: var(--color-text);
   --color-shadow: rgb(29 44 77 / 0.25);
-  --color-shadow-thin: rgb(29, 44, 77, 0.10);
+  --color-shadow-thin: rgb(29, 44, 77, 0.1);
 
   --color-sns-x: #000;
   --color-sns-instagram: #f00075;

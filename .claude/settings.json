@@ -1,14 +1,21 @@
 {
   "permissions": {
     "allow": [
-      "Bash(deno task:*)",
-      "Bash(deno check:*)"
+      "Bash(pnpm run:*)",
+      "Bash(pnpm serve:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(pnpm build:*)",
+      "Bash(pnpm zip:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(pnpm check:*)",
+      "Bash(pnpm format:*)"
     ],
     "deny": [
       "Edit(_site/**)",
       "Edit(_zip/**)",
       "Edit(_cache/**)",
-      "Edit(deno.lock)"
+      "Edit(pnpm-lock.yaml)"
     ]
   },
   "hooks": {
@@ -18,7 +25,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*) ;; *) exit 0 ;; esac; case \"$f\" in */node_modules/*) ;; *.ts|*.tsx) deno fmt \"$f\" >/dev/null 2>&1 ;; *.css) deno run -A npm:stylelint --fix \"$f\" >/dev/null 2>&1; deno fmt \"$f\" >/dev/null 2>&1 ;; esac; exit 0"
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*) ;; *) exit 0 ;; esac; case \"$f\" in */node_modules/*) ;; *.ts|*.tsx) (cd \"$CLAUDE_PROJECT_DIR\" && node_modules/.bin/oxfmt \"$f\" >/dev/null 2>&1) ;; *.css) (cd \"$CLAUDE_PROJECT_DIR\" && node_modules/.bin/stylelint --fix \"$f\" >/dev/null 2>&1; node_modules/.bin/oxfmt \"$f\" >/dev/null 2>&1) ;; esac; exit 0"
           }
         ]
       }

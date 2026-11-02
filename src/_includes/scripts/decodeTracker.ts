@@ -18,7 +18,8 @@ function handleIntersect(
       continue;
     }
 
-    img.decode()
+    img
+      .decode()
       .catch((error: unknown) => console.error("Image decoding failed:", error))
       .finally(() => markDecoded(img));
   }

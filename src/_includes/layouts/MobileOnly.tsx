@@ -4,9 +4,5 @@ export default (data: Lume.Data) => {
   const { children, comp } = data;
   const { DesktopView } = comp.layouts;
 
-  return (
-    <DesktopView data={data}>
-      {children}
-    </DesktopView>
-  );
+  return <DesktopView data={data}>{children}</DesktopView>;
 };

@@ -12,12 +12,12 @@
  * Remove:   このファイルと _config.ts の import + 登録ブロックを削除
  */
 
-import binaryLoader from "lume/core/loaders/binary.ts";
-import { md5 } from "lume/core/utils/digest.ts";
-import { parseSrcset } from "lume/core/utils/dom_links.ts";
-import { posix } from "lume/deps/path.ts";
-import type { Page } from "lume/core/file.ts";
-import type Site from "lume/core/site.ts";
+import { posix } from "node:path";
+import binaryLoader from "@lumeland/core/loaders/binary.ts";
+import { md5 } from "@lumeland/core/utils/digest.ts";
+import { parseSrcset } from "@lumeland/core/utils/dom-links.ts";
+import type { Page } from "@lumeland/core/file.ts";
+import type Site from "@lumeland/core/site.ts";
 
 type Options = {
   /** 書き換え対象の要素セレクタと属性 (default: css/js/img/source/video/audio/image) */
@@ -44,9 +44,11 @@ const defaultSelectors: ReadonlyArray<{ selector: string; attribute: string }> =
 /** `https:` などのスキーム付きとプロトコル相対 (`//`) は対象外 */
 const EXTERNAL_URL = /^[a-z][\w+.-]*:|^\/\//i;
 
-export default function cacheBuster(
-  { selectors = defaultSelectors, hashLength = 8, paramName = "v" }: Options = {},
-) {
+export default function cacheBuster({
+  selectors = defaultSelectors,
+  hashLength = 8,
+  paramName = "v",
+}: Options = {}) {
   return (site: Site) => {
     site.process([".html"], async (pages, allPages) => {
       const basePath = site.options.location.pathname.replace(/\/+$/, "");
@@ -71,13 +73,13 @@ export default function cacheBuster(
 
       const computeHash = async (url: string): Promise<string | null> => {
         const page = assetPages.get(url);
-        if (page) return (await md5(page.bytes)).slice(0, hashLength);
+        if (page) return md5(page.bytes).slice(0, hashLength);
 
         // site.copy のファイルは無変換で出力されるためソースのバイトで代用できる
         const file = staticFiles.get(url);
         if (!file) return null;
         const { content } = await file.src.entry.getContent(binaryLoader);
-        return (await md5(content as Uint8Array)).slice(0, hashLength);
+        return md5(content as Uint8Array).slice(0, hashLength);
       };
 
       const bust = async (value: string, page: Page): Promise<string> => {
@@ -93,7 +95,9 @@ export default function cacheBuster(
 
         // 絶対パスは base_path が付けた location.pathname を剥がし、相対パスはページ基準で解決
         const url = path.startsWith("/")
-          ? basePath && path.startsWith(`${basePath}/`) ? path.slice(basePath.length) : path
+          ? basePath && path.startsWith(`${basePath}/`)
+            ? path.slice(basePath.length)
+            : path
           : posix.join(posix.dirname(page.outputPath), path);
 
         const hash = await hashOf(url);
@@ -107,11 +111,14 @@ export default function cacheBuster(
             const value = element.getAttribute(attribute);
             if (!value) continue;
 
-            const next = attribute === "srcset"
-              ? (await Promise.all(
-                parseSrcset(value).map(async ([url, rest]) => await bust(url, page) + rest),
-              )).join(", ")
-              : await bust(value, page);
+            const next =
+              attribute === "srcset"
+                ? (
+                    await Promise.all(
+                      parseSrcset(value).map(async ([url, rest]) => (await bust(url, page)) + rest),
+                    )
+                  ).join(", ")
+                : await bust(value, page);
 
             if (next !== value) element.setAttribute(attribute, next);
           }

@@ -1,11 +1,11 @@
 ---
 name: check-build
 description: Run the full verification gate (lint, type-check, production build) and summarize failures. Run before committing or when asked to verify the site builds.
-allowed-tools: Bash(deno task:*), Bash(deno check:*)
+allowed-tools: Bash(pnpm check:*), Bash(pnpm lint:*), Bash(pnpm typecheck:*), Bash(pnpm build:*)
 ---
 
-Run `deno task check` — the project's verification gate. The canonical step list lives in the
-`check` task in `deno.json` (currently: lint, `deno check _config.ts`, production build).
+Run `pnpm check` — the project's verification gate. The canonical step list lives in the `check`
+script in `package.json` (currently: lint, `tsc`, production build).
 
 The task stops at the first failing step. When that happens, run the remaining steps from the task
 individually so the report covers all failures, not just the first.

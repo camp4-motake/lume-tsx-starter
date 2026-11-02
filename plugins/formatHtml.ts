@@ -9,17 +9,9 @@
  * Remove:   このファイルと _config.ts の import + 登録ブロックを削除
  */
 
-import type { Element } from "lume/deps/dom.ts";
-import type Site from "lume/core/site.ts";
+import type Site from "@lumeland/core/site.ts";
 
-const PRESERVE = new Set([
-  "script",
-  "style",
-  "svg",
-  "noscript",
-  "pre",
-  "textarea",
-]);
+const PRESERVE = new Set(["script", "style", "svg", "noscript", "pre", "textarea"]);
 
 const INLINE = new Set([
   "a",
@@ -80,12 +72,7 @@ export default function formatHtml({ indent = "  " }: Options = {}) {
   };
 }
 
-function serializeElement(
-  el: Element,
-  depth: number,
-  indent: string,
-  out: string[],
-): void {
+function serializeElement(el: Element, depth: number, indent: string, out: string[]): void {
   const pad = indent.repeat(depth);
   const tag = el.tagName.toLowerCase();
 

@@ -4,19 +4,19 @@
  */
 
 import { langPath, pathJoin, range, useAttrs } from "#helpers";
-import lume from "lume/mod.ts";
-import base_path from "lume/plugins/base_path.ts";
-import esbuild from "lume/plugins/esbuild.ts";
-import inline from "lume/plugins/inline.ts";
-import jsx from "lume/plugins/jsx.ts";
-import lightningCss from "lume/plugins/lightningcss.ts";
-import metas from "lume/plugins/metas.ts";
-import minifyHTML from "lume/plugins/minify_html.ts";
-import picture from "lume/plugins/picture.ts";
-import relativeUrls from "lume/plugins/relative_urls.ts";
-import sourceMaps from "lume/plugins/source_maps.ts";
-import svgo from "lume/plugins/svgo.ts";
-import transformImages from "lume/plugins/transform_images.ts";
+import lume from "@lumeland/lume";
+import base_path from "@lumeland/plugin-base-path";
+import esbuild from "@lumeland/plugin-esbuild";
+import inline from "@lumeland/plugin-inline";
+import jsx from "@lumeland/plugin-jsx";
+import lightningCss from "@lumeland/plugin-lightningcss";
+import metas from "@lumeland/plugin-metas";
+import minifyHTML from "@lumeland/plugin-minify-html";
+import picture from "@lumeland/plugin-picture";
+import relativeUrls from "@lumeland/plugin-relative-urls";
+import sourceMaps from "@lumeland/plugin-source-maps";
+import svgo from "@lumeland/plugin-svgo";
+import transformImages from "@lumeland/plugin-transform-images";
 import { cssTargets, jsTargets } from "./plugins/browserTargets.ts";
 import cacheBuster from "./plugins/cacheBuster.ts";
 import dropRedundantImages from "./plugins/dropRedundantImages.ts";
@@ -24,7 +24,7 @@ import formatHtml from "./plugins/formatHtml.ts";
 import imageDimensions from "./plugins/imageDimensions.ts";
 import imageQuality from "./plugins/imageQuality.ts";
 
-const isDev = Deno.args.includes("-s");
+const isDev = process.argv.includes("-s");
 
 /**
  * Lume configuration
@@ -66,15 +66,13 @@ site.use(svgo({ options: { plugins: ["preset-default", "prefixIds"] } }));
 site.use(inline({ copyAttributes: ["role", "title", /^aria-/, /^data-/] }));
 
 // img.src や CSS url() の書き換えを含むので画像系 / inline の後
-// deno-lint-ignore lume/plugin-order
 site.use(base_path());
-if (Deno.env.get("RELATIVE_URLS") === "true") site.use(relativeUrls());
+if (process.env.RELATIVE_URLS === "true") site.use(relativeUrls());
 
-// deno-lint-ignore lume/plugin-order
 site.use(metas());
 
 if (!isDev) site.use(cacheBuster());
-if (!isDev && Deno.env.get("FORMAT_HTML") === "true") site.use(formatHtml());
+if (!isDev && process.env.FORMAT_HTML === "true") site.use(formatHtml());
 else site.use(minifyHTML());
 
 /**

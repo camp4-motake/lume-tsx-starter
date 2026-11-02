@@ -51,7 +51,6 @@ export default function {Name}(
 ## style.css template
 
 <!-- {category} / {class-name} placeholders are not valid CSS -->
-<!-- deno-fmt-ignore -->
 ```css
 @layer components.{category} {
   .{class-name} {

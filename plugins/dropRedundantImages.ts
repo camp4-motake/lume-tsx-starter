@@ -14,25 +14,21 @@
  * Remove:   このファイルと _config.ts の import + 登録ブロックを削除
  */
 
-import type Site from "lume/core/site.ts";
+import type Site from "@lumeland/core/site.ts";
 
 type Options = {
   /** 除外対象の原本拡張子 (default: ["png", "jpg", "jpeg"]) */
   extensions?: string[];
 };
 
-export default function dropRedundantImages(
-  { extensions = ["png", "jpg", "jpeg"] }: Options = {},
-) {
+export default function dropRedundantImages({ extensions = ["png", "jpg", "jpeg"] }: Options = {}) {
   const escaped = extensions.map((ext) => ext.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
   const redundantUrl = new RegExp(`^(.+)\\.(${escaped.join("|")})$`);
 
   return (site: Site) => {
     site.process((_, allPages) => {
       const avifUrls = new Set(
-        allPages
-          .filter((p) => p.data.url?.endsWith(".avif"))
-          .map((p) => p.data.url.slice(0, -5)),
+        allPages.filter((p) => p.data.url?.endsWith(".avif")).map((p) => p.data.url.slice(0, -5)),
       );
       for (let i = allPages.length - 1; i >= 0; i--) {
         const { url, transformImages } = allPages[i].data;

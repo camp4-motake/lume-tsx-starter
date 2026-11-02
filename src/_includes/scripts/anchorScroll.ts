@@ -4,9 +4,7 @@ const EXCLUDE_HASH_VALUES = ["", "#", "#0", "#todo"];
 const EXCLUDE_SELECTORS = ["[data-anchor-scroll-ignore]", `[role="tab"]`].join(",");
 
 export function anchorScroll(): void {
-  const anchor = document.querySelectorAll<HTMLAnchorElement>(
-    'a[href*="#"]',
-  );
+  const anchor = document.querySelectorAll<HTMLAnchorElement>('a[href*="#"]');
   for (const el of anchor) {
     if (!isMatchURL(el.href)) continue;
     el.addEventListener("click", handleAnchorClick);

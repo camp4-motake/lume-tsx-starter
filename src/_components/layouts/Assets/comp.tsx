@@ -25,12 +25,7 @@ function resolvePreconnects(fonts: string[]): Preconnect[] {
 }
 
 export default function ({ config, webFonts }: Lume.Data) {
-  const fonts = Array.from(
-    new Set([
-      ...(config?.webFonts ?? []),
-      ...(webFonts ?? []),
-    ]),
-  );
+  const fonts = Array.from(new Set([...(config?.webFonts ?? []), ...(webFonts ?? [])]));
   const preconnects = resolvePreconnects(fonts);
 
   return (
@@ -46,13 +41,7 @@ export default function ({ config, webFonts }: Lume.Data) {
             />
           ))}
           {fonts.map((url) => (
-            <link
-              key={`preload:${url}`}
-              rel="preload"
-              as="style"
-              href={url}
-              fetchPriority="high"
-            />
+            <link key={`preload:${url}`} rel="preload" as="style" href={url} fetchPriority="high" />
           ))}
           {fonts.map((url) => (
             <link
@@ -70,12 +59,10 @@ export default function ({ config, webFonts }: Lume.Data) {
       <link rel="stylesheet" href="/assets/main.css" />
       <script type="module" src="/assets/main.js"></script>
 
-      {
-        /* favicon
+      {/* favicon
           <link href="/assets/favicon.svg" rel="icon" sizes="any" type="image/svg+xml" />
           <link href="/assets/apple-touch-icon.png" rel="apple-touch-icon" />
-          */
-      }
+          */}
     </>
   );
 }
