@@ -2,16 +2,18 @@ This file provides guidance to coding agents when working with code in this repo
 
 ## Runtime
 
-Lume 3 on Deno. Do not run `npm install` — `node_modules/` exists only because
-`nodeModulesDir: "auto"` is set for npm interop.
+Lume 4 on Node.js (>= 24), managed with pnpm. Use `pnpm`, not `npm install`.
 
 ## Commands
 
-- `deno task serve` (alias: `dev`) — dev server
-- `deno task build` — production build to `_site/`
-- `deno task build:fmt` — build with pretty HTML (otherwise non-dev builds are minified)
-- `deno task zip` — build + zip `_site/` into `_zip/` (override prefix with `ZIP_PREFIX`)
-- `deno task lint` / `deno task format` — `deno lint`/`fmt` + `stylelint`
+- `pnpm serve` (alias: `dev`) — dev server
+- `pnpm build` — production build to `_site/`
+- `pnpm build:fmt` — build with pretty HTML (otherwise non-dev builds are minified)
+- `pnpm zip` — build + zip `_site/` into `_zip/` (override prefix with `ZIP_PREFIX`)
+- `pnpm lint` / `pnpm format` — `oxlint`/`oxfmt` + `stylelint`
+- `pnpm typecheck` — `tsc`
+- `pnpm check` — lint + typecheck + build
+- `pnpm new <archetype>` — run a Lume archetype
 
 `RELATIVE_URLS=true` enables relative URLs. Cache busting runs automatically in non-dev builds.
 

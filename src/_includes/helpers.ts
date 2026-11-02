@@ -1,7 +1,7 @@
 /**
  * helpers — コンポーネントと _config.ts で共有するユーティリティ (Lume プラグインではない)
  *
- * コンポーネントからは `#helpers` エイリアス (deno.json) で import し、
+ * コンポーネントからは `#helpers` エイリアス (package.json の imports) で import し、
  * _config.ts では tag helper として登録される。
  */
 
@@ -31,29 +31,19 @@ const HTML_ATTRIBUTES = new Set([
  * @example <a {...useAttrs(props, "", ["variant", "size"])}>
  * @example <a {...useAttrs(props, "a", ["variant", "size"])}>
  */
-export const useAttrs = (
-  props: Partial<Lume.Data>,
-  tagName?: string,
-  omitKeys: string[] = [],
-) => {
+export const useAttrs = (props: Partial<Lume.Data>, tagName?: string, omitKeys: string[] = []) => {
   const attrs: Record<string, unknown> = {};
   const omitSet = new Set([...omitKeys]);
 
-  const allowedAttributes = tagName && bcd.html.elements[tagName]
-    ? new Set([
-      ...GLOBAL_ATTRIBUTES,
-      ...Object.keys(bcd.html.elements[tagName]),
-    ])
-    : HTML_ATTRIBUTES;
+  const allowedAttributes =
+    tagName && bcd.html.elements[tagName]
+      ? new Set([...GLOBAL_ATTRIBUTES, ...Object.keys(bcd.html.elements[tagName])])
+      : HTML_ATTRIBUTES;
 
   for (const key in props) {
     if (omitSet.has(key)) continue;
 
-    if (
-      allowedAttributes.has(key) ||
-      key.startsWith("data-") ||
-      key.startsWith("aria-")
-    ) {
+    if (allowedAttributes.has(key) || key.startsWith("data-") || key.startsWith("aria-")) {
       attrs[key] = props[key];
     }
   }

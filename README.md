@@ -4,30 +4,29 @@ Lume/TSX Static Site Development Environment
 
 ## Task
 
-Please set up [Deno](https://deno.com/) first. `npm install -g deno` or
-[other installation](https://docs.deno.com/runtime/getting_started/installation/). You can also
-install it via a version manager such as [mise](https://mise.jdx.dev/).
+Requires [Node.js](https://nodejs.org/) 24+ and [pnpm](https://pnpm.io/). You can install them via a
+version manager such as [mise](https://mise.jdx.dev/). Run `pnpm install` first.
 
 ```sh
 # dev
-deno task serve
+pnpm serve
 
 # build
-deno task build
+pnpm build
 
 # zip
-deno task zip
+pnpm zip
 
 # lint
-deno task lint
+pnpm lint
 
 # format
-deno task format
+pnpm format
 ```
 
 ## Resources
 
-[Deno](https://deno.com/) | [Lume3](https://github.com/lumeland/lume)
+[Node.js](https://nodejs.org/) | [Lume 4](https://github.com/lumeland/lume)
 
 ### How can I support multi-languages, Tailwind CSS, etc.?
 

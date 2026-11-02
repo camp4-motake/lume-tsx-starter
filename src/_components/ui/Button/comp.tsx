@@ -5,9 +5,7 @@ export interface Props {
   Tag?: "a" | "button";
 }
 
-export default function Button(
-  { Tag = "a", children, ...props }: Props & Lume.Data,
-) {
+export default function Button({ Tag = "a", children, ...props }: Props & Lume.Data) {
   const attributes = useAttrs(props, Tag);
 
   if (Tag === "button" && !attributes.type) {

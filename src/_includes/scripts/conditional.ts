@@ -7,8 +7,7 @@ export const isMatchURL = (href: string): boolean => {
   const tgt = new URL(href);
 
   return (
-    `${loc.origin}${loc.pathname}${loc.search}` ===
-      `${tgt.origin}${tgt.pathname}${tgt.search}`
+    `${loc.origin}${loc.pathname}${loc.search}` === `${tgt.origin}${tgt.pathname}${tgt.search}`
   );
 };
 

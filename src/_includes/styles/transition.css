@@ -40,9 +40,7 @@
       transition:
         transform var(--_duration) var(--ease-out-circ),
         opacity calc(var(--_duration) * 0.6) ease;
-      transition-delay:
-        var(--_delay),
-        var(--_delay);
+      transition-delay: var(--_delay), var(--_delay);
     }
 
     [data-decode-in-img] {

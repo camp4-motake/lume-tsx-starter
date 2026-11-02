@@ -77,7 +77,6 @@ Three sublayers in cascade order:
 ### Template
 
 <!-- {component-name} placeholders are not valid CSS -->
-<!-- deno-fmt-ignore -->
 ```css
 @layer components.ui {
   .{component-name} {

@@ -4,7 +4,7 @@
  * Lume の esbuild / lightningcss プラグインは Baseline 由来の内蔵デフォルト
  * (chrome107 / safari16 など)をターゲットにする。ここでビルド時に
  * browserslist クエリを解決し、両プラグインへ渡せる形式に変換する。
- * 解決結果は deno.lock に固定された caniuse-lite のデータに依存するため、
+ * 解決結果は pnpm-lock.yaml に固定された caniuse-lite のデータに依存するため、
  * シェア変動へ追随するには定期的な依存更新が必要。
  *
  * Ordering: なし(Lume プラグインではなく純粋モジュール)
@@ -14,13 +14,12 @@
  */
 
 import browserslist from "browserslist";
-// Lume がピン留めしている lightningcss-wasm と同じ実体を使う
-import { browserslistToTargets, type Targets } from "lume/deps/lightningcss.ts";
-import { defaults as lightningCssDefaults } from "lume/plugins/lightningcss.ts";
+import { defaults as lightningCssDefaults } from "@lumeland/plugin-lightningcss";
+import { browserslistToTargets, type Targets } from "lightningcss";
 
 const BROWSERS = "> 0.5% in JP and last 2 years and not dead";
 
-// lightningcss-wasm 1.32 の browserslistToTargets は and_chr → chrome などの
+// lightningcss 1.33 の browserslistToTargets は and_chr → chrome などの
 // 名前マッピングを定義しながら適用しないため、解決リスト側を先に正規化する。
 // 重複したブラウザ名の最小バージョン採用は browserslistToTargets が行う
 const CANIUSE_ALIASES: Record<string, string> = {
@@ -41,14 +40,19 @@ const targets = browserslistToTargets(resolved) as Record<string, number>;
 // (古いバージョン)が残ってしまう。デフォルトが持つキーのうちクエリ結果に
 // 無いものは同系エンジンの値で埋めて、古いターゲットへの巻き戻りを防ぐ
 const ENGINE_FALLBACKS: Record<string, string> = {
-  android: "chrome",
   edge: "chrome",
   opera: "chrome",
   samsung: "chrome",
   ios_saf: "safari",
   safari: "ios_saf",
 };
-for (const key of Object.keys(lightningCssDefaults.options?.targets ?? {})) {
+// android は lightningcss では旧 Android Browser の互換表を引くため、Chrome 相当の値でも
+// ネイティブネストなどが下げられてしまう。and_chr は chrome に正規化済みなので不要だが、
+// merge() は undefined を無視して上書きできないのでデフォルト自体から取り除く
+const defaultTargets: Targets = lightningCssDefaults.options.targets;
+delete defaultTargets.android;
+
+for (const key of Object.keys(defaultTargets)) {
   const fallback = ENGINE_FALLBACKS[key];
   if (targets[key] == null && fallback != null && targets[fallback] != null) {
     targets[key] = targets[fallback];

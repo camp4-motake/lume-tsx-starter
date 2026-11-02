@@ -12,7 +12,7 @@
  * Deps:     image-size
  */
 
-import type Site from "lume/core/site.ts";
+import type Site from "@lumeland/core/site.ts";
 import { imageSizeFromFile } from "image-size/fromFile";
 
 export default function imageDimensions() {
@@ -26,9 +26,7 @@ export default function imageDimensions() {
 
       for (const page of pages) {
         const images = page.document.querySelectorAll("img");
-        await Promise.all(
-          Array.from(images).map((img) => applyDimensions(site, fileMap, img)),
-        );
+        await Promise.all(Array.from(images).map((img) => applyDimensions(site, fileMap, img)));
       }
     });
   };
@@ -74,12 +72,13 @@ function transformedSize(
   srcHeight: number,
 ): { width: number; height: number } {
   // picture プラグインと同じ lookup (祖先要素の指定も有効)
-  const transformImages = img.closest("[transform-images]")
-    ?.getAttribute("transform-images");
+  const transformImages = img.closest("[transform-images]")?.getAttribute("transform-images");
   if (!transformImages) return { width: srcWidth, height: srcHeight };
 
   // picture プラグインと同じ規則: 数字で始まるトークンがサイズ指定
-  const sizes = transformImages.trim().split(/\s+/)
+  const sizes = transformImages
+    .trim()
+    .split(/\s+/)
     .filter((piece) => /^\d/.test(piece))
     .map(parseSize)
     .filter((size): size is ParsedSize => size !== undefined);

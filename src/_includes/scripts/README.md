@@ -9,4 +9,4 @@ src/_components/Assets/script.ts
 
 ## Resources
 
-<https://lume.deno.dev/plugins/esbuild/>
+<https://lume.land/plugins/esbuild/>

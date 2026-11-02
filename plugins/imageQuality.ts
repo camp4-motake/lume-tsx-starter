@@ -11,7 +11,7 @@
  * Remove:   このファイルと _config.ts の import + 登録ブロックを削除
  */
 
-import type Site from "lume/core/site.ts";
+import type Site from "@lumeland/core/site.ts";
 
 type Options = {
   /** フォーマット名 → quality の対応 (例: { avif: 80 }) */

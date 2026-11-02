@@ -27,10 +27,7 @@ export function setInert(el: HTMLElement): () => void {
   };
 }
 
-function crawlSiblingsUp(
-  el: HTMLElement,
-  callback: (sibling: HTMLElement) => void,
-): void {
+function crawlSiblingsUp(el: HTMLElement, callback: (sibling: HTMLElement) => void): void {
   if (el.isSameNode(document.body) || !el.parentNode) {
     return;
   }

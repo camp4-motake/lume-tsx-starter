@@ -9,10 +9,7 @@ export const inView = (options: IntersectionObserverInit = {}): void => {
   });
 
   // add observer
-  const selectors = [
-    "[data-scroll-fade-in]",
-    "[data-scroll]",
-  ];
+  const selectors = ["[data-scroll-fade-in]", "[data-scroll]"];
   const targets = document.querySelectorAll<Element>(selectors.join(", "));
   if (!targets.length) return;
 

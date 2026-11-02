@@ -1,7 +1,4 @@
-export default function (
-  data: Lume.Data,
-  helpers: Lume.Helpers,
-) {
+export default function (data: Lume.Data, helpers: Lume.Helpers) {
   const { children, comp, config, lang } = data;
   const { Assets } = comp.layouts;
   const { url: urlHelper } = helpers;
@@ -16,10 +13,7 @@ export default function (
     <html lang={lang || config.lang}>
       <head>
         <meta charset="UTF-8" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <meta name="format-detection" content="telephone=no" />
 
         <title>{titleText}</title>
@@ -42,21 +36,22 @@ export default function (
           type="speculationrules"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
-              "prerender": [{
-                "where": {
-                  "and": [
-                    { "href_matches": "/*" },
-                    { "not": { "selector_matches": "[rel~='nofollow']" } },
-                    { "not": { "selector_matches": ["[data-no-prerender]"] } },
-                    // { "not": { "href_matches": ["/wp-*", "/*\\?(.+)"] } },
-                  ],
+              prerender: [
+                {
+                  where: {
+                    and: [
+                      { href_matches: "/*" },
+                      { not: { selector_matches: "[rel~='nofollow']" } },
+                      { not: { selector_matches: ["[data-no-prerender]"] } },
+                      // { "not": { "href_matches": ["/wp-*", "/*\\?(.+)"] } },
+                    ],
+                  },
+                  eagerness: "moderate",
                 },
-                "eagerness": "moderate",
-              }],
+              ],
             }),
           }}
-        >
-        </script>
+        ></script>
       </body>
     </html>
   );
