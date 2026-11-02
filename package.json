@@ -35,21 +35,20 @@
     "@lumeland/plugin-transform-images": "^1.0.0",
     "@lumeland/ssx": "^0.1.16",
     "@mdn/browser-compat-data": "^8.1.7",
-    "adm-zip": "^0.6.1",
     "browserslist": "^4.29.5",
     "clsx": "^2.1.1",
-    "es-toolkit": "^1.53.1",
     "image-size": "2.0.2",
-    "lightningcss": "^1.33.0",
-    "stylelint": "^17.16.0",
-    "stylelint-config-recess-order": "^7.9.0",
-    "stylelint-config-recommended": "^18.0.0"
+    "lightningcss": "^1.33.0"
   },
   "devDependencies": {
     "@types/adm-zip": "^0.6.0",
     "@types/node": "^24.19.2",
+    "adm-zip": "^0.6.1",
     "oxfmt": "^0.75.0",
     "oxlint": "^1.90.0",
+    "stylelint": "^17.16.0",
+    "stylelint-config-recess-order": "^7.9.0",
+    "stylelint-config-recommended": "^18.0.0",
     "typescript": "^7.0.2"
   },
   "engines": {
