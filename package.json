@@ -19,7 +19,7 @@
     "new": "lume run"
   },
   "dependencies": {
-    "@lumeland/core": "^1.0.1",
+    "@lumeland/core": "^1.0.2",
     "@lumeland/lume": "^4.0.0",
     "@lumeland/plugin-base-path": "^1.0.0",
     "@lumeland/plugin-esbuild": "^1.0.0",
@@ -37,7 +37,7 @@
     "@mdn/browser-compat-data": "^8.1.7",
     "browserslist": "^4.29.5",
     "clsx": "^2.1.1",
-    "image-size": "2.0.2",
+    "image-size": "2.0.4",
     "lightningcss": "^1.33.0"
   },
   "devDependencies": {
